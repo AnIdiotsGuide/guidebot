@@ -22,7 +22,7 @@ Once finished:
 - Rename `config.json.example` to `config.json`
 - Edit `config.json` and enter your token and other details as indicated. It should look like this afterwards: 
 
-![](http://i.imgur.com/KH2ELvM.png)
+![](http://proof.evie-banned.me/WhaRsa6)
 
 
 ## Starting the bot
