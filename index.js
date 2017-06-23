@@ -15,10 +15,6 @@ client.config = require("./config.json");
 // client.config.token contains the bot's token
 // client.config.prefix contains the message prefix
 
-// Here we login the client. Yes, this line can be at the start of the bot, 
-// because... everything else is async so it's fine!
-client.login(client.config.token);
-
 // Let's start by getting some useful functions that we'll use throughout
 // the bot, like logs and elevation features.
 require("./modules/functions.js")(client);
@@ -55,5 +51,9 @@ readdir('./events/').then(files => {
     delete require.cache[require.resolve(`./events/${file}`)];
   });
 }).catch(console.error);
+
+
+// Here we login the client.
+client.login(client.config.token);
 
 // Yep. That's it for the main file. Everything else is done in sub files!
