@@ -20,19 +20,17 @@ module.exports = (client, message) => {
 
   // Get the user or member's permission level from the elevation
   let perms = client.permlevel(message);
-  let cmd;
   
   // Check whether the command, or alias, exist in the collections defined
   // in app.js. 
-  if (client.commands.has(command)) {
-    cmd = client.commands.get(command);
-  } else if (client.aliases.has(command)) {
-    cmd = client.commands.get(client.aliases.get(command));
-  }
+  const cmd = client.commands.has(command) || client.commands.get(client.aliases.get(command));
+  // using this const varName = thing OR otherthign; is a pretty efficient 
+  // and clean way to grab one of 2 values! 
+  
   // If the command exists, **AND** the user has permission, run it.
-  if (cmd) {
-    if (perms < cmd.conf.permLevel) return;
-    client.log("log", `${message.guild.name}/#${message.channel.name}: ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "CMD");
+  if (cmd && perms >= cmd.conf.permLevel) {
+    client.log("log", `${message.guild.name}/#${message.channel.name}:
+      ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "CMD");
     cmd.run(client, message, args, perms);
   }
   // Best Practice: **do not** reply with a message if the command does
