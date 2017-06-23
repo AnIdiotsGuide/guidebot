@@ -19,12 +19,19 @@ client.config = require("./config.json");
 // the bot, like logs and elevation features.
 require("./modules/functions.js")(client);
 
-// Here we load **commands** into memory, as a collection, so they're accessible
-// here and everywhere else. 
+// Aliases and commands are put in collections where they can be read from,
+// catalogued, listed, etc.
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
-readdir('./commands/').then(files => {
+// We're doing real fancy node 8 async/await stuff here, and to do that
+// we need to wrap stuff in an anonymous function. It's annoying but it works.
+
+(async function() {
+
+  // Here we load **commands** into memory, as a collection, so they're accessible
+  // here and everywhere else. 
+  const files = await readdir('./commands/');
   client.log("log", `Loading a total of ${files.length} commands.`);
   files.forEach(f => {
     try {
@@ -38,10 +45,9 @@ readdir('./commands/').then(files => {
       client.log(`Unable to load command ${f}: ${e}`);
     }
   });
-}).catch(console.error);
 
-// Then we load events, which will include our message and ready event.
-readdir('./events/').then(files => {
+  // Then we load events, which will include our message and ready event.
+  const files = await readdir('./events/')
   client.log("log", `Loading a total of ${files.length} events.`);
   files.forEach(file => {
     const eventName = file.split(".")[0];
@@ -50,10 +56,10 @@ readdir('./events/').then(files => {
     client.on(eventName, event.bind(null, client));
     delete require.cache[require.resolve(`./events/${file}`)];
   });
-}).catch(console.error);
 
 
-// Here we login the client.
-client.login(client.config.token);
+  // Here we login the client.
+  client.login(client.config.token);
 
-// Yep. That's it for the main file. Everything else is done in sub files!
+// End top-level async/await function.  
+}());
