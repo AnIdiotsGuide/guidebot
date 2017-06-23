@@ -28,7 +28,7 @@ Once finished:
 ## Starting the bot
 
 To start the bot, in the command prompt, run the following command:
-`node app.js`
+`node index.js`
 
 ## Inviting to a guild
 
