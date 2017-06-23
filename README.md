@@ -1,5 +1,16 @@
-# discordjs-bot-handler
-An example of a Discord.js Bot Handler. Updated and Maintained by the Idiot's Guide Community
+# Guide Bot
+An example of a Discord.js Bot Handler. Updated and Maintained by the Idiot's Guide Community.
+
+Ages ago, Guide Bot was actually a little bot I had on the official discord.js server.
+It helped me link to the d.js bot making guide I was building, with links.
+This bot grew into something that I could show new coders and bot makers, but
+over time it grew into a full framework - one that is now under the hands of a 
+group of contributors, and no longer easily "understandable" by the majority
+of our newbies. So I've pulled the original Guide Bot out of the mothballs,
+gave it a fresh coat of paint and grease, and here it is back in its full glory!
+
+This command handler is 98% compatible with [my selfbot](https://github.com/eslachance/evie.selfbot) 
+and 99% compatible with commands from [York's TutorialBot](https://github.com/AnIdiotsGuide/Tutorial-Bot/tree/Episode-9).
 
 ## Requirements
 

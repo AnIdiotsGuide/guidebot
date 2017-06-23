@@ -1,12 +1,14 @@
 // Load up the discord.js library
 const Discord = require("discord.js");
 // We also load the rest of the things we need in this file:
-const fs = require("fs");
+const { promisify } = require('util');
+const readdir = promisify(require("fs").readdir);
 
 // This is your client. Some people call it `bot`, some people call it `self`, 
 // some might call it `cootchie`. Either way, when you see `client.something`, 
 // or `bot.something`, this is what we're refering to. Your client.
 const client = new Discord.Client();
+
 
 // Here we load the config.json file that contains our token and our prefix values. 
 client.config = require("./config.json");
@@ -25,8 +27,8 @@ require("./modules/functions.js")(client);
 // here and everywhere else. 
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
-fs.readdir('./commands/', (err, files) => {
-  if (err) console.error(err);
+
+readdir('./commands/').then(files => {
   client.log("log", `Loading a total of ${files.length} commands.`);
   files.forEach(f => {
     try {
@@ -40,11 +42,10 @@ fs.readdir('./commands/', (err, files) => {
       client.log(`Unable to load command ${f}: ${e}`);
     }
   });
-});
+}).catch(console.error);
 
 // Then we load events, which will include our message and ready event.
-fs.readdir('./events/', (err, files) => {
-  if (err) console.error(err);
+readdir('./events/').then(files => {
   client.log("log", `Loading a total of ${files.length} events.`);
   files.forEach(file => {
     const eventName = file.split(".")[0];
@@ -53,6 +54,6 @@ fs.readdir('./events/', (err, files) => {
     client.on(eventName, event.bind(null, client));
     delete require.cache[require.resolve(`./events/${file}`)];
   });
-});
+}).catch(console.error);
 
 // Yep. That's it for the main file. Everything else is done in sub files!

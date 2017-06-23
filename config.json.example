@@ -1,7 +1,7 @@
 {
-  "ownerid": "insert the ID of the bot's owner",
+  "ownerID": "insert the ID of the bot's owner",
   "token": "insert your bot token here between the double quotes",
   "prefix": "-",
-  "modrolename": "Moderator",
-  "adminrolename": "Administrator"
+  "modRoleName": "Moderator",
+  "adminRoleName": "Administrator"
 }

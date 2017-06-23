@@ -13,7 +13,7 @@ module.exports = (client) => {
     let permlvl = 0;
     
     // If bot owner, return max perm level
-    if(message.author.id === client.config.ownerid) return 10;
+    if(message.author.id === client.config.ownerID) return 10;
     
     // If DMs or webhook, return 0 perm level.
     if(!message.guild || !message.member) return 0;
@@ -21,10 +21,10 @@ module.exports = (client) => {
     // The rest of the perms rely on roles. If those roles are not found
     // in the config, or the user does not have it, their level will be 0
     try {
-      let mod_role = message.guild.roles.find('name', client.config.modrolename);
-      if (mod_role && message.member.roles.has(mod_role.id)) permlvl = 2;
-      let admin_role = message.guild.roles.find('name', client.config.adminrolename);
-      if (admin_role && message.member.roles.has(admin_role.id)) permlvl = 3;
+      let modRole = message.guild.roles.find('name', client.config.modRoleName);
+      if (modRole && message.member.roles.has(modRole.id)) permlvl = 2;
+      let adminRole = message.guild.roles.find('name', client.config.adminRoleName);
+      if (adminRole && message.member.roles.has(adminRole.id)) permlvl = 3;
     } catch (e) {
       // Mod names were not configured.
       permlvl = 0;

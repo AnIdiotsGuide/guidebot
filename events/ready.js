@@ -1,5 +1,4 @@
 /* global wait */
-const fs = require("fs");
 module.exports = async client => {
   // Why await here? Because the ready event isn't actually ready, sometimes
   // guild information will come in *after* ready. 1s is plenty, generally,
