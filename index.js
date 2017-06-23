@@ -47,7 +47,7 @@ client.aliases = new Discord.Collection();
   });
 
   // Then we load events, which will include our message and ready event.
-  const files = await readdir('./events/')
+  const files = await readdir('./events/');
   client.log("log", `Loading a total of ${files.length} events.`);
   files.forEach(file => {
     const eventName = file.split(".")[0];
