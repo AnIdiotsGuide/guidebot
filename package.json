@@ -1,0 +1,22 @@
+{
+  "name": "discordjs-command-handler",
+  "version": "1.0.0",
+  "description": "An example of a Discord.js Bot Handler. Updated and Maintained by the Idiot's Guide Community",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eslachance/discordjs-command-handler.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eslachance/discordjs-command-handler/issues"
+  },
+  "homepage": "https://github.com/eslachance/discordjs-command-handler#readme",
+  "dependencies": {
+    "discord.js": "^11.1.0"
+  }
+}
