@@ -1,5 +1,6 @@
-exports.run = (client, msg, args) => {
-  msg.channel.send("Ping?").then(m => m.edit(`Pong! Latency is ${m.createdTimestamp - msg.createdTimestamp}ms. API Latency is ${Math.round(client.ping)}ms`) );
+exports.run = async (client, msg, args) => {
+  const m = await msg.channel.send("Ping?");
+  m.edit(`Pong! Latency is ${m.createdTimestamp - msg.createdTimestamp}ms. API Latency is ${Math.round(client.ping)}ms`) );
 };
 
 exports.conf = {
