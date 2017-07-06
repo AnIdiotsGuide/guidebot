@@ -23,12 +23,16 @@ module.exports = (client) => {
     try {
       let modRole = message.guild.roles.find('name', client.config.modRoleName);
       if (modRole && message.member.roles.has(modRole.id)) permlvl = 2;
+    } catch (e) {
+      console.warn("modRoleName not present in configuration. Skipping Moderator (level 2) check");
+    }
+    try {
       let adminRole = message.guild.roles.find('name', client.config.adminRoleName);
       if (adminRole && message.member.roles.has(adminRole.id)) permlvl = 3;
     } catch (e) {
-      // Mod names were not configured.
-      permlvl = 0;
+      console.warn("adminRoleName not present in configuration. Skipping Administrator (level 3) check");
     }
+
     // Guild Owner gets an extra level, wooh!
     if(message.author.id === message.guild.owner.id) permlvl = 4;
     
