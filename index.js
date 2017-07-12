@@ -31,9 +31,9 @@ client.aliases = new Discord.Collection();
 
   // Here we load **commands** into memory, as a collection, so they're accessible
   // here and everywhere else. 
-  const files = await readdir('./commands/');
-  client.log("log", `Loading a total of ${files.length} commands.`);
-  files.forEach(f => {
+  const cmdFiles = await readdir('./commands/');
+  client.log("log", `Loading a total of ${cmdFiles.length} commands.`);
+  cmdFiles.forEach(f => {
     try {
       let props = require(`./commands/${f}`);
       client.log("log", `Loading Command: ${props.help.name}. 👌`);
@@ -47,9 +47,9 @@ client.aliases = new Discord.Collection();
   });
 
   // Then we load events, which will include our message and ready event.
-  const files = await readdir('./events/');
-  client.log("log", `Loading a total of ${files.length} events.`);
-  files.forEach(file => {
+  const evtFiles = await readdir('./events/');
+  client.log("log", `Loading a total of ${evtFiles.length} events.`);
+  evtFiles.forEach(file => {
     const eventName = file.split(".")[0];
     const event = require(`./events/${file}`);
     // This line is awesome by the way. Just sayin'.
