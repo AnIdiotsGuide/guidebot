@@ -1,6 +1,6 @@
 {
   "name": "discordjs-command-handler",
-  "version": "1.0.0",
+  "version": "1.5.1",
   "description": "An example of a Discord.js Bot Handler. Updated and Maintained by the Idiot's Guide Community",
   "main": "index.js",
   "scripts": {
@@ -10,8 +10,8 @@
     "type": "git",
     "url": "git+https://github.com/eslachance/discordjs-command-handler.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "The Idiot's Guide Community",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/eslachance/discordjs-command-handler/issues"
   },
