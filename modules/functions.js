@@ -19,18 +19,18 @@ module.exports = (client) => {
     if(!message.guild || !message.member) return 0;
     
     // The rest of the perms rely on roles. If those roles are not found
-    // in the config, or the user does not have it, their level will be 0
+    // in the settings, or the user does not have it, their level will be 0
     try {
-      let modRole = message.guild.roles.find('name', client.config.modRoleName);
+      let modRole = message.guild.roles.find(r => r.name.toLowerCase() === message.settings.modRole.toLowerCase());
       if (modRole && message.member.roles.has(modRole.id)) permlvl = 2;
     } catch (e) {
-      console.warn("modRoleName not present in configuration. Skipping Moderator (level 2) check");
+      console.warn("modRole not present in guild settings. Skipping Moderator (level 2) check");
     }
     try {
-      let adminRole = message.guild.roles.find('name', client.config.adminRoleName);
+      let adminRole = message.guild.roles.find(r => r.name.toLowerCase() === message.settings.adminRole.toLowerCase());
       if (adminRole && message.member.roles.has(adminRole.id)) permlvl = 3;
     } catch (e) {
-      console.warn("adminRoleName not present in configuration. Skipping Administrator (level 3) check");
+      console.warn("adminRole not present in guild settings. Skipping Administrator (level 3) check");
     }
 
     // Guild Owner gets an extra level, wooh!
@@ -100,6 +100,9 @@ module.exports = (client) => {
 
   /* MISCELANEOUS NON-CRITICAL FUNCTIONS */
   
+  String.prototype.toProperCase = function () {
+    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+  };
   
   // `await wait(1000);` to "pause" for 1 second. 
   global.wait = require('util').promisify(setTimeout);

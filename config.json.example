@@ -1,7 +1,12 @@
 {
   "ownerID": "insert the ID of the bot's owner",
   "token": "insert your bot token here between the double quotes",
-  "prefix": "-",
-  "modRoleName": "Moderator",
-  "adminRoleName": "Administrator"
+  "defaultSettings" : {
+    "prefix": "-",
+    "modLogChannel": "mod-log",
+    "modRole": "Moderator",
+    "adminRole": "Administrator",
+    "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
+    "welcomeEnabled": "false"
+  }
 }

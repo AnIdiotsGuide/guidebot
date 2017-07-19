@@ -3,12 +3,12 @@ const Discord = require("discord.js");
 // We also load the rest of the things we need in this file:
 const { promisify } = require('util');
 const readdir = promisify(require("fs").readdir);
+const PersistentCollection = require("djs-collection-persistent");
 
 // This is your client. Some people call it `bot`, some people call it `self`, 
 // some might call it `cootchie`. Either way, when you see `client.something`, 
 // or `bot.something`, this is what we're refering to. Your client.
 const client = new Discord.Client();
-
 
 // Here we load the config.json file that contains our token and our prefix values. 
 client.config = require("./config.json");
@@ -24,10 +24,15 @@ require("./modules/functions.js")(client);
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
+// Now we integrate the use of Evie's awesome PersistentCollection module, which
+// essentially saves a collection to disk. This is great for per-server configs,
+// and makes things extremely easy for this purpose.
+client.settings = new PersistentCollection({name: "settings"});
+
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
 
-(async function() {
+const init = async () => {
 
   // Here we load **commands** into memory, as a collection, so they're accessible
   // here and everywhere else. 
@@ -57,9 +62,10 @@ client.aliases = new Discord.Collection();
     delete require.cache[require.resolve(`./events/${file}`)];
   });
 
-
   // Here we login the client.
   client.login(client.config.token);
 
 // End top-level async/await function.  
-}());
+};
+
+init();

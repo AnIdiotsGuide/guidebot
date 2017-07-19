@@ -5,11 +5,12 @@ exports.run = (client, message, params, level) => {
     const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
     let currentCategory = "";
     let output = `= Command List =\n\n[Use ${client.config.prefix}help <commandname> for details]\n`;
-    const sorted = myCommands.sort((p, c) => p.help.category > c.help.category);
-    sorted.forEach( c => { 
-      if(currentCategory !== c.help.category) {
-        output += `\n== ${c.help.category}\n`;
-        currentCategory = c.help.category;
+    const sorted = myCommands.sort((p, c) => p.help.category > c.help.category ? 1 : -1);
+    sorted.forEach( c => {
+      let cat = c.help.category.toProperCase();
+      if(currentCategory !== cat) {
+        output += `\n== ${cat} ==\n`;
+        currentCategory = cat;
       }
      output += `${client.config.prefix}${c.help.name}${' '.repeat(longest - c.help.name.length)} :: ${c.help.description}\n`;
     });
@@ -32,7 +33,7 @@ exports.conf = {
 
 exports.help = {
   name: 'help',
-  category: 'system',
+  category: 'System',
   description: 'Displays all the available commands for your permission level.',
   usage: 'help [command]'
 };

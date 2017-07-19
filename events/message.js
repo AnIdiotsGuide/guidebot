@@ -7,16 +7,23 @@ module.exports = (client, message) => {
   // and not get into a spam loop (we call that "botception").
   if(message.author.bot) return;
   
+  // Grab the settings for this server from the PersistentCollection
+  const settings = client.settings.get(message.guild.id);
+  
+  // For ease of use in commands and functions, we'll attach the settings
+  // to the message object, so `message.settings` is accessible.
+  message.settings = settings;
+  
   // Also good practice to ignore any message that does not start with our prefix, 
   // which is set in the configuration file.
-  if(message.content.indexOf(client.config.prefix) !== 0) return;
+  if(message.content.indexOf(settings.prefix) !== 0) return;
 
   // Here we separate our "command" name, and our "arguments" for the command. 
   // e.g. if we have the message "+say Is this the real life?" , we'll get the following:
   // command = say
   // args = ["Is", "this", "the", "real", "life?"]
   const args = message.content.split(/\s+/g);
-  const command = args.shift().slice(client.config.prefix.length).toLowerCase();
+  const command = args.shift().slice(settings.prefix.length).toLowerCase();
 
   // Get the user or member's permission level from the elevation
   let perms = client.permlevel(message);

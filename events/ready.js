@@ -6,5 +6,8 @@ module.exports = async client => {
   await wait(1000);
   
   // Both `wait` and `client.log` are in `./modules/functions`.
-  client.log("log", `Ready to spy on ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} servers.`, "Ready!");
+  client.log("log", `Ready to serve ${client.users.size} users in ${client.guilds.size} servers.`, "Ready!");
+  
+  // Ensure that any guild added while the bot was offline gets a default configuration.
+  client.guilds.forEach(guild => client.settings.set(guild.id, client.config.defaultSettings));
 };

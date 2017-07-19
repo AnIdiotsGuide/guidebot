@@ -33,7 +33,7 @@ exports.conf = {
 
 exports.help = {
   name: 'reload',
-  category: 'system',
+  category: 'System',
   description: 'Reloads a command that\'s been modified.',
   usage: 'reload [command]'
 };
