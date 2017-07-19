@@ -1,5 +1,5 @@
-exports.run = async (client, msg, args, perms) => {
-  msg.reply("Your permission level is: " + perms);
+exports.run = async (client, message, args, level) => {
+  message.reply(`Your permission level is: ${level}`);
 };
 
 exports.conf = {
@@ -10,8 +10,8 @@ exports.conf = {
 };
 
 exports.help = {
-  name: 'mylevel',
-  category: 'Miscelaneous',
-  description: 'Tells you your permission level for the current message location.',
-  usage: 'mylevel'
+  name: "mylevel",
+  category: "Miscelaneous",
+  description: "Tells you your permission level for the current message location.",
+  usage: "mylevel"
 };

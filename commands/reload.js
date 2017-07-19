@@ -1,5 +1,5 @@
-exports.run = async (client, msg, args) => {
-  if(!args || args.size < 1) return msg.reply(`Must provide a command to reload. Derp.`);
+exports.run = async (client, message, args, level) => {// eslint-disable-line no-unused-vars
+  if(!args || args.size < 1) return message.reply("Must provide a command to reload. Derp.");
 
   let command;
   if (client.commands.has(args[0])) {
@@ -7,11 +7,11 @@ exports.run = async (client, msg, args) => {
   } else if (client.aliases.has(args[0])) {
     command = client.commands.get(client.aliases.get(args[0]));
   }
-  if(!command) return msg.reply(`The command \`${args[0]}\` doesn't seem to exist, nor is it an alias. Try again!`);
+  if(!command) return message.reply(`The command \`${args[0]}\` doesn"t seem to exist, nor is it an alias. Try again!`);
   command = command.help.name;
 
   delete require.cache[require.resolve(`./${command}.js`)];
-  let cmd = require(`./${command}`);
+  const cmd = require(`./${command}`);
   client.commands.delete(command);
   client.aliases.forEach((cmd, alias) => {
     if (cmd === command) client.aliases.delete(alias);
@@ -21,7 +21,7 @@ exports.run = async (client, msg, args) => {
     client.aliases.set(alias, cmd.help.name);
   });
 
-  msg.reply(`The command \`${command}\` has been reloaded`);
+  message.reply(`The command \`${command}\` has been reloaded`);
 };
 
 exports.conf = {
@@ -32,8 +32,8 @@ exports.conf = {
 };
 
 exports.help = {
-  name: 'reload',
-  category: 'System',
-  description: 'Reloads a command that\'s been modified.',
-  usage: 'reload [command]'
+  name: "reload",
+  category: "System",
+  description: "Reloads a command that\"s been modified.",
+  usage: "reload [command]"
 };

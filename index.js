@@ -1,16 +1,16 @@
 // Load up the discord.js library
 const Discord = require("discord.js");
 // We also load the rest of the things we need in this file:
-const { promisify } = require('util');
+const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
 const PersistentCollection = require("djs-collection-persistent");
 
-// This is your client. Some people call it `bot`, some people call it `self`, 
-// some might call it `cootchie`. Either way, when you see `client.something`, 
+// This is your client. Some people call it `bot`, some people call it `self`,
+// some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're refering to. Your client.
 const client = new Discord.Client();
 
-// Here we load the config.json file that contains our token and our prefix values. 
+// Here we load the config.json file that contains our token and our prefix values.
 client.config = require("./config.json");
 // client.config.token contains the bot's token
 // client.config.prefix contains the message prefix
@@ -35,12 +35,12 @@ client.settings = new PersistentCollection({name: "settings"});
 const init = async () => {
 
   // Here we load **commands** into memory, as a collection, so they're accessible
-  // here and everywhere else. 
-  const cmdFiles = await readdir('./commands/');
+  // here and everywhere else.
+  const cmdFiles = await readdir("./commands/");
   client.log("log", `Loading a total of ${cmdFiles.length} commands.`);
   cmdFiles.forEach(f => {
     try {
-      let props = require(`./commands/${f}`);
+      const props = require(`./commands/${f}`);
       if(f.split(".").slice(-1)[0] !== "js") return;
       client.log("log", `Loading Command: ${props.help.name}. 👌`);
       client.commands.set(props.help.name, props);
@@ -53,7 +53,7 @@ const init = async () => {
   });
 
   // Then we load events, which will include our message and ready event.
-  const evtFiles = await readdir('./events/');
+  const evtFiles = await readdir("./events/");
   client.log("log", `Loading a total of ${evtFiles.length} events.`);
   evtFiles.forEach(file => {
     const eventName = file.split(".")[0];
@@ -66,7 +66,7 @@ const init = async () => {
   // Here we login the client.
   client.login(client.config.token);
 
-// End top-level async/await function.  
+// End top-level async/await function.
 };
 
 init();
