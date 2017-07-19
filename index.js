@@ -41,6 +41,7 @@ const init = async () => {
   cmdFiles.forEach(f => {
     try {
       let props = require(`./commands/${f}`);
+      if(f.split(".").slice(-1)[0] !== "js") return;
       client.log("log", `Loading Command: ${props.help.name}. 👌`);
       client.commands.set(props.help.name, props);
       props.conf.aliases.forEach(alias => {
