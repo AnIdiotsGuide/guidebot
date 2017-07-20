@@ -28,7 +28,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     
     // One the settings is modified, we write it back to the collection
     client.settings.set(message.guild.id, settings);
-    message.reply(`${key} successfully edited to ${value}`);
+    message.reply(`${key} successfully edited to ${value.join(" ")}`);
   } else
   if(action === "get") {
     if(!key) return message.reply("Please specify a key to view");
