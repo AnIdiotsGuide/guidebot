@@ -4,10 +4,12 @@ module.exports = async client => {
   // guild information will come in *after* ready. 1s is plenty, generally,
   // for lal of them to be loaded.
   await wait(1000);
-  
+
   // Both `wait` and `client.log` are in `./modules/functions`.
   client.log("log", `Ready to serve ${client.users.size} users in ${client.guilds.size} servers.`, "Ready!");
-  
-  // Ensure that any guild added while the bot was offline gets a default configuration.
-  client.guilds.forEach(guild => client.settings.set(guild.id, client.config.defaultSettings));
+
+  // We check for any guilds added while the bot was offline, if any were, they get a default configuration.
+  client.guilds.forEach(guild => {
+    if (client.settings.get(guild.id) === false) client.settings.set(guild.id, client.config.defaultSettings);
+  });
 };
