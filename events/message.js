@@ -7,6 +7,9 @@ module.exports = (client, message) => {
   // and not get into a spam loop (we call that "botception").
   if(message.author.bot) return;
 
+  // Make sure it's got a guild
+  if(!message.guild) return;
+  
   // Grab the settings for this server from the PersistentCollection
   const settings = client.settings.get(message.guild.id);
 
@@ -29,7 +32,7 @@ module.exports = (client, message) => {
   const level = client.permlevel(message);
 
   // Check whether the command, or alias, exist in the collections defined
-  // in app.js.
+  // in index.js.
   const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
   // using this const varName = thing OR otherthign; is a pretty efficient
   // and clean way to grab one of 2 values!
