@@ -22,8 +22,8 @@ module.exports = (client, message) => {
   // e.g. if we have the message "+say Is this the real life?" , we'll get the following:
   // command = say
   // args = ["Is", "this", "the", "real", "life?"]
-  const args = message.content.split(/ +/g);
-  const command = args.shift().slice(settings.prefix.length).toLowerCase();
+  const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+  const command = args.shift().toLowerCase();
 
   // Get the user or member's permission level from the elevation
   const level = client.permlevel(message);
