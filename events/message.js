@@ -22,7 +22,7 @@ module.exports = (client, message) => {
   // e.g. if we have the message "+say Is this the real life?" , we'll get the following:
   // command = say
   // args = ["Is", "this", "the", "real", "life?"]
-  const args = message.content.split(/\s+/g);
+  const args = message.content.split(/ +/g);
   const command = args.shift().slice(settings.prefix.length).toLowerCase();
 
   // Get the user or member's permission level from the elevation
