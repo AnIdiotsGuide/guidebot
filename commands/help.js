@@ -9,7 +9,7 @@ exports.run = (client, message, args, level) => {
     const sorted = myCommands.sort((p, c) => p.help.category > c.help.category ? 1 : -1);
     sorted.forEach( c => {
       const cat = c.help.category.toProperCase();
-      if(currentCategory !== cat) {
+      if (currentCategory !== cat) {
         output += `\n== ${cat} ==\n`;
         currentCategory = cat;
       }

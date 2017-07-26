@@ -1,5 +1,5 @@
 exports.run = async (client, message, args, level) => {// eslint-disable-line no-unused-vars
-  if(!args || args.size < 1) return message.reply("Must provide a command to reload. Derp.");
+  if (!args || args.size < 1) return message.reply("Must provide a command to reload. Derp.");
 
   let command;
   if (client.commands.has(args[0])) {
@@ -7,7 +7,7 @@ exports.run = async (client, message, args, level) => {// eslint-disable-line no
   } else if (client.aliases.has(args[0])) {
     command = client.commands.get(client.aliases.get(args[0]));
   }
-  if(!command) return message.reply(`The command \`${args[0]}\` doesn"t seem to exist, nor is it an alias. Try again!`);
+  if (!command) return message.reply(`The command \`${args[0]}\` doesn"t seem to exist, nor is it an alias. Try again!`);
   command = command.help.name;
 
   delete require.cache[require.resolve(`./${command}.js`)];

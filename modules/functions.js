@@ -13,10 +13,10 @@ module.exports = (client) => {
     let permlvl = 0;
 
     // If bot owner, return max perm level
-    if(message.author.id === client.config.ownerID) return 10;
+    if (message.author.id === client.config.ownerID) return 10;
 
     // If DMs or webhook, return 0 perm level.
-    if(!message.guild || !message.member) return 0;
+    if (!message.guild || !message.member) return 0;
 
     // The rest of the perms rely on roles. If those roles are not found
     // in the settings, or the user does not have it, their level will be 0
@@ -34,7 +34,7 @@ module.exports = (client) => {
     }
 
     // Guild Owner gets an extra level, wooh!
-    if(message.author.id === message.guild.owner.id) permlvl = 4;
+    if (message.author.id === message.guild.owner.id) permlvl = 4;
 
     return permlvl;
   };
@@ -46,7 +46,7 @@ module.exports = (client) => {
   Logs to console. Future patches may include time+colors
   */
   client.log = (type, msg, title) => {
-    if(!title) title = "Log";
+    if (!title) title = "Log";
     console.log(`[${type}] [${title}]${msg}`);
   };
 
@@ -69,7 +69,7 @@ module.exports = (client) => {
     try {
       const collected = await msg.channel.awaitMessages(filter, { max: 1, time: limit, errors: ["time"] });
       return collected.first().content;
-    } catch(e) {
+    } catch (e) {
       return false;
     }
   };
@@ -101,7 +101,7 @@ module.exports = (client) => {
   /* MISCELANEOUS NON-CRITICAL FUNCTIONS */
 
   String.prototype.toProperCase = function() {
-    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
   };
 
   // `await wait(1000);` to "pause" for 1 second.
@@ -113,7 +113,7 @@ module.exports = (client) => {
   // Because honestly for...i loops are ugly.
   global.range = (count, start = 0) => {
     const myArr = [];
-    for(var i = 0; i<count; i++) {
+    for (var i = 0; i<count; i++) {
       myArr[i] = i+start;
     }
     return myArr;
