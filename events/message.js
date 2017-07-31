@@ -36,6 +36,11 @@ module.exports = (client, message) => {
   const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
   // using this const varName = thing OR otherthign; is a pretty efficient
   // and clean way to grab one of 2 values!
+  
+  // Some commands may not be useable in DMs. This check prevents those commands from running
+  // and return a friendly error message. 
+  if (cmd && message.guild && cmd.conf.guildOnly)
+    return message.channel.send("This command is unavailable via private message. Please run this command in a guild.");
 
   // If the command exists, **AND** the user has permission, run it.
   if (cmd && level >= cmd.conf.permLevel) {
