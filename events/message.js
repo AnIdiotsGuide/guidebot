@@ -8,7 +8,10 @@ module.exports = (client, message) => {
   if (message.author.bot) return;
 
   // Grab the settings for this server from the PersistentCollection
-  const settings = client.settings.get(message.guild.id);
+  // If there is no guild, get default conf (DMs)
+  const settings = !!message.guild 
+    ? client.settings.get(message.guild.id) 
+    : client.config.defaultSettings;
 
   // For ease of use in commands and functions, we'll attach the settings
   // to the message object, so `message.settings` is accessible.
@@ -36,8 +39,7 @@ module.exports = (client, message) => {
 
   // If the command exists, **AND** the user has permission, run it.
   if (cmd && level >= cmd.conf.permLevel) {
-    client.log("log", `${message.guild.name}/#${message.channel.name}:
-      ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "CMD");
+    client.log("log", `${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "CMD");
     cmd.run(client, message, args, level);
   }
   // Best Practice: **do not** reply with a message if the command does
