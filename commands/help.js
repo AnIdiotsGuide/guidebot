@@ -5,7 +5,7 @@ exports.run = (client, message, args, level) => {
     const commandNames = myCommands.keyArray();
     const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
     let currentCategory = "";
-    let output = `= Command List =\n\n[Use ${client.config.prefix}help <commandname> for details]\n`;
+    let output = `= Command List =\n\n[Use ${settings.prefix}help <commandname> for details]\n`;
     const sorted = myCommands.sort((p, c) => p.help.category > c.help.category ? 1 : -1);
     sorted.forEach( c => {
       const cat = c.help.category.toProperCase();
