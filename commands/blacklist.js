@@ -77,10 +77,10 @@ exports.run = async (client, message, [action, key], level) => {
 
     // Make a custom promise that maps everyone in the blacklist then fetches their user
     // details for the command.
-    const fetch = () => Promise.all(blacklist.map(r => client.fetchUser(r).then(u => u.tag)));
+    const fetch = Promise.all(blacklist.map(r => client.fetchUser(r).then(u => u.tag)));
 
     // After we've `fetch`ed the users from the blacklist, join and send them to the channel.
-    fetch().then(r => message.channel.send(`**❯ Blacklisted:**\n${r.join("\n")}`));
+    fetch.then(r => message.channel.send(`**❯ Blacklisted:**\n${r.join("\n")}`));
   }
 
 };
