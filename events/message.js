@@ -9,8 +9,8 @@ module.exports = (client, message) => {
 
   // Grab the settings for this server from the PersistentCollection
   // If there is no guild, get default conf (DMs)
-  const settings = !!message.guild 
-    ? client.settings.get(message.guild.id) 
+  const settings = message.guild 
+    ? client.settings.get(message.guild.id)
     : client.config.defaultSettings;
 
   // For ease of use in commands and functions, we'll attach the settings
@@ -36,9 +36,9 @@ module.exports = (client, message) => {
   const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
   // using this const varName = thing OR otherthign; is a pretty efficient
   // and clean way to grab one of 2 values!
-  
+
   // Some commands may not be useable in DMs. This check prevents those commands from running
-  // and return a friendly error message. 
+  // and return a friendly error message.
   if (cmd && !message.guild && cmd.conf.guildOnly)
     return message.channel.send("This command is unavailable via private message. Please run this command in a guild.");
 
