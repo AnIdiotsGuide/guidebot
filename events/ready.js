@@ -10,4 +10,8 @@ module.exports = async client => {
 
   // We check for any guilds added while the bot was offline, if any were, they get a default configuration.
   client.guilds.filter(g => !client.settings.has(g.id)).forEach(g => client.settings.set(g.id, client.config.defaultSettings));
+
+  // Behaves exactly like the code above, checks for new guilds, if any are found, adds an empty array.
+  client.guilds.filter(g => !client.blacklist.has(g.id)).forEach(g => client.blacklist.set(g.id, []));
+
 };

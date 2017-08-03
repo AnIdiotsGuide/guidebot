@@ -104,6 +104,17 @@ module.exports = (client) => {
     return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
   };
 
+  Array.prototype.remove = function() {
+    var value, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+      value = a[--L];
+      while ((ax = this.indexOf(value)) !== -1) {
+        this.splice(ax, 1);
+      }
+    }
+    return this;
+  };
+
   // `await wait(1000);` to "pause" for 1 second.
   global.wait = require("util").promisify(setTimeout);
 

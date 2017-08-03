@@ -20,7 +20,10 @@ exports.run = (client, message, args, level) => {
     let command = args[0];
     if (client.commands.has(command)) {
       command = client.commands.get(command);
-      message.channel.send(`= ${command.help.name} = \n${command.help.description}\nusage::${command.help.usage}`, {code:"asciidoc"});
+      // If the message author does `help eval`, and they're not the author
+      // the bot will ignore them.
+      if (level < command.conf.permLevel) return;
+      message.channel.send(`= ${command.help.name} = \n${command.help.description}\nusage:: ${command.help.usage}\nalises:: ${command.conf.aliases.join(", ")}`, {code:"asciidoc"});
     }
   }
 };

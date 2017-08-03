@@ -29,6 +29,10 @@ client.aliases = new Discord.Collection();
 // and makes things extremely easy for this purpose.
 client.settings = new PersistentCollection({name: "settings"});
 
+// We need to create a persistent blacklist collection if we want our bot to
+// remember which users were blacklisted on which guild.
+client.blacklist = new PersistentCollection({name: "blacklist"});
+
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
 
