@@ -18,7 +18,7 @@
     ],
     "linebreak-style": [
       "error",
-      "windows"
+      "unix"
     ],
     "quotes": [
       "warn",
@@ -36,7 +36,7 @@
     ],
     "space-before-blocks": [
       "error", {
-        "functions": "always",
+        "functions":"always",
         "keywords": "always",
         "classes": "always"
       }
