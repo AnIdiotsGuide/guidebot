@@ -104,20 +104,8 @@ module.exports = (client) => {
     return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
   };
 
-  // `await wait(1000);` to "pause" for 1 second.
-  global.wait = require("util").promisify(setTimeout);
-
-
-  // Another semi-useful utility command, which creates a "range" of numbers
-  // in an array. `range(10).forEach()` loops 10 times for instance. Why?
-  // Because honestly for...i loops are ugly.
-  global.range = (count, start = 0) => {
-    const myArr = [];
-    for (var i = 0; i<count; i++) {
-      myArr[i] = i+start;
-    }
-    return myArr;
-  };
+  // `await client.wait(1000);` to "pause" for 1 second.
+  client.wait = require("util").promisify(setTimeout);
 
   // These 2 simply handle unhandled things. Like Magic. /shrug
   process.on("uncaughtException", (err) => {
