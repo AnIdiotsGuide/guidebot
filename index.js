@@ -39,20 +39,34 @@ client.settings = new PersistentCollection({name: "settings"});
 
 const init = async () => {
 
-  // Here we load **commands** into memory, as a collection, so they're accessible
-  // here and everywhere else.
-  const cmdFiles = await readdir("./commands/");
-  client.log("log", `Loading a total of ${cmdFiles.length} commands.`);
-  cmdFiles.forEach(f => {
+  /*
+  Here we load **commands** into memory, as a collection,
+  so they're accessible here and everywhere else.
+  Useing the pathwalker function out of functions.js.
+  */  
+  const cmdFiles = await client.pathwalker("./commands/");
+  client.log("log", `Loading a total of ${cmdFiles[1].length} commands out of ${cmdFiles[0].length} folders.`);
+  // for each CMD
+  cmdFiles[1].forEach(f => {
     try {
-      const props = require(`./commands/${f}`);
+      // try each Path
+      cmdFiles[0].forEach(d =>{
+        try {
+          client.props = require(`./commands/${d}/${f}`);
+        } catch (e) {
+          // else try another dir
+          return;
+        }
+      });
+      // after good match do some more
       if (f.split(".").slice(-1)[0] !== "js") return;
-      client.log("log", `Loading Command: ${props.help.name}. 👌`);
-      client.commands.set(props.help.name, props);
+      client.log("log", `Loading Command: ${client.props.help.name}. 👌`);
+      client.commands.set(client.props.help.name, client.props);
       props.conf.aliases.forEach(alias => {
-        client.aliases.set(alias, props.help.name);
+        client.aliases.set(alias, client.props.help.name);
       });
     } catch (e) {
+      // else match err
       client.log(`Unable to load command ${f}: ${e}`);
     }
   });
