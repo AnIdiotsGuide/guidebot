@@ -1,3 +1,4 @@
+const fs = require("fs");
 module.exports = (client) => {
 
   /*
@@ -6,10 +7,10 @@ module.exports = (client) => {
   Basic recursive directory search.
   Returns two dimensional Array [0] all subdirs [1] all filenames.
   */
-   client.pathwalker = (dir, allDir = [], allFiles = []) => {
+  client.pathwalker = (dir, allDir = [], allFiles = []) => {
     const files = fs.readdirSync(dir);
     files.forEach(f => {
-      if(fs.statSync(dir + f).isDirectory()) {
+      if (fs.statSync(dir + f).isDirectory()) {
         allDir.push(f);
         client.pathwalker(dir + f + "/", allDir, allFiles);
       } else allFiles.push(f);
