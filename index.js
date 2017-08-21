@@ -7,7 +7,8 @@ if (process.version.slice(1).split(".")[0] < 8) throw new Error("Node 8.0.0 or h
 const Discord = require("discord.js");
 // We also load the rest of the things we need in this file:
 const { promisify } = require("util");
-const readdir = promisify(require("fs").readdir);
+const fs = require("fs");
+const readdir = promisify(fs.readdir);
 const PersistentCollection = require("djs-collection-persistent");
 
 // This is your client. Some people call it `bot`, some people call it `self`,
@@ -44,26 +45,29 @@ const init = async () => {
   so they're accessible here and everywhere else.
   Useing the pathwalker function out of functions.js.
   */
-  const cmdFiles = await client.pathwalker("./commands/");
-  client.log("log", `Loading a total of ${cmdFiles[1].length} commands out of ${cmdFiles[0].length} folders.`);
+
+  function pathwalker(dir, allFiles = []) {
+    const files = fs.readdirSync(dir);
+    files.forEach(f => {
+      if (fs.statSync(dir + f).isDirectory()) {
+        pathwalker(dir + f + "/", allFiles);
+      } else allFiles.push(dir + f);
+    });
+    return (allFiles);
+  }
+
+  const cmdFiles = await pathwalker("./commands/");
+  client.log("log", `Loading a total of ${cmdFiles.length} commands.`);
   // for each CMD
-  cmdFiles[1].forEach(f => {
+  cmdFiles.forEach(f => {
     try {
-      // try each Path
-      cmdFiles[0].forEach(d =>{
-        try {
-          client.props = require(`./commands/${d}/${f}`);
-        } catch (e) {
-          // else try another dir
-          return;
-        }
-      });
+      const props = require(`./${f}`);
       // after good match do some more
       if (f.split(".").slice(-1)[0] !== "js") return;
-      client.log("log", `Loading Command: ${client.props.help.name}. 👌`);
-      client.commands.set(client.props.help.name, client.props);
-      client.props.conf.aliases.forEach(alias => {
-        client.aliases.set(alias, client.props.help.name);
+      client.log("log", `Loading Command: ${props.help.name}. 👌`);
+      client.commands.set(props.help.name, props);
+      props.conf.aliases.forEach(alias => {
+        client.aliases.set(alias, props.help.name);
       });
     } catch (e) {
       // else match err

@@ -3,19 +3,18 @@ module.exports = (client) => {
 
   /*
   FILE GRABBER FUNCTION
-  
+
   Basic recursive directory search.
   Returns two dimensional Array [0] all subdirs [1] all filenames.
   */
-  client.pathwalker = (dir, allDir = [], allFiles = []) => {
+  client.pathwalker = (dir, allFiles = []) => {
     const files = fs.readdirSync(dir);
     files.forEach(f => {
       if (fs.statSync(dir + f).isDirectory()) {
-        allDir.push(f);
-        client.pathwalker(dir + f + "/", allDir, allFiles);
-      } else allFiles.push(f);
+        client.pathwalker(dir + f + "/", allFiles);
+      } else allFiles.push(dir + f);
     });
-    return [allDir, allFiles];
+    return (allFiles);
   };
 
   /*
