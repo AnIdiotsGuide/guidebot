@@ -7,7 +7,8 @@ if (process.version.slice(1).split(".")[0] < 8) throw new Error("Node 8.0.0 or h
 const Discord = require("discord.js");
 // We also load the rest of the things we need in this file:
 const { promisify } = require("util");
-const readdir = promisify(require("fs").readdir);
+const fs = require("fs");
+const readdir = promisify(fs.readdir);
 const PersistentCollection = require("djs-collection-persistent");
 
 // This is your client. Some people call it `bot`, some people call it `self`,
@@ -39,13 +40,29 @@ client.settings = new PersistentCollection({name: "settings"});
 
 const init = async () => {
 
-  // Here we load **commands** into memory, as a collection, so they're accessible
-  // here and everywhere else.
-  const cmdFiles = await readdir("./commands/");
+  /*
+  Here we load **commands** into memory, as a collection,
+  so they're accessible here and everywhere else.
+  Useing the pathwalker function out of functions.js.
+  */
+
+  function pathwalker(dir, allFiles = []) {
+    const files = fs.readdirSync(dir);
+    files.forEach(f => {
+      if (fs.statSync(dir + f).isDirectory()) {
+        pathwalker(dir + f + "/", allFiles);
+      } else allFiles.push(dir + f);
+    });
+    return (allFiles);
+  }
+
+  const cmdFiles = await pathwalker("./commands/");
   client.log("log", `Loading a total of ${cmdFiles.length} commands.`);
+  // for each CMD
   cmdFiles.forEach(f => {
     try {
-      const props = require(`./commands/${f}`);
+      const props = require(`./${f}`);
+      // after good match do some more
       if (f.split(".").slice(-1)[0] !== "js") return;
       client.log("log", `Loading Command: ${props.help.name}. 👌`);
       client.commands.set(props.help.name, props);
@@ -53,6 +70,7 @@ const init = async () => {
         client.aliases.set(alias, props.help.name);
       });
     } catch (e) {
+      // else match err
       client.log(`Unable to load command ${f}: ${e}`);
     }
   });
