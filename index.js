@@ -62,7 +62,7 @@ const init = async () => {
       if (f.split(".").slice(-1)[0] !== "js") return;
       client.log("log", `Loading Command: ${client.props.help.name}. 👌`);
       client.commands.set(client.props.help.name, client.props);
-      props.conf.aliases.forEach(alias => {
+      client.props.conf.aliases.forEach(alias => {
         client.aliases.set(alias, client.props.help.name);
       });
     } catch (e) {
