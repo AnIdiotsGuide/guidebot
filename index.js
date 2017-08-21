@@ -43,7 +43,7 @@ const init = async () => {
   Here we load **commands** into memory, as a collection,
   so they're accessible here and everywhere else.
   Useing the pathwalker function out of functions.js.
-  */  
+  */
   const cmdFiles = await client.pathwalker("./commands/");
   client.log("log", `Loading a total of ${cmdFiles[1].length} commands out of ${cmdFiles[0].length} folders.`);
   // for each CMD
@@ -62,7 +62,7 @@ const init = async () => {
       if (f.split(".").slice(-1)[0] !== "js") return;
       client.log("log", `Loading Command: ${client.props.help.name}. 👌`);
       client.commands.set(client.props.help.name, client.props);
-      props.conf.aliases.forEach(alias => {
+      client.props.conf.aliases.forEach(alias => {
         client.aliases.set(alias, client.props.help.name);
       });
     } catch (e) {
