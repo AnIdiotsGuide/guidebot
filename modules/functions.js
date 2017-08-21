@@ -1,21 +1,4 @@
-const fs = require("fs");
 module.exports = (client) => {
-
-  /*
-  FILE GRABBER FUNCTION
-
-  Basic recursive directory search.
-  Returns two dimensional Array [0] all subdirs [1] all filenames.
-  */
-  client.pathwalker = (dir, allFiles = []) => {
-    const files = fs.readdirSync(dir);
-    files.forEach(f => {
-      if (fs.statSync(dir + f).isDirectory()) {
-        client.pathwalker(dir + f + "/", allFiles);
-      } else allFiles.push(dir + f);
-    });
-    return (allFiles);
-  };
 
   /*
   PERMISSION LEVEL FUNCTION
