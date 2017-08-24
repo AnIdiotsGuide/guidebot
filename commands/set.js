@@ -21,7 +21,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
   if (action === "edit") {
     if (!key) return message.reply("Please specify a key to edit");
     if (!settings[key]) return message.reply("This key does not exist in the settings");
-    if (!value) return message.reply("Please specify a new value");
+    if (value.size < 1) return message.reply("Please specify a new value");
 
     // `value` being an array, we need to join it first.
     settings[key] = value.join(" ");
