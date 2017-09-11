@@ -17,7 +17,6 @@ const client = new Discord.Client();
 
 // Here we load the config file that contains our token and our prefix values.
 client.config = require("./config.js");
-console.log(client.config.permLevels.map(p=>`${p.level} : ${p.name}`));
 // client.config.token contains the bot's token
 // client.config.prefix contains the message prefix
 
