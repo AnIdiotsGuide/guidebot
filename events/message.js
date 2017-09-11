@@ -45,8 +45,8 @@ module.exports = (client, message) => {
 
   if (level < client.levelCache[cmd.conf.permLevel])
     return message.channel.send(`You do not have permission to use this command.
-  Your permission level is ${level} (${client.config.permLevels.find(l => l.level === level).name})
-  This command requires level ${client.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
+Your permission level is ${level} (${client.config.permLevels.find(l => l.level === level).name})
+This command requires level ${client.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
 
   // If the command exists, **AND** the user has permission, run it.
   client.log("log", `${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "CMD");
