@@ -1,5 +1,6 @@
 exports.run = async (client, message, args, level) => {
-  message.reply(`Your permission level is: ${level}`);
+  const friendly = client.config.permLevels.find(l => l.level === level).name;
+  message.reply(`Your permission level is: ${level} - ${friendly}`);
 };
 
 exports.conf = {

@@ -36,17 +36,19 @@ module.exports = (client, message) => {
   const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
   // using this const varName = thing OR otherthign; is a pretty efficient
   // and clean way to grab one of 2 values!
+  if (!cmd) return;
 
   // Some commands may not be useable in DMs. This check prevents those commands from running
   // and return a friendly error message.
   if (cmd && !message.guild && cmd.conf.guildOnly)
     return message.channel.send("This command is unavailable via private message. Please run this command in a guild.");
 
+  if (level < client.levelCache[cmd.conf.permLevel])
+    return message.channel.send(`You do not have permission to use this command.
+  Your permission level is ${level} (${client.config.permLevels.find(l => l.level === level).name})
+  This command requires level ${client.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
+
   // If the command exists, **AND** the user has permission, run it.
-  if (cmd && level >= client.levelCache[cmd.conf.permLevel]) {
-    client.log("log", `${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "CMD");
-    cmd.run(client, message, args, level);
-  }
-  // Best Practice: **do not** reply with a message if the command does
-  // not exist, or permissions lack.
+  client.log("log", `${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "CMD");
+  cmd.run(client, message, args, level);
 };
