@@ -43,8 +43,8 @@ module.exports = (client, message) => {
     return message.channel.send("This command is unavailable via private message. Please run this command in a guild.");
 
   // If the command exists, **AND** the user has permission, run it.
-  if (cmd && level >= cmd.conf.permLevel) {
-    client.log("log", `${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "CMD");
+  if (cmd && level >= client.levelCache[cmd.conf.permLevel]) {
+    client.log("log", `${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "CMD");
     cmd.run(client, message, args, level);
   }
   // Best Practice: **do not** reply with a message if the command does
