@@ -8,7 +8,7 @@ const Discord = require("discord.js");
 // We also load the rest of the things we need in this file:
 const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
-const PersistentCollection = require("djs-collection-persistent");
+const Enmap = require("enmap");
 
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
@@ -26,13 +26,13 @@ require("./modules/functions.js")(client);
 
 // Aliases and commands are put in collections where they can be read from,
 // catalogued, listed, etc.
-client.commands = new Discord.Collection();
-client.aliases = new Discord.Collection();
+client.commands = new Enmap();
+client.aliases = new Enmap();
 
-// Now we integrate the use of Evie's awesome PersistentCollection module, which
+// Now we integrate the use of Evie's awesome Enhanced Map module, which
 // essentially saves a collection to disk. This is great for per-server configs,
 // and makes things extremely easy for this purpose.
-client.settings = new PersistentCollection({name: "settings"});
+client.settings = new Enmap({name: "settings", persistent: true});
 
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.

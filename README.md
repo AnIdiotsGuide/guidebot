@@ -10,7 +10,7 @@ of our newbies. So I've pulled the original Guide Bot out of the mothballs,
 gave it a fresh coat of paint and grease, and here it is back in its full glory!
 
 This command handler is 98% compatible with [my selfbot](https://github.com/eslachance/evie.selfbot) 
-and 99% compatible with commands from [York's TutorialBot](https://github.com/AnIdiotsGuide/Tutorial-Bot/tree/Episode-9).
+and 99% compatible with commands from [York's Tutorial Bot](https://github.com/AnIdiotsGuide/Tutorial-Bot/tree/Episode-10-Part-1).
 
 ## Requirements
 
@@ -33,8 +33,22 @@ Once finished:
 - Rename `config.json.example` to `config.json`
 - Edit `config.json` and enter your token and other details as indicated. It should look like this afterwards: 
 
-![](http://proof.evie-banned.me/WhaRsa6)
-
+```json
+{
+  "ownerID": "139412744439988224",
+  "token": "MzUzOTUxODYwOTA3OTY2NDY0.DI3K3w.VN1Gvsl7CSh2IYIELJDJAFejH4w",
+  "defaultSettings" : {
+    "prefix": "-",
+    "modLogChannel": "mod-log",
+    "modRole": "Moderator",
+    "adminRole": "Administrator",
+    "welcomeEnabled": "false",
+    "welcomeChannel": "welcome",
+    "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D"
+  }
+}
+```
+> The token in the above example belongs to a deleted bot.
 
 ## Starting the bot
 
@@ -46,4 +60,4 @@ To start the bot, in the command prompt, run the following command:
 To add the bot to your guild, you have to get an oauth link for it. 
 
 You can use this site to help you generate a full OAuth Link, which includes a calculator for the permissions:
-[https://finitereality.github.io/permissions](https://finitereality.github.io/permissions)
+[https://finitereality.github.io/permissions-calculator/?v=0](https://finitereality.github.io/permissions-calculator/?v=0)
