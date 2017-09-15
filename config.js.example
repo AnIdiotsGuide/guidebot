@@ -56,6 +56,22 @@ module.exports = {
       check: (message) => message.guild.owner.user.id === message.author.id
     },
 
+    /*
+    Bot Support, for example, has the equivalent of server owner access to any server
+    it joins, in order to help troubleshoot the bot on behalf of owners.
+    */
+    { level: 8,
+      name: "Bot Support",
+      check: () => ["supportID1", "supportID2", "supportID3"].includes(message.author.id);
+    },
+
+    // Bot Admin has some limited access like rebooting the bot or reloading commands.
+
+    { level: 9,
+      name: "Bot Admin",
+      check: () => ["adminID1", "adminID3"].includes(message.author.id);
+    },
+
       // This is the bot owner, this should be the highest permission level available.
       // The reason this should be the highest level is because of dangerous commands such as eval
       // or exec (if the owner has that).
