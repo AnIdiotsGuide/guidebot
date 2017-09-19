@@ -20,6 +20,8 @@
     "discord.js": "^11.2.1",
     "enmap": "0.0.4",
     "moment": "^2.18.1",
-    "moment-duration-format": "^1.3.0"
+    "moment-duration-format": "^1.3.0",
+    "native-level-promise": "0.0.3",
+    "snekfetch": "^3.3.0"
   }
 }
