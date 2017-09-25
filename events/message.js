@@ -43,13 +43,16 @@ module.exports = (client, message) => {
   if (cmd && !message.guild && cmd.conf.guildOnly)
     return message.channel.send("This command is unavailable via private message. Please run this command in a guild.");
 
-  if (message.channel.type !== "text" || client.settings.get(message.guild.id).systemNotice === "true") {
-    if (level < client.levelCache[cmd.conf.permLevel])
+  if (level < client.levelCache[cmd.conf.permLevel]) {
+    if (settings.systemNotice === "true") {
       return message.channel.send(`You do not have permission to use this command.
-Your permission level is ${level} (${client.config.permLevels.find(l => l.level === level).name})
-This command requires level ${client.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
+  Your permission level is ${level} (${client.config.permLevels.find(l => l.level === level).name})
+  This command requires level ${client.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
+    } else {
+      return;
+    }
   }
-  // If the command exists, **AND** the user has permission, run it.
+    // If the command exists, **AND** the user has permission, run it.
   client.log("log", `${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "CMD");
   cmd.run(client, message, args, level);
 };
