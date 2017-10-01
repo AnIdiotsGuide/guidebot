@@ -10,6 +10,10 @@ exports.run = async (client, message, args, level) => {// eslint-disable-line no
   if (!command) return message.reply(`The command \`${args[0]}\` doesn"t seem to exist, nor is it an alias. Try again!`);
   command = command.help.name;
 
+  if (command.shutdown) {
+    await command.shutdown(client);
+  }
+
   delete require.cache[require.resolve(`./${command}.js`)];
   const cmd = require(`./${command}`);
   client.commands.delete(command);
@@ -17,6 +21,9 @@ exports.run = async (client, message, args, level) => {// eslint-disable-line no
     if (cmd === command) client.aliases.delete(alias);
   });
   client.commands.set(command, cmd);
+  if (cmd.init) {
+    cmd.init(client);
+  }
   cmd.conf.aliases.forEach(alias => {
     client.aliases.set(alias, cmd.help.name);
   });
