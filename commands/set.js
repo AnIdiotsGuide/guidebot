@@ -27,7 +27,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     settings[key] = value.join(" ");
   
     // One the settings is modified, we write it back to the collection
-    this.client.settings.set(message.guild.id, settings);
+    client.settings.set(message.guild.id, settings);
     message.reply(`${key} successfully added with the value of ${value.join(" ")}`);
   } else
   
@@ -39,7 +39,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
   
     settings[key] = value.join(" ");
 
-    this.client.settings.set(message.guild.id, settings);
+    client.settings.set(message.guild.id, settings);
     message.reply(`${key} successfully edited to ${value.join(" ")}`);
   } else
   
@@ -49,14 +49,14 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     if (!settings[key]) return message.reply("This key does not exist in the settings");
     
     // Throw the 'are you sure?' text at them.
-    const response = await this.client.awaitReply(message, `Are you sure you want to permanently delete ${key}? This **CANNOT** be undone.`);
+    const response = await client.awaitReply(message, `Are you sure you want to permanently delete ${key}? This **CANNOT** be undone.`);
 
     // If they respond with y or yes, continue.
     if (["y", "yes"].includes(response)) {
 
       // We delete the `key` here.
       delete settings[key];
-      this.client.settings.set(message.guild.id, settings);
+      client.settings.set(message.guild.id, settings);
       message.reply(`${key} was successfully deleted.`);
     } else
     // If they respond with n or no, we inform them that the action has been cancelled.
