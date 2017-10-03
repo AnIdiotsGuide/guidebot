@@ -12,6 +12,10 @@ const config = {
   "token": "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0",
 
   // Default per-server settings. New guilds have these settings. 
+
+  // DO NOT LEAVE ANY OF THESE BLANK, AS YOU WILL NOT BE ABLE TO UPDATE THEM
+  // VIA COMMANDS IN THE GUILD.
+  
   "defaultSettings" : {
     "prefix": "-",
     "modLogChannel": "mod-log",
