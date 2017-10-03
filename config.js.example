@@ -12,9 +12,12 @@ const config = {
   "token": "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0",
 
   "dashboard" : {
-    "oauthSecret": "enter oauth secret here",
+    "clientID": "1234567891234156",
+    "oauthSecret": "your oauth secret from the app page",
     "callbackURL": "http://localhost:8080/callback",
-    "sessionSecret": "pushingupthedaysies"
+    "sessionSecret": "enterasecrethere",
+    "domain": "localhost",
+    "port": 8080
   },
 
   // Default per-server settings. New guilds have these settings. 
