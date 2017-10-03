@@ -1,0 +1,35 @@
+<%- include('blocks/header', {bot:bot, user: user, auth: auth}) %>
+<h1 class="display-3">Dashboard</h1>
+<ul class="list-unstyled">
+<% user.guilds.forEach(guild => { 
+  const permsOnGuild = new perms(guild.permissions);
+  if(!permsOnGuild.has("MANAGE_GUILD")) return;
+%>
+<li class="media" style="padding: 10px;">
+    <% if (guild.icon) { %>
+      <img class="d-flex mr-3 rounded-circle" src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.jpg?size=128" style="width: 75px;" alt="">
+    <% } else { %>
+      <img class="d-flex mr-3 rounded-circle" src="/public/NoServerIcon.png" style="width: 75px;" alt="">
+    <% } %>
+    <div class="media-body">
+      <h5 class="mt-0 mb-1"><%= guild.name %></h5>
+      <% 
+      let href, text;
+      if(bot.guilds.get(guild.id)) {
+        href = "/manage/" + guild.id;
+        text = "Manage";
+      } else {
+        href = `https://discordapp.com/oauth2/authorize?client_id=${bot.config.dashboard.clientID}&scope=bot&guild_id=${guild.id}`;
+        text = "Invite Bot";
+      }
+      %> 
+      <a class="btn btn-primary btn-lg" role="button" href="<%= href %>">
+          <%= text %>
+          <i class="right chevron icon"></i>
+        </a>
+    </div>
+  </li>
+<% }); %>
+</ul>
+
+<% include ./blocks/footer %>

@@ -11,6 +11,12 @@ const config = {
   // Your Bot's Token. Available on https://discordapp.com/developers/applications/me
   "token": "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0",
 
+  "dashboard" : {
+    "oauthSecret": "enter oauth secret here",
+    "callbackURL": "http://localhost:8080/callback",
+    "sessionSecret": "pushingupthedaysies"
+  },
+
   // Default per-server settings. New guilds have these settings. 
   "defaultSettings" : {
     "prefix": "-",

@@ -1,0 +1,33 @@
+<%- include('blocks/header', {bot:bot, user: user, auth: auth}) %>
+<div class="jumbotron">
+    <div class="col-sm-8 mx-auto">
+      <h1><%= guild.name %></h1>
+      <div class="row">
+        <div class="col">
+          <i class="fa fa-user" aria-hidden="true"></i> <%= `${guild.memberCount}` %> Members
+          ( <i class="fa fa-android" aria-hidden="true"></i> <%= `${guild.members.filter(m=>m.user.bot).size}` %> Bots )
+        </div>
+        <div class="col">
+          <i class="fa fa-users" aria-hidden="true"></i> <%= `${guild.roles.size} Roles` %>
+        </div>
+        <div class="col">
+          Channels : <i class="fa fa-hashtag" aria-hidden="true"></i> <%= `${guild.channels.filter(c=>c.type==='text').size}`%> 
+          <i class="fa fa-microphone" aria-hidden="true"></i> <%= `${guild.channels.filter(c=>c.type==='voice').size}`%> 
+        </div>
+      </div>
+    </div>
+  </div>
+
+<h1 class="display-4">Settings</h1>
+
+<form method="post">
+  <% const settings = bot.settings.get(guild.id); %>
+  <% for (const key in settings) { %>
+  <div class="form-group">
+    <label for="<%= key %>"><%= key %></label>
+    <input type="text" class="form-control" id="<%= key %>" name="<%= key %>" placeholder="Enter <%= key %>" value="<%= settings[key] %>">
+  </div>
+  <% } %>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<% include ./blocks/footer %>

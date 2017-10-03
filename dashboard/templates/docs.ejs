@@ -1,0 +1,31 @@
+<%- include('blocks/header', {bot:bot, user: user, auth: auth}) %>
+
+<% 
+const help = {};
+
+bot.commands.forEach((command) => {
+  const cat = command.help.category;
+  if (!help.hasOwnProperty(cat)) help[cat] = [];
+  help[cat].push(command);
+});
+%>
+
+
+<h1 class="display-3">Documentation</h1>
+
+<% for (const category in help) { %>
+<h1 class="display-5"><%= category %></h1>
+<div class="card-columns">
+    <% for (const command of help[category]) { %>
+      <div class="card">
+        <h4 class="card-header"><%= command.help.name %></h4>
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 text-muted">Permission: <%= command.conf.permLevel %></h6>
+          <p class="card-text"><%= command.help.description %></p>
+        </div>
+      </div>
+    <% } %>
+</div>
+<% } %>
+
+<% include ./blocks/footer %>
