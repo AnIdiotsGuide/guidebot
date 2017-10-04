@@ -24,7 +24,7 @@
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="/commands">Commands</a></li>
-          <li class="nav-item"><a class="nav-link" href="https://discordapp.com/oauth2/authorize?client_id=<%= bot.config.dashboard.clientID %>&scope=bot">Add to Server</a></li>
+          <li class="nav-item"><a class="nav-link<% if(!bot.appInfo.botPublic) { %> disabled<% } %>" href="https://discordapp.com/oauth2/authorize?client_id=<%= bot.appInfo.id %>&scope=bot">Add to Server</a></li>
           <li class="nav-item"><a class="nav-link disabled">On <%= bot.guilds.size %>  Servers</a></li>
         </ul>
         <ul class="navbar-nav">

@@ -15,18 +15,21 @@
       <h5 class="mt-0 mb-1"><%= guild.name %></h5>
       <% 
       let href, text;
+      let enabled;
       if(bot.guilds.get(guild.id)) {
         href = "/manage/" + guild.id;
         text = "Manage";
+        enabled = true;
       } else {
-        href = `https://discordapp.com/oauth2/authorize?client_id=${bot.config.dashboard.clientID}&scope=bot&guild_id=${guild.id}`;
+        href = `https://discordapp.com/oauth2/authorize?client_id=${bot.appInfo.id}&scope=bot&guild_id=${guild.id}`;
         text = "Invite Bot";
+        enabled = bot.appInfo.botPublic;
       }
       %> 
-      <a class="btn btn-primary btn-lg" role="button" href="<%= href %>">
-          <%= text %>
-          <i class="right chevron icon"></i>
-        </a>
+      <a class="btn btn-primary btn-lg<% if(!enabled) { %> disabled<% } %>" role="button" href="<%= href %>">
+        <%= text %>
+        <i class="right chevron icon"></i>
+      </a>
     </div>
   </li>
 <% }); %>
