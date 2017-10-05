@@ -29,26 +29,9 @@ In a command prompt in your projects folder (wherever that may be) run the follo
 
 Once finished: 
 
-- In the folder from where you ran the git command, run `cd discordjs-bot-handler` and then run `npm install`
-- Rename `config.json.example` to `config.json`
-- Edit `config.json` and enter your token and other details as indicated. It should look like this afterwards: 
-
-```json
-{
-  "ownerID": "139412744439988224",
-  "token": "MzUzOTUxODYwOTA3OTY2NDY0.DI3K3w.VN1Gvsl7CSh2IYIELJDJAFejH4w",
-  "defaultSettings" : {
-    "prefix": "-",
-    "modLogChannel": "mod-log",
-    "modRole": "Moderator",
-    "adminRole": "Administrator",
-    "welcomeEnabled": "false",
-    "welcomeChannel": "welcome",
-    "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D"
-  }
-}
-```
-> The token in the above example belongs to a deleted bot.
+- In the folder from where you ran the git command, run `cd guidebot` and then run `npm install`
+- Rename or copy `config.js.example` to `config.js`
+- Edit `config.js` and fill in all the relevant details as indicated in the file's comments.
 
 ## Starting the bot
 
