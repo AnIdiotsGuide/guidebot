@@ -1,0 +1,41 @@
+<%- include('blocks/header', {bot: bot, user: user, auth: auth, stats: stats}) %>
+  <div class="container">
+    <div class="jumbotron">
+      <center><h3>Live Statistics.</h3></center>
+      <div class="container">
+        <p style="text-align:center">I am aware this looks shite on mobile, first time using Bootstraps Grid system...</p>
+        <div class="row justify-content-md-center">
+          <div class="col-2"><i class="fa fa-fw fa-server" aria-hidden="true"></i> Servers:</div>
+          <div class="col-3"><strong><%= stats.servers %></strong></div>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="col-2"><i class="fa fa-fw fa-clock-o" aria-hidden="true"></i> Uptime:</div>
+          <div class="col-3"><strong><%= stats.uptime %></strong></div>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="col-2"><i class="fa fa-fw fa-users" aria-hidden="true"></i> Members:</div>
+          <div class="col-3"><strong><%= stats.members %></strong></div>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="col-2"><i class="fa fa-fw fa-tasks" aria-hidden="true"></i> Memory:</div>
+          <div class="col-3"><strong><%= stats.memoryUsage %> MB</strong></div>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="col-2"><i class="fa fa-fw fa-hashtag" aria-hidden="true"></i> Text Channels:</div>
+          <div class="col-3"><strong><%= stats.text %></strong></div>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="col-2"><i class="fa fa-fw fa-microphone" aria-hidden="true"></i> Voice Channels:</div>
+          <div class="col-3"><strong><%= stats.voice %></strong></div>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="col-2"><i class="fa fa-fw fa-cogs" aria-hidden="true"></i> Discord.js Version:</div>
+          <div class="col-3"><strong><%= stats.dVersion %></strong></div>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="col-2"><i class="fa fa-fw fa-cog" aria-hidden="true"></i> Node.js Version:</div>
+          <div class="col-3"><strong><%= stats.nVersion %></strong></div>
+        </div>
+      </div>
+    </div>
+    <% include ./blocks/footer %>

@@ -1,37 +1,10 @@
-<%- include('blocks/header', {bot:bot, user: user, auth: auth}) %>
-<div class="jumbotron">
-    <div class="col-sm-8 mx-auto">
+<%- include('blocks/header', {bot: bot, user: user, auth: auth}) %>
+<div class="container">
+  <div class="jumbotron">
+    <div>
       <h1><%= bot.user.username %> Dashboard</h1>
-      <p>Obviously, there should be some witty, entertaining, inspired description of the bot here.</p>
-      <p>
-        <a class="btn btn-primary" href="/commands" role="button">Bot Documentation »</a>
-      </p>
+      <h4><% if(bot.appInfo.description.length > 3) { %> <%= bot.appInfo.description %> <% } else { %>No description given.<% }%></h4>
+      <p><a class="btn btn-primary" href="/commands" role="button">Click here to see the commands »</a></p>
     </div>
   </div>
-
-<div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-4">
-          <h2>Discord Server</h2>
-          <p>Hey, it's always awesome to have a support server to help people out with your bot!</p>
-          <p><a class="btn btn-secondary" href="https://discord.gg/9ESEZAx" role="button">Join Server »</a></p>
-        </div>
-        <div class="col-md-4">
-          <h2>Hosted on Glitch</h2>
-          <p>Glitch is a platform that enables easy sharing of projects, collaboration, and hosting.</p>
-          <p>
-            <a href="https://glitch.com/edit/#!/idiots-dashboard">You can clone this project in seconds</a>, just click the project title then click <b>Remix This!</b>
-          </p>
-          <p><a class="btn btn-secondary" href="https://www.glitch.com/" role="button">Glitch.com »</a></p>
-        </div>
-        <div class="col-md-4">
-          <h2>Some other stuff</h2>
-          <p>I dunno it's 1am and I should be sleeping. <strong>You</strong> come up with something to put here!</p>
-          <p>Oh yeah, it has a great dashboard!<p>
-          <p><a class="btn btn-secondary" href="/login" role="button">Login »</a></p>
-        </div>
-      </div>
-    </div>
-
-<% include ./blocks/footer %>
+  <% include ./blocks/footer %>
