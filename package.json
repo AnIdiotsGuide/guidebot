@@ -1,24 +1,29 @@
 {
   "name": "guidebot",
-  "version": "2.0.3",
+  "version": "2.2.4",
   "description": "A boilerplate example bot with command handler and reloadable commands. Updated and Maintained by the Idiot's Guide Community",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=8"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eslachance/discordjs-command-handler.git"
+    "url": "git+https://github.com/An-Idiots-Guide/guidebot.git"
   },
-  "author": "The Idiot's Guide Community",
+  "author": "Evelyne Lachance <eslachance@gmail.com> (http://evie.codes)",
+  "contributors": ["York (http://anidiots.guide)"],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/eslachance/discordjs-command-handler/issues"
+    "url": "https://github.com/An-Idiots-Guide/guidebot/issues"
   },
-  "homepage": "https://github.com/eslachance/discordjs-command-handler#readme",
+  "homepage": "https://github.com/An-Idiots-Guide/guidebot#readme",
   "dependencies": {
     "discord.js": "^11.2.1",
-    "enmap": "0.0.4",
+    "enmap": "^0.3.2",
     "moment": "^2.18.1",
     "moment-duration-format": "^1.3.0"
   }

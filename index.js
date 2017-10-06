@@ -48,6 +48,9 @@ const init = async () => {
       const props = require(`./commands/${f}`);
       if (f.split(".").slice(-1)[0] !== "js") return;
       client.log("log", `Loading Command: ${props.help.name}. 👌`);
+      if (props.init) {
+        props.init(client);
+      }
       client.commands.set(props.help.name, props);
       props.conf.aliases.forEach(alias => {
         client.aliases.set(alias, props.help.name);
