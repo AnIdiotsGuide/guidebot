@@ -15,7 +15,9 @@
     "url": "git+https://github.com/An-Idiots-Guide/guidebot.git"
   },
   "author": "Evelyne Lachance <eslachance@gmail.com> (http://evie.codes)",
-  "contributors": ["York (http://anidiots.guide)"],
+  "contributors": [
+    "York (http://anidiots.guide)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/An-Idiots-Guide/guidebot/issues"
@@ -23,7 +25,8 @@
   "homepage": "https://github.com/An-Idiots-Guide/guidebot#readme",
   "dependencies": {
     "discord.js": "^11.2.1",
-    "enmap": "^0.3.2",
+    "enmap": "^0.4.1",
+    "enmap-level": "^1.0.0",
     "moment": "^2.18.1",
     "moment-duration-format": "^1.3.0"
   }
