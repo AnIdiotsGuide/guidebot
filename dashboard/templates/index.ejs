@@ -1,0 +1,10 @@
+<%- include('blocks/header', {bot: bot, user: user, auth: auth}) %>
+<div class="container">
+  <div class="jumbotron">
+    <div>
+      <h1><%= bot.user.username %> Dashboard</h1>
+      <h4><% if(bot.appInfo.description.length > 3) { %> <%= bot.appInfo.description %> <% } else { %>No description given.<% }%></h4>
+      <p><a class="btn btn-primary" href="/commands" role="button">Click here to see the commands »</a></p>
+    </div>
+  </div>
+  <% include ./blocks/footer %>

@@ -1,0 +1,88 @@
+<%- include('blocks/header', {bot:bot, user: user, auth: auth}) %>
+<div class="container">
+  <div class="jumbotron">
+    <div class="col-sm-11 mx-auto">
+      <h1><%= guild.name %></h1>
+      <div class="row">
+        <div class="col">
+          <i class="fa fa-fw fa-user-circle-o" aria-hidden="true"></i> <%= `${guild.owner.user.tag}` %>
+        </div>
+        <div class="col">
+          <i class="fa fa-fw fa-users" aria-hidden="true"></i> <%= `${guild.memberCount}` %> Members
+          ( <i class="fa fa-fw fa-android" aria-hidden="true"></i> <%= `${guild.members.filter(m => m.user.bot).size}` %> Bots )
+        </div>
+        <div class="col">
+          <i class="fa fa-fw fa-users" aria-hidden="true"></i> <%= `${guild.roles.size} Roles` %>
+        </div>
+        <div class="col">
+          Channels : <i class="fa fa-fw fa-hashtag" aria-hidden="true"></i> <%= `${guild.channels.filter(c => c.type === 'text').size}`%> 
+          <i class="fa fa-fw fa-microphone" aria-hidden="true"></i> <%= `${guild.channels.filter(c => c.type === 'voice').size}`%> 
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-10 mx-auto" style="margin-top: 15px;">
+      <p style="text-align:center">
+        <a class="btn btn-danger btn-lg" data-toggle="modal" data-target="#serverLeaveModal" role="button">Leave <i class="fa fa-fw fa-sign-out" aria-hidden="true"></i></a>
+        <a class="btn btn-info btn-lg" data-toggle="modal" data-target="#settingsResetModal" role="button">Reset <i class="fa fa-fw fa-cogs" aria-hidden="true"></i></a>
+      </p>
+    </div>
+  </div>
+
+<h1>Settings</h1>
+
+<form method="post">
+  <% const settings = bot.settings.get(guild.id); %>
+  <% for (const key in settings) { %>
+  <div class="form-group">
+    <label for="<%= key %>"><%= key %></label>
+    <input type="text" class="form-control" id="<%= key %>" name="<%= key %>" placeholder="Enter <%= key %>" value="<%= settings[key] %>" width="200">
+  </div>
+  <% } %>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<!-- Manage Page Modals -->
+<div class="modal fade" id="serverLeaveModal" tabindex="-1" role="dialog" aria-labelledby="serverLeaveModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="serverLeaveModalLabel">Leave Server?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Are you sure you want <%= bot.user.username %> to leave this server?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-outline-danger" href="/leave/<%= guild.id %>" role="button">Leave</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Manage Page Modals -->
+  <div class="modal fade" id="settingsResetModal" tabindex="-1" role="dialog" aria-labelledby="settingsResetModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="settingsResetModalLabel">Reset Settings?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Are you sure you want to reset to the default settings?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-outline-danger" href="/reset/<%= guild.id %>" role="button">Reset</a>
+        </div>
+      </div>
+    </div>
+  </div>
+<% include ./blocks/footer %>
