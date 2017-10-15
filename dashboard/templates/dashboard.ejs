@@ -1,0 +1,47 @@
+<%- include('blocks/header', {bot:bot, user: user, auth: auth}) %>
+<div class="container">
+<h1 class="display-3">Dashboard</h1>
+<ul class="list-unstyled">
+  <% user.guilds.forEach(guild => { 
+    const permsOnGuild = new perms(guild.permissions);
+    if(!permsOnGuild.has("MANAGE_GUILD")) return;
+  %>
+
+  <li class="media" style="padding: 10px;">
+    <% if (guild.icon) { %>
+      <img class="d-flex mr-3 rounded-circle" src="<%= `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=128` %>" style="width: 80px;" alt="">
+    <% } else { %>
+      <canvas style="background-color: #7289da" class="d-flex mr-3 rounded-circle" id="<%= guild.name.split(' ').join('').replace(`'`, ``) %>" width="80px" height="80px"></canvas>
+      <script>
+        function draw() {
+          const ctx = document.getElementById("<%= guild.name.split(' ').join('').replace(`'`, ``) %>").getContext('2d');
+          ctx.font = '30px Arial';
+          ctx.textAlign = "center";
+          ctx.fillStyle = "white";
+          ctx.fillText("<%= guild.name.split(' ').map(v => v[0]).join('') %>", 40, 50);
+        };
+        draw();
+      </script>
+    <% } %>
+    <div class="media-body">
+        <h5 class="mt-0 mb-1"><%= guild.name %></h5>
+        <% 
+        let href, text;
+        let enabled;
+        if(bot.guilds.get(guild.id)) {
+          href = "/manage/" + guild.id;
+          text = "Manage";
+          enabled = true;
+        } else {
+          href = `https://discordapp.com/oauth2/authorize?client_id=${bot.appInfo.id}&scope=bot&guild_id=${guild.id}&response_type=code&redirect_uri=${encodeURIComponent(bot.config.dashboard.callbackURL)}`;
+          text = "Invite Bot";
+          enabled = bot.appInfo.botPublic;
+        }
+        %> 
+        <a class="btn btn-primary btn-lg<% if(!enabled) { %> disabled<% } %>" role="button" href="<%= href %>"><%= text %> <i class="fa fa-fw fa-chevron-circle-right" aria-hidden="true"></i></a>
+      </div>
+    </li>
+  <% }); %>
+  </ul>
+
+  <% include ./blocks/footer %>

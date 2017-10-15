@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://bootswatch.com/4-alpha/darkly/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel='icon' href='<%= bot.user.displayAvatarURL %>'>
+    <title><%= bot.user.username %></title>
+  </head>
+  <body style="padding-top:70px;">
+    <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary fixed-top">
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar01" aria-controls="navbar01" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+      <div class="container">
+        <a class="navbar-brand" href="/"><img src="<%= bot.user.avatarURL %>" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="<%= bot.user.username %>"> <%= bot.user.username %></a>
+        <div class="collapse navbar-collapse" id="navbar01">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link" href="/commands">Commands</a></li>
+            <li class="nav-item"><a class="nav-link" href="/stats">Statistics</a></li>
+            <li class="nav-item"><a class="nav-link<% if(!bot.appInfo.botPublic) { %> disabled<% } %>" href="<% if(!bot.appInfo.botPublic) { %><% } else {%>https://discordapp.com/oauth2/authorize?client_id=<%= bot.appInfo.id %>&scope=bot&response_type=code&redirect_uri=<%= encodeURIComponent(bot.config.dashboard.callbackURL) %><% } %>">Add to Server</a></li>
+            <li class="nav-item"><a class="nav-link disabled">On <%= bot.guilds.size %>  Servers</a></li>
+          </ul>
+          <ul class="navbar-nav">
+            <% if(auth) { %>
+              <li class="dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><%= user.username %>#<%= user.discriminator %></a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink"><h6 class="dropdown-header"><i class="fa fa-fw fa-user" aria-hidden="true"></i> <%= user.username %></h6>
+                  <a class="dropdown-item" href="/dashboard"><i class="fa fa-fw fa-cogs" aria-hidden="true"></i> Dashboard</a>
+                  <% if(user.id === bot.appInfo.owner.id) { %>
+                    <a class="dropdown-item" href="/admin"><i class="fa fa-fw fa-key"></i> Admin</a>
+                  <% } %>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="/logout"><i class="fa fa-fw fa-sign-out" aria-hidden="true"></i> Logout</a>
+                </div>
+              </li>
+            <% } else { %>
+              <li class="nav-item"><a href="/login" class="nav-link"><i class="fa fa-fw fa-key" aria-hidden="true"></i> Login</a></li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <br>
