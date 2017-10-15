@@ -4,13 +4,6 @@ module.exports = async client => {
   // for all of them to be loaded.
   await client.wait(1000);
 
-  client.appInfo = await client.fetchApplication();
-  setInterval( async () => {
-    client.appInfo = await client.fetchApplication();
-  }, 60000);
-
-  require("../modules/dashboard")(client);  
-
   // Both `wait` and `client.log` are in `./modules/functions`.
   client.log("log", `${client.user.tag}, ready to serve ${client.users.size} users in ${client.guilds.size} servers.`, "Ready!");
 
