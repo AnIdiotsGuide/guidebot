@@ -1,0 +1,32 @@
+<%- include('blocks/header', {bot:bot, user: user, auth: auth}) %>
+<%
+  const memberArray = [];
+  for(const member of members) {
+    memberArray.push({
+      id: member.id,
+      tag: member.user.tag,
+      username: member.user.username
+    });
+  }
+%>
+<h1 class="display-3">Member List</h1>
+<h4>
+  <%= guild.name %> (<%= guild.id %>)
+</h4>
+<table id="members">
+</table>
+
+<script type="text/javascript">
+  $(document).ready( function () {
+    $('#members').DataTable({
+      data: <%- JSON.stringify(memberArray) %>,
+      columns: [
+          { data: 'id' },
+          { data: 'tag' },
+          { data: 'username' }
+      ]
+    });
+} );
+</script>
+
+<% include ./blocks/footer %>
