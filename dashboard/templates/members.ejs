@@ -1,4 +1,4 @@
-<%- include('blocks/header', {bot:bot, user: user, auth: auth}) %>
+<%- include('blocks/header', {bot:bot, user: user, path: path, auth: auth}) %>
 <div class="container">
   <h2>Member List</h2>
   <div class="row" style="margin-top: 25px;">
@@ -67,7 +67,7 @@
   }
   
   function getMembers(start, callback) {
-    $.getJSON(`/members/${guildID}/list?start=${start}&limit=${pages.limit}&sortby=${pages.sortby}&filter=${pages.filter}`, function(response) {
+    $.getJSON(`/dashboard/${guildID}/members/list?start=${start}&limit=${pages.limit}&sortby=${pages.sortby}&filter=${pages.filter}`, function(response) {
       pages.total = response.pageof;
       pages.current = response.page;
       pages.elements = response.total;
@@ -82,7 +82,7 @@
       var color = member.highestRole.hexColor === "#000000" ? '#FFFFFF' : member.highestRole.hexColor;
       var roles = member.roles.filter(r=>r.name !== "@everyone").map(r=> {
         var rc = r.hexColor === "#000000" ? {r:255,g:255,b:255} : hexToRgb(r.hexColor);
-        return `<span class="roleBox" style="color: rgb(${rc.r}, ${rc.g}, ${rc.b}); background-color: rgba(${rc.r}, ${rc.g}, ${rc.b}, 0.0980392) !important; border: 1px solid rgba(${rc.r}, ${rc.g}, ${rc.b}, 0.498039);">${r.name}</span>`;
+        return `<span class="roleBox" style="color: rgb(${rc.r}, ${rc.g}, ${rc.b}); background-color: rgba(${rc.r}, ${rc.g}, ${rc.b}, 0.0980392); border: 1px solid rgba(${rc.r}, ${rc.g}, ${rc.b}, 0.498039);">${r.name}</span>`;
       }).join(" ");
       var thishtml = snippet
         .replace(/\{color\}/g, color)

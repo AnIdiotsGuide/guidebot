@@ -33,7 +33,7 @@
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="/commands">Commands</a></li>
-          <li class="nav-item"><a class="nav-link<% if(!bot.appInfo.botPublic) { %> disabled<% } %>" href="https://discordapp.com/oauth2/authorize?client_id=<%= bot.appInfo.id %>&scope=bot&response_type=code&redirect_uri=<%= encodeURIComponent(`https://${process.env.PROJECT_DOMAIN}.glitch.me/dashboard`) %>">Add to Server</a></li>
+          <li class="nav-item"><a class="nav-link<% if(!bot.appInfo.botPublic) { %> disabled<% } %>" href="https://discordapp.com/oauth2/authorize?client_id=<%= bot.appInfo.id %>&scope=bot&response_type=code&redirect_uri=<%= encodeURIComponent(bot.config.dashboard.callbackURL) %>">Add to Server</a></li>
           <li class="nav-item"><a class="nav-link" href="/stats">On <%= bot.guilds.size %>  Servers</a></li>
         </ul>
         <ul class="navbar-nav">
@@ -63,7 +63,15 @@
   <div class="container">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="/">Home</a></li>
-      <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="/manage/308741622169075722">OwO</a></li>
-      <li class="breadcrumb-item active">Members</li>
+      <%
+        pathArray = path.split("/").slice(1);
+        pathArray = pathArray.map(p=> {
+          if(bot.guilds.has(p)) return bot.guilds.get(p).name;
+          return p.toProperCase();
+        });
+        let builtPath = "";
+        for(let i = 0; i < pathArray.length; i++) {
+          builtPath += "/"+path.split("/").slice(1)[i]; %>
+      <li class="breadcrumb-item<% if((i+1) === pathArray.length) {%> active"><%= pathArray[i] %><% } else { %>"><a href="<%= builtPath %>"><%= pathArray[i] %></a><% } %></li>
+      <% } %>
     </ol>

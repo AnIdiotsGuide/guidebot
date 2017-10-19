@@ -142,6 +142,7 @@ module.exports = (client) => {
   app.get("/", (req, res) => {
     res.render(path.resolve(`${templateDir}${path.sep}index.ejs`), {
       bot: client,
+      path: req.path,
       auth: req.isAuthenticated() ? true : false,
       user: req.isAuthenticated() ? req.user : null
     });
@@ -178,6 +179,7 @@ module.exports = (client) => {
   app.get("/autherror", (req, res) => {
     res.render(path.resolve(`${templateDir}${path.sep}autherror.ejs`), {
       bot: client,
+      path: req.path,
       auth: req.isAuthenticated() ? true : false,
       user: req.isAuthenticated() ? req.user : null
     });
@@ -186,6 +188,7 @@ module.exports = (client) => {
   app.get("/admin", checkAdmin, (req, res) => {
     res.render(path.resolve(`${templateDir}${path.sep}admin.ejs`), {
       bot: client,
+      path: req.path,
       user: req.user,
       auth: true
     });
@@ -196,12 +199,17 @@ module.exports = (client) => {
     res.render(path.resolve(`${templateDir}${path.sep}dashboard.ejs`), {
       perms: perms,
       bot: client,
+      path: req.path,
       user: req.user,
       auth: true
     });
   });
+
+  app.get("/dashboard/:guildID", checkAuth, (req, res) => {
+    res.redirect(`/dashboard/${req.params.guildID}/manage`);
+  })
   
-  app.get("/members/:guildID", checkAuth, async (req, res) => {
+  app.get("/dashboard/:guildID/members", checkAuth, async (req, res) => {
     const guild = client.guilds.get(req.params.guildID);
     if (!guild) return res.status(404);
     if (req.params.fetch) {
@@ -210,13 +218,14 @@ module.exports = (client) => {
     res.render(path.resolve(`${templateDir}${path.sep}members.ejs`), {
       bot: client,
       user: req.user,
+      path: req.path,
       auth: true,
       guild: guild,
       members: guild.members.array()
     })
   })
 
-  app.get("/members/:guildID/list", checkAuth, async (req, res) => {
+  app.get("/dashboard/:guildID/members/list", checkAuth, async (req, res) => {
     const guild = client.guilds.get(req.params.guildID);
     if (!guild) return res.status(404);
     if (req.query.fetch) {
@@ -272,7 +281,7 @@ module.exports = (client) => {
     });
   });
 
-  app.post("/manage/:guildID", checkAuth, (req, res) => {
+  app.post("/dashboard/:guildID/manage", checkAuth, (req, res) => {
     const guild = client.guilds.get(req.params.guildID);
     if (!guild) return res.status(404);
     const isManaged = guild && !!guild.member(req.user.id) ? guild.member(req.user.id).permissions.has("MANAGE_GUILD") : false;
@@ -286,10 +295,10 @@ module.exports = (client) => {
       settings[key] = req.body[key];
     }
     client.settings.set(guild.id, settings);
-    res.redirect("/manage/"+req.params.guildID);
+    res.redirect("/dashboard/"+req.params.guildID+"/manage");
   });
   
-  app.get("/manage/:guildID", checkAuth, (req, res) => {
+  app.get("/dashboard/:guildID/manage", checkAuth, (req, res) => {
     const guild = client.guilds.get(req.params.guildID);
     if (!guild) return res.status(404);
     const isManaged = guild && !!guild.member(req.user.id) ? guild.member(req.user.id).permissions.has("MANAGE_GUILD") : false;
@@ -300,13 +309,14 @@ module.exports = (client) => {
     }
     res.render(path.resolve(`${templateDir}${path.sep}manage.ejs`), {
       bot: client,
+      path: req.path,
       guild: guild,
       user: req.user,
       auth: true
     });
   });
   
-  app.get("/leave/:guildID", checkAuth, async (req, res) => {
+  app.get("/dashboard/:guildID/leave", checkAuth, async (req, res) => {
     const guild = client.guilds.get(req.params.guildID);
     if (!guild) return res.status(404);
     const isManaged = guild && !!guild.member(req.user.id) ? guild.member(req.user.id).permissions.has("MANAGE_GUILD") : false;
@@ -322,7 +332,7 @@ module.exports = (client) => {
     res.redirect("/dashboard");
   });
 
-  app.get("/reset/:guildID", checkAuth, async (req, res) => {
+  app.get("/dashboard/:guildID/reset", checkAuth, async (req, res) => {
     const guild = client.guilds.get(req.params.guildID);
     if (!guild) return res.status(404);
     const isManaged = guild && !!guild.member(req.user.id) ? guild.member(req.user.id).permissions.has("MANAGE_GUILD") : false;
@@ -332,13 +342,14 @@ module.exports = (client) => {
       res.redirect("/");
     }
     client.settings.set(guild.id, client.config.defaultSettings);
-    res.redirect("/manage/"+req.params.guildID);
+    res.redirect("/dashboard/"+req.params.guildID);
   });
   
   
   app.get("/commands", (req, res) => {
     res.render(path.resolve(`${templateDir}${path.sep}commands.ejs`), {
       bot: client,
+      path: req.path,
       auth: req.isAuthenticated() ? true : false,
       user: req.isAuthenticated() ? req.user : null,
       md: md
@@ -353,6 +364,7 @@ module.exports = (client) => {
     const guilds = client.guilds.size;
     res.render(path.resolve(`${templateDir}${path.sep}stats.ejs`), {
       bot: client,
+      path: req.path,
       auth: req.isAuthenticated() ? true : false,
       user: req.isAuthenticated() ? req.user : null,
       stats: {

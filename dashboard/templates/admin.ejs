@@ -1,4 +1,4 @@
-<%- include('blocks/header', {bot:bot, user: user, auth: auth}) %>
+<%- include('blocks/header', {bot:bot, user: user, path: path, auth: auth}) %>
   <div class="container">
     <h1 class="display-3">Administration</h1>
     <ul class="list-unstyled">
@@ -26,10 +26,10 @@
                   <% 
                     let href, text;
                     if(bot.guilds.get(guild.id)) {
-                      href = "/manage/" + guild.id;
+                      href = `/dashboard/${guild.id}/manage`;
                       text = "Manage";
                     } else {
-                      href = `https://discordapp.com/oauth2/authorize?client_id=${bot.config.dashboard.clientID}&scope=bot&guild_id=${guild.id}`;
+                      href = `https://discordapp.com/oauth2/authorize?client_id=${bot.config.dashboard.clientID}&scope=bot&guild_id=${guild.id}&response_type=code&redirect_uri=${encodeURIComponent(client.config.dashboard.callbackURL)}`;
                       text = "Invite Bot";
                     }
                     %>

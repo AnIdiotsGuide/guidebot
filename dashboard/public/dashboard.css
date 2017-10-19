@@ -2,6 +2,7 @@
   border-radius: 3px;
   padding: 0px 3px;
   font-size: 0.8em;
+  white-space: nowrap;
 }
 
 .status {
