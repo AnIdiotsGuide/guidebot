@@ -52,7 +52,6 @@ module.exports = (client) => {
   // which is the folder that stores all the internal template files.
   const templateDir = path.resolve(`${dataDir}${path.sep}templates`);
 
-
   // The public data directory, which is accessible from the *browser*. 
   // It contains all css, client javascript, and images needed for the site.
   app.use("/public", express.static(path.resolve(`${dataDir}${path.sep}public`)));
@@ -224,16 +223,15 @@ module.exports = (client) => {
       await guild.fetchMembers();
     }
     const totals = guild.members.size;
-    console.log(req.query);
     const start = parseInt(req.query.start, 10) || 0;
     const limit = parseInt(req.query.limit, 10) || 50;
     let members = guild.members;
     
-    if (req.query.filter) {
-      if (!req.query.filtervalue) return res.status(400);
+    if (req.query.filter && req.query.filter !== "null") {
+      //if (!req.query.filtervalue) return res.status(400);
       members = members.filter(m=> {
         m = req.query.filterUser ? m.user : m;
-        return m[req.query.filter] === req.query.filtervalue;
+        return m["displayName"].toLowerCase().includes(req.query.filter.toLowerCase());
       });
     }
     
@@ -242,23 +240,34 @@ module.exports = (client) => {
     }
     const memberArray = members.array().slice(start, start+limit);
     
-    const returnObject = {};
+    const returnObject = [];
     for (let i = 0; i < memberArray.length; i++) {
       const m = memberArray[i];
-      returnObject[m.id] = {
+      returnObject.push({
         id: m.id,
+        status: m.user.presence.status,
+        bot: m.user.bot,
         username: m.user.username,
         displayName: m.displayName,
         tag: m.user.tag,
         discriminator: m.user.discriminator,
         joinedAt: m.joinedTimestamp,
         createdAt: m.user.createdTimestamp,
+        highestRole: {
+          hexColor: m.highestRole.hexColor
+        },
         memberFor: moment.duration(Date.now() - m.joinedAt).format(" D [days], H [hrs], m [mins], s [secs]"),
-        roles: m.roles.map(r=>r.name).join(", ")
-      };
+        roles: m.roles.map(r=>({
+          name: r.name,
+          id: r.id,
+          hexColor: r.hexColor
+        }))
+      });
     }
     res.json({
       total: totals,
+      page: (start/limit)+1,
+      pageof: Math.ceil(members.size / limit),
       members: returnObject
     });
   });

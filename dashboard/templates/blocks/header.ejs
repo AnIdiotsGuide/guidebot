@@ -11,11 +11,11 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-
-  <link rel="stylesheet" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/cr-1.4.1/r-2.2.0/datatables.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js" integrity="sha256-zG8v+NWiZxmjNi+CvUYnZwKtHzFtdO8cAKUIdB8+U9I=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/public/dashboard.css" />
   <script src="https://cdn.datatables.net/v/bs4/dt-1.10.16/cr-1.4.1/r-2.2.0/datatables.min.js"></script>
   <link rel='icon' href='<%= bot.user.avatarURL %>'>
   <title>
@@ -25,7 +25,7 @@
 
 <body>
   <a name="top"></a>
-  <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary">
+  <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary" style="margin-bottom: 20px;">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar01" aria-controls="navbar01" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
     <div class="container">
       <a class="navbar-brand" href="/"><img src="<%= bot.user.avatarURL %>" width="30" height="30" class="d-inline-block align-top rounded-circle" alt=""> <%= bot.user.username %></a>
@@ -40,7 +40,7 @@
           <% if(auth) { %>
             <li class="dropdown">
               <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png?size=32" width="30" height="30" class="d-inline-block align-top rounded-circle" alt=""> 
+                <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png?size=32" width="28" height="28" class="d-inline-block align-middle rounded-circle" alt=""> 
                 <%= user.username %>#<%= user.discriminator %>
               </a>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
@@ -61,3 +61,9 @@
     </div>
   </nav>
   <div class="container">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="/manage/308741622169075722">OwO</a></li>
+      <li class="breadcrumb-item active">Members</li>
+    </ol>
