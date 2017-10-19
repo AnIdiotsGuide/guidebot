@@ -1,4 +1,4 @@
-<%- include('blocks/header', {bot:bot, user: user, auth: auth}) %>
+<%- include('blocks/header', {bot:bot, user: user, path: path, auth: auth}) %>
 <div class="container">
 <h1 class="display-3">Dashboard</h1>
 <ul class="list-unstyled">
@@ -29,7 +29,7 @@
         let href, text;
         let enabled;
         if(bot.guilds.get(guild.id)) {
-          href = "/manage/" + guild.id;
+          href = `/dashboard/${guild.id}/manage`;
           text = "Manage";
           enabled = true;
         } else {

@@ -1,0 +1,187 @@
+<%- include('blocks/header', {bot:bot, user: user, path: path, auth: auth}) %>
+<div class="container">
+  <h2>Member List</h2>
+  <div class="row" style="margin-top: 25px;">
+    <div class="col-6">
+      <form class="form-inline">
+
+        <label class="mr-sm-2" for="show-members">Show</label>
+        <select class="custom-select mb-2 mr-sm-2 mb-sm-0 form-control-sm" id="show-members">
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="250">250</option>
+        </select>
+        <label class="mr-sm-2" for="sort-by">Sort</label>
+        <select class="custom-select mb-2 mr-sm-2 mb-sm-0 form-control-sm" id="sort-by">
+          <option value="displayName">Name</option>
+          <option value="joinedTimestamp">Join</option>
+          <option value="id">ID</option>
+        </select>
+        <label class="sr-only" for="display-name-search">Display Name Search</label>
+        <div class="input-group">
+          <div class="input-group-addon fa fa-search"></div>
+          <input type="text" class="form-control form-control-sm" id="display-name-search" placeholder="Display Name">
+        </div>
+      </form>
+    </div>
+    <div class="col-6">
+      <nav aria-label="Member Navigation">
+        <ul class="pagination pagination-sm justify-content-end">
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<table class="table table-hover table-bordered">
+  <thead class="thead-default">
+    <tr>
+      <th>Display Name:</th>
+      <th>User Tag:</th>
+      <th>Joined:</th>
+      <th>Roles:</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script type="text/javascript">
+  var guildID = "<%= guild.id %>";
+  var pages = {
+    total: null,
+    current: null,
+    elements: null,
+    limit: 50,
+    sortby: null,
+    inverted: false,
+    filter: null
+  };
+
+  function hexToRgb(hex) {
+      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+      } : null;
+  }
+  
+  function getMembers(start, callback) {
+    $.getJSON(`/dashboard/${guildID}/members/list?start=${start}&limit=${pages.limit}&sortby=${pages.sortby}&filter=${pages.filter}`, function(response) {
+      pages.total = response.pageof;
+      pages.current = response.page;
+      pages.elements = response.total;
+      callback(response);
+    });
+  }
+  
+  function updateTable(members) {
+    $("table tbody").empty();
+    for(var i = 0; i < members.length; i++) {
+      member = members[i];
+      var color = member.highestRole.hexColor === "#000000" ? '#FFFFFF' : member.highestRole.hexColor;
+      var roles = member.roles.filter(r=>r.name !== "@everyone").map(r=> {
+        var rc = r.hexColor === "#000000" ? {r:255,g:255,b:255} : hexToRgb(r.hexColor);
+        return `<span class="roleBox" style="color: rgb(${rc.r}, ${rc.g}, ${rc.b}); background-color: rgba(${rc.r}, ${rc.g}, ${rc.b}, 0.0980392); border: 1px solid rgba(${rc.r}, ${rc.g}, ${rc.b}, 0.498039);">${r.name}</span>`;
+      }).join(" ");
+      var thishtml = snippet
+        .replace(/\{color\}/g, color)
+        .replace("{displayName}", member.displayName)
+        .replace("{status}", member.status)
+        .replace("{tag}", member.tag)
+        .replace("{id}", member.id)
+        .replace("{joined}", moment(member.joinedAt).format("MMMM Do YYYY, h:mm a"))
+        .replace("{roles}", roles);
+      if (member.bot) {
+        thishtml = thishtml.replace("{botimg}", ' <img src="/public/bot.png">');
+      } else { 
+        thishtml = thishtml.replace("{botimg}", '');
+      }
+      $('table > tbody').append(thishtml);
+    };
+  }
+  
+  function changePage(page) {
+    var start = page * pages.limit;
+    pages.current = page;
+    getMembers(start, function(data) {
+      updateTable(data.members);
+    })
+    console.log("Changing To Page: "+page)
+  }
+  
+  function drawPagination() {
+    $('.pagination').empty();
+    $('.pagination').append('<li class="page-item active"><a class="page-link" href="#" data-pagenum="1">1</a></li>')
+    for(var i = 1; i < pages.total; i++) {
+      var strItem = '<li class="page-item"><a class="page-link" href="#" data-pagenum="'+(i+1)+'">'+(i+1)+'</a></li>';
+      $('.pagination').append(strItem);
+    }
+    $('.page-link').click(function(e) {
+      e.preventDefault();
+      $( this ).parent().addClass('active');
+      $('.pagination').find('.active').removeClass('active');
+      changePage($(this).attr('data-pagenum'));
+      return false;
+    });
+  }
+
+  var snippet = `    <tr>
+      <td style="color:{color}"><span class="status {status}"></span> {displayName}{botimg}</td>
+      <td style="color:{color}">{tag}<br/>{id}</td>
+      <td style="color:{color}">{joined}</td>
+      <td>{roles}</td>
+    </tr>`;
+  var roleSnippet = '<span style="color:{color}">{name}</span>';
+
+  $(document).ready( function () {
+    getMembers(0, function(data) {
+      pages.current = data.page;
+      updateTable(data.members);
+      console.log(data);
+      drawPagination();
+    });
+  });
+  
+  $( "#show-members" ).change(function() {
+    console.log("Changing display limit to: " + this.value)
+    pages.limit = this.value;
+    getMembers(0, function(data) {
+      updateTable(data.members);
+      console.log(data);
+      drawPagination();
+    });
+  });
+  
+  $( "#sort-by" ).change(function() {
+    console.log("Sorting By: " + this.value)
+    pages.sortby = this.value;
+    getMembers(pages.current, function(data) {
+      updateTable(data.members);
+      console.log(data);
+      drawPagination();
+    });
+  });
+
+  var typingTimer;                //timer identifier
+  var doneTypingInterval = 1000;  //time in ms (5 seconds)
+
+  $('#display-name-search').keyup(function(){
+    clearTimeout(typingTimer);
+    if ($('#display-name-search').val()) {
+      pages.filter = $('#display-name-search').val();
+    } else {
+      pages.filter = null;
+    }
+    typingTimer = setTimeout(doneTyping, doneTypingInterval);
+  });
+
+  function doneTyping () {
+    getMembers(0, function(data) {
+      updateTable(data.members);
+      drawPagination();
+    });
+  }
+</script>
+
+<% include ./blocks/footer %>

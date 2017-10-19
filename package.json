@@ -26,17 +26,19 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "discord.js": "^11.2.1",
+    "ejs": "^2.5.7",
     "enmap": "^0.4.1",
     "enmap-level": "^1.0.0",
-    "ejs": "^2.5.7",
     "express": "^4.16.1",
     "express-passport": "^0.1.0",
     "express-session": "^1.15.6",
+    "helmet": "^3.9.0",
+    "level-session-store": "^2.1.0",
     "marked": "^0.3.6",
     "moment": "^2.18.1",
     "moment-duration-format": "^1.3.0",
     "passport": "^0.4.0",
     "passport-discord": "^0.1.2",
-    "snekfetch": "^3.4.2"
+    "snekfetch": "^3.5.2"
   }
 }
