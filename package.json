@@ -4,8 +4,8 @@
   "description": "A boilerplate example bot with command handler and reloadable commands. Updated and Maintained by the Idiot's Guide Community",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "prepublish": "node setup.js"
   },
   "engines": {
     "node": ">=8"
@@ -33,6 +33,7 @@
     "express-passport": "^0.1.0",
     "express-session": "^1.15.6",
     "helmet": "^3.9.0",
+    "inquirer": "^3.3.0",
     "level-session-store": "^2.1.0",
     "marked": "^0.3.6",
     "moment": "^2.18.1",
