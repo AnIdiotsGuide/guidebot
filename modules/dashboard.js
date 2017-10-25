@@ -2,7 +2,8 @@
 DASHBOARD EXAMPLE
 
   Install the following for dashboard stuff.
-  npm install body-parser ejs express express-passport express-session marked passport passport-discord
+  npm install body-parser ejs express express-passport express-session
+  npm install level-session-store marked passport passport-discord
   
 This is a very simple dashboard example, but even in its simple state, there are still a
 lot of moving parts working together to make this a reality. I shall attempt to explain
@@ -31,6 +32,8 @@ require("moment-duration-format");
 // Express Plugins
 // Specifically, passport helps with oauth2 in general.
 // passport-discord is a plugin for passport that handles Discord's specific implementation.
+// express-session and level-session-store work together to create persistent sessions
+// (so that when you come back to the page, it still remembers you're logged in).
 const passport = require("passport");
 const session = require("express-session");
 const LevelStore = require("level-session-store")(session);
@@ -56,7 +59,8 @@ module.exports = (client) => {
   // It contains all css, client javascript, and images needed for the site.
   app.use("/public", express.static(path.resolve(`${dataDir}${path.sep}public`)));
 
-  // uhhhh check what these do. 
+  // These are... internal things related to passport. Honestly I have no clue either.
+  // Just leave 'em there.
   passport.serializeUser((user, done) => {
     done(null, user);
   });
@@ -108,7 +112,8 @@ module.exports = (client) => {
   // The domain name used in various endpoints to link between pages.
   app.locals.domain = client.config.dashboard.domain;
   
-  // The EJS templating engine gives us more power 
+  // The EJS templating engine gives us more power to create complex web pages. 
+  // This lets us have a separate header, footer, and "blocks" we can use in our pages.
   app.engine("html", require("ejs").renderFile);
   app.set("view engine", "html");
 
@@ -121,15 +126,28 @@ module.exports = (client) => {
   })); 
 
   /* 
-  Authentication Checks. checkAuth verifies regular authentication,
-  whereas checkAdmin verifies the bot owner. Those are used in url
-  endpoints to give specific permissions. 
+  Authentication Checks. For each page where the user should be logged in, double-checks
+  whether the login is valid and the session is still active.
   */
   function checkAuth(req, res, next) {
     if (req.isAuthenticated()) return next();
     req.session.backURL = req.url;
     res.redirect("/login");
   }
+
+  // This function simplifies the rendering of the page, since every page must be rendered
+  // with the passing of these 4 variables, and from a base path. 
+  // Objectassign(object, newobject) simply merges 2 objects together, in case you didn't know!
+  const renderTemplate = (res, req, template, data = {}) => {
+    const baseData = {
+      bot: client,
+      path: req.path,
+      auth: req.isAuthenticated() ? true : false,
+      user: req.isAuthenticated() ? req.user : null
+    };
+    res.render(path.resolve(`${templateDir}${path.sep}${template}`), Object.assign(baseData, data));
+  };
+
 
   /** PAGE ACTIONS RELATED TO SESSIONS */
 
@@ -150,16 +168,6 @@ module.exports = (client) => {
   },
   passport.authenticate("discord"));
 
-  const renderTemplate = (res, req, template, data = {}) => {
-    const baseData = {
-      bot: client,
-      path: req.path,
-      auth: req.isAuthenticated() ? true : false,
-      user: req.isAuthenticated() ? req.user : null
-    };
-    res.render(path.resolve(`${templateDir}${path.sep}${template}`), Object.assign(baseData, data));
-  };
-
   // Once the user returns from OAuth2, this endpoint gets called. 
   // Here we check if the user was already on the page and redirect them
   // there, mostly.
@@ -178,10 +186,12 @@ module.exports = (client) => {
     }
   });
   
+  // If an error happens during authentication, this is what's displayed.
   app.get("/autherror", (req, res) => {
     renderTemplate(res, req, "autherror.ejs");
   });
 
+  // Destroys the session to log out the user.
   app.get("/logout", function(req, res) {
     req.session.destroy(() => {
       req.logout();
@@ -189,16 +199,22 @@ module.exports = (client) => {
     });
   });
 
+  /** REGULAR INFORMATION PAGES */
+
   // Index page. If the user is authenticated, it shows their info
   // at the top right of the screen.
   app.get("/", (req, res) => {
     renderTemplate(res, req, "index.ejs");
   });
 
+
+  // The list of commands the bot has. Current **not filtered** by permission.
   app.get("/commands", (req, res) => {
     renderTemplate(res, req, "commands.ejs", {md});
   });
   
+  // Bot statistics. Notice that most of the rendering of data is done through this code, 
+  // not in the template, to simplify the page code. Most of it **could** be done on the page.
   app.get("/stats", (req, res) => {
     const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
     const members = client.guilds.reduce((p, c) => p + c.memberCount, 0);
@@ -219,18 +235,37 @@ module.exports = (client) => {
     });
   });
 
-  app.get("/admin", checkAuth, (req, res) => {
-    if (!req.session.isAdmin) return res.redirect("/");
-    renderTemplate(res, req, "admin.ejs");
-  });
-
   app.get("/dashboard", checkAuth, (req, res) => {
     const perms = Discord.EvaluatedPermissions;
     renderTemplate(res, req, "dashboard.ejs", {perms});
   });
 
+  // The Admin dashboard is similar to the one above, with the exception that
+  // it shows all current guilds the bot is on, not *just* the ones the user has
+  // access to. Obviously, this is reserved to the bot's owner for security reasons.
+  app.get("/admin", checkAuth, (req, res) => {
+    if (!req.session.isAdmin) return res.redirect("/");
+    renderTemplate(res, req, "admin.ejs");
+  });
+
+  // Simple redirect to the "Settings" page (aka "manage")
   app.get("/dashboard/:guildID", checkAuth, (req, res) => {
     res.redirect(`/dashboard/${req.params.guildID}/manage`);
+  });
+
+  // Settings page to change the guild configuration. Definitely more fancy than using
+  // the `set` command!
+  app.post("/dashboard/:guildID/manage", checkAuth, (req, res) => {
+    const guild = client.guilds.get(req.params.guildID);
+    if (!guild) return res.status(404);
+    const isManaged = guild && !!guild.member(req.user.id) ? guild.member(req.user.id).permissions.has("MANAGE_GUILD") : false;
+    if (!isManaged && !req.session.isAdmin) res.redirect("/");
+    const settings = client.settings.get(guild.id);
+    for (const key in settings) {
+      settings[key] = req.body[key];
+    }
+    client.settings.set(guild.id, settings);
+    res.redirect("/dashboard/"+req.params.guildID+"/manage");
   });
   
   app.get("/dashboard/:guildID/members", checkAuth, async (req, res) => {
@@ -298,19 +333,6 @@ module.exports = (client) => {
     });
   });
 
-  app.post("/dashboard/:guildID/manage", checkAuth, (req, res) => {
-    const guild = client.guilds.get(req.params.guildID);
-    if (!guild) return res.status(404);
-    const isManaged = guild && !!guild.member(req.user.id) ? guild.member(req.user.id).permissions.has("MANAGE_GUILD") : false;
-    if (!isManaged && !req.session.isAdmin) res.redirect("/");
-    const settings = client.settings.get(guild.id);
-    for (const key in settings) {
-      settings[key] = req.body[key];
-    }
-    client.settings.set(guild.id, settings);
-    res.redirect("/dashboard/"+req.params.guildID+"/manage");
-  });
-  
   app.get("/dashboard/:guildID/manage", checkAuth, (req, res) => {
     const guild = client.guilds.get(req.params.guildID);
     if (!guild) return res.status(404);
