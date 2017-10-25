@@ -1,0 +1,39 @@
+<%- include('../blocks/header', {bot, user, path}) %>
+  <h2>Server Management</h2>
+  <div class="row">
+    <div class="col col-4">
+      <%- include('../blocks/guild-card', {guild}) %>
+    </div>
+    <div class="col">
+      <%- include('../blocks/guild-nav.ejs', {active: "manage", guild}) %>
+      <form method="post">
+        <ul class="list-group list-group-flush">
+        <% const settings = bot.settings.get(guild.id);
+            const defaults = bot.config.defaultSettings;
+            for (const key in settings) { %>
+          <li class="list-group-item" style="padding: 0;">
+            <label class="sr-only" for="inlineForm<%= key %>">
+              <%= key %>
+            </label>
+            <div class="input-group mb-2 mr-sm-2 mb-sm-0" style="width: 100%; margin: 0 !important;">
+              <div class="input-group-addon" style="width: 150px; text-align: right; margin: 0;">
+                <%= key %>
+              </div>
+              <input type="text" class="form-control" style="text-align: left;" id="inlineForm<%= key %>" value="<%= settings[key] %>"
+                placeholder="Enter <%= key %>">
+            </div>
+          </li>
+          <% } %>
+        </ul>
+        <a class="btn btn-danger" data-toggle="modal" data-target="#serverLeaveModal" role="button">Leave
+          <i class="fa fa-fw fa-sign-out" aria-hidden="true"></i>
+        </a>
+      </form>
+    </div>
+  </div>
+  <% include ../blocks/guild-modals %>
+  <script type="text/javascript">
+    var ts = parseInt($('#guildCreate').text());
+    $('#guildCreate').html(`<strong>Created:</strong>: ${moment(ts).format('MMMM Do YYYY (h:mm a)')}`);
+  </script>
+<% include ../blocks/footer %>

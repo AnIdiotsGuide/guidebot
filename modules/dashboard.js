@@ -137,16 +137,7 @@ module.exports = (client) => {
     res.redirect("/");
   }
 
-  // Index page. If the user is authenticated, it shows their info
-  // at the top right of the screen.
-  app.get("/", (req, res) => {
-    res.render(path.resolve(`${templateDir}${path.sep}index.ejs`), {
-      bot: client,
-      path: req.path,
-      auth: req.isAuthenticated() ? true : false,
-      user: req.isAuthenticated() ? req.user : null
-    });
-  });
+  /** PAGE ACTIONS RELATED TO SESSIONS */
 
   // The login page saves the page the person was on in the session,
   // then throws the user to the Discord OAuth2 login page.
@@ -165,49 +156,85 @@ module.exports = (client) => {
   },
   passport.authenticate("discord"));
 
-  app.get("/callback", passport.authenticate("discord", {
-    failureRedirect: "/autherror"
-  }), (req, res) => {
+  const renderTemplate = (res, req, template, data = {}) => {
+    const baseData = {
+      bot: client,
+      path: req.path,
+      auth: req.isAuthenticated() ? true : false,
+      user: req.isAuthenticated() ? req.user : null
+    };
+    res.render(path.resolve(`${templateDir}${path.sep}${template}`), Object.assign(baseData, data));
+  };
+
+  // Once the user returns from OAuth2, this endpoint gets called. 
+  // Here we check if the user was already on the page and redirect them
+  // there, mostly.
+  app.get("/callback", passport.authenticate("discord", { failureRedirect: "/autherror" }), (req, res) => {
+    if (req.user.id === client.config.ownerID) {
+      req.session.isAdmin = true;
+    }
     if (req.session.backURL) {
-      res.redirect(req.session.backURL);
+      const url = req.session.backURL;
       req.session.backURL = null;
+      res.redirect(url);
     } else {
       res.redirect("/");
     }
   });
   
   app.get("/autherror", (req, res) => {
-    res.render(path.resolve(`${templateDir}${path.sep}autherror.ejs`), {
-      bot: client,
-      path: req.path,
-      auth: req.isAuthenticated() ? true : false,
-      user: req.isAuthenticated() ? req.user : null
+    renderTemplate(res, req, "autherror.ejs");
+  });
+
+  app.get("/logout", function(req, res) {
+    req.session.destroy(() => {
+      req.logout();
+      res.redirect("/"); //Inside a callback… bulletproof!
+    });
+  });
+
+  // Index page. If the user is authenticated, it shows their info
+  // at the top right of the screen.
+  app.get("/", (req, res) => {
+    renderTemplate(res, req, "index.ejs");
+  });
+
+  app.get("/commands", (req, res) => {
+    renderTemplate(res, req, "command.ejs", {md});
+  });
+  
+  app.get("/stats", (req, res) => {
+    const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
+    const members = client.guilds.reduce((p, c) => p + c.memberCount, 0);
+    const textChannels = client.channels.filter(c => c.type === "text").size;
+    const voiceChannels = client.channels.filter(c => c.type === "voice").size;
+    const guilds = client.guilds.size;
+    renderTemplate(res, req, "stats.ejs", {
+      stats: {
+        servers: guilds,
+        members: members,
+        text: textChannels,
+        voice: voiceChannels,
+        uptime: duration,
+        memoryUsage: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2),
+        dVersion: Discord.version,
+        nVersion: process.version
+      }
     });
   });
 
   app.get("/admin", checkAdmin, (req, res) => {
-    res.render(path.resolve(`${templateDir}${path.sep}admin.ejs`), {
-      bot: client,
-      path: req.path,
-      user: req.user,
-      auth: true
-    });
+    renderTemplate(res, req, "admin.ejs");
   });
 
   app.get("/dashboard", checkAuth, (req, res) => {
     const perms = Discord.EvaluatedPermissions;
-    res.render(path.resolve(`${templateDir}${path.sep}dashboard.ejs`), {
-      perms: perms,
-      bot: client,
-      path: req.path,
-      user: req.user,
-      auth: true
-    });
+    renderTemplate(res, req, "dashboard.ejs", {perms});
   });
 
   app.get("/dashboard/:guildID", checkAuth, (req, res) => {
     res.redirect(`/dashboard/${req.params.guildID}/manage`);
-  })
+  });
   
   app.get("/dashboard/:guildID/members", checkAuth, async (req, res) => {
     const guild = client.guilds.get(req.params.guildID);
@@ -215,15 +242,11 @@ module.exports = (client) => {
     if (req.params.fetch) {
       await guild.fetchMembers();
     }
-    res.render(path.resolve(`${templateDir}${path.sep}members.ejs`), {
-      bot: client,
-      user: req.user,
-      path: req.path,
-      auth: true,
+    renderTemplate(res, req, "guild/admin.ejs", {
       guild: guild,
       members: guild.members.array()
-    })
-  })
+    });
+  });
 
   app.get("/dashboard/:guildID/members/list", checkAuth, async (req, res) => {
     const guild = client.guilds.get(req.params.guildID);
@@ -307,13 +330,19 @@ module.exports = (client) => {
     } else if (!isManaged) {
       res.redirect("/");
     }
-    res.render(path.resolve(`${templateDir}${path.sep}manage.ejs`), {
-      bot: client,
-      path: req.path,
-      guild: guild,
-      user: req.user,
-      auth: true
-    });
+    renderTemplate(res, req, "guild/manage.ejs", {guild});
+  });
+
+  app.get("/dashboard/:guildID/stats", checkAuth, (req, res) => {
+    const guild = client.guilds.get(req.params.guildID);
+    if (!guild) return res.status(404);
+    const isManaged = guild && !!guild.member(req.user.id) ? guild.member(req.user.id).permissions.has("MANAGE_GUILD") : false;
+    if (req.user.id === client.config.ownerID) {
+      console.log(`Admin bypass for managing server: ${req.params.guildID}`);
+    } else if (!isManaged) {
+      res.redirect("/");
+    }
+    renderTemplate(res, req, "guild/stats.ejs", {guild});
   });
   
   app.get("/dashboard/:guildID/leave", checkAuth, async (req, res) => {
@@ -345,45 +374,5 @@ module.exports = (client) => {
     res.redirect("/dashboard/"+req.params.guildID);
   });
   
-  
-  app.get("/commands", (req, res) => {
-    res.render(path.resolve(`${templateDir}${path.sep}commands.ejs`), {
-      bot: client,
-      path: req.path,
-      auth: req.isAuthenticated() ? true : false,
-      user: req.isAuthenticated() ? req.user : null,
-      md: md
-    });
-  });
-  
-  app.get("/stats", (req, res) => {
-    const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
-    const members = client.guilds.reduce((p, c) => p + c.memberCount, 0);
-    const textChannels = client.channels.filter(c => c.type === "text").size;
-    const voiceChannels = client.channels.filter(c => c.type === "voice").size;
-    const guilds = client.guilds.size;
-    res.render(path.resolve(`${templateDir}${path.sep}stats.ejs`), {
-      bot: client,
-      path: req.path,
-      auth: req.isAuthenticated() ? true : false,
-      user: req.isAuthenticated() ? req.user : null,
-      stats: {
-        servers: guilds,
-        members: members,
-        text: textChannels,
-        voice: voiceChannels,
-        uptime: duration,
-        memoryUsage: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2),
-        dVersion: Discord.version,
-        nVersion: process.version
-      }
-    });
-  });
-
-  app.get("/logout", function(req, res) {
-    req.logout();
-    res.redirect("/");
-  });
-
   client.site = app.listen(client.config.dashboard.port);
 };

@@ -1,0 +1,22 @@
+<%- include('../blocks/header', {bot, user, path}) %>
+<h2>Server Statistics (In Dev)</h2>
+
+  <div class="row">
+    <div class="col col-4">
+      <%- include('../blocks/guild-card', {guild}) %>
+    </div>
+    <div class="col">
+      <div class="card" style="width: 100%;">
+        <%- include('../blocks/guild-nav', {active: "stats", guild}) %>
+        <p>To Be Done</p>
+      </div>
+    </div>
+  </div>
+
+  <% include ../blocks/guild-modals %>
+  <script type="text/javascript">
+    var ts = parseInt($('#guildCreate').text());
+    $('#guildCreate').html(`<strong>Created:</strong>: ${moment(ts).format('MMMM Do YYYY (h:mm a)')}`);
+  </script>
+
+<% include ../blocks/footer %>

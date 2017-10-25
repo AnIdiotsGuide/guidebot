@@ -1,0 +1,13 @@
+    <div class="card-header" style="padding: 2px;">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link<% if(active === 'manage') { %> active<% } %>" href="/dashboard/<%= guild.id %>/manage">Settings</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link<% if(active === 'stats') { %> active<% } %>" href="/dashboard/<%= guild.id %>/stats">Stats</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link<% if(active === 'members') { %> active<% } %>" href="/dashboard/<%= guild.id %>/members">Members</a>
+        </li>
+      </ul>
+    </div>

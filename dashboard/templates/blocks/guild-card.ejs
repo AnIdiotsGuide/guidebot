@@ -1,0 +1,58 @@
+<div class="card" style="width: 20rem;">
+        <% if (guild.icon) { %>
+          <img class="card-img-top" style="width: 100%;" src="<%= `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=256` %>"
+            alt="">
+          <% } else { %>
+            <canvas style="background-color: #7289da" class="card-img-top" id="<%= guild.name.split(' ').join('').replace(`'`, ``) %>"
+              width="20rem" height="20rem"></canvas>
+            <script>
+              function draw() {
+                const ctx = document.getElementById("<%= guild.name.split(' ').join('').replace(`'`, ``) %>").getContext(
+                  '2d');
+                ctx.font = '30px Arial';
+                ctx.textAlign = "center";
+                ctx.fillStyle = "white";
+                ctx.fillText("<%= guild.name.split(' ').map(v => v[0]).join('') %>", 40, 50);
+              };
+              draw();
+            </script>
+            <% } %>
+              <div class="card-block">
+                <h4 class="card-title">
+                  <%= guild.name %>
+                </h4>
+                <p class="card-text" id="guildCreate">
+                  <%= guild.createdTimestamp %>
+                </p>
+                <ul class="list-group list-group-flush" style="width: 100%">
+                  <li class="list-group-item" style="width: 100%">
+                    <strong>Owner</strong> : 
+                    <i class="fa fa-fw fa-user-circle-o" aria-hidden="true"></i>
+                    <%= `${guild.owner.user.tag}` %>
+                  </li>
+                  <li class="list-group-item">
+                    <strong>Members</strong> :
+                    <i class="fa fa-fw fa-users" aria-hidden="true"></i>
+                    <%= `${guild.memberCount}` %>
+                      (
+                      <i class="fa fa-fw fa-android" aria-hidden="true"></i>
+                      <%= `${guild.members.filter(m => m.user.bot).size}` %> Bots )
+                  </li>
+                  <li class="list-group-item">
+                    <strong>Roles</strong> :
+                    <i class="fa fa-fw fa-users" aria-hidden="true"></i>
+                    <%= guild.roles.size %>
+                  </li>
+                  <li class="list-group-item">
+                    <strong>Channels</strong> :
+                    <i class="fa fa-fw fa-hashtag" aria-hidden="true"></i>
+                    <%= `${guild.channels.filter(c => c.type === 'text').size}`%>
+                      <i class="fa fa-fw fa-microphone" aria-hidden="true"></i>
+                      <%= `${guild.channels.filter(c => c.type === 'voice').size}`%>
+                  </li>
+                </ul>
+                <a class="btn btn-danger" data-toggle="modal" data-target="#serverLeaveModal" role="button">Leave
+                  <i class="fa fa-fw fa-sign-out" aria-hidden="true"></i>
+                </a>
+              </div>
+      </div>

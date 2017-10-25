@@ -1,5 +1,4 @@
-<%- include('blocks/header', {bot:bot, user: user, path: path, auth: auth}) %>
-
+<%- include('blocks/header', {bot, user, path}) %>
 <% const help = {};
 bot.commands.forEach((command) => {
   const cat = command.help.category;
