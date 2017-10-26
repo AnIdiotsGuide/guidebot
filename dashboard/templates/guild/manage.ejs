@@ -12,14 +12,14 @@
             const defaults = bot.config.defaultSettings;
             for (const key in settings) { %>
           <li class="list-group-item" style="padding: 0;">
-            <label class="sr-only" for="inlineForm<%= key %>">
+            <label class="sr-only" for="<%= key %>">
               <%= key %>
             </label>
             <div class="input-group mb-2 mr-sm-2 mb-sm-0" style="width: 100%; margin: 0 !important;">
               <div class="input-group-addon" style="width: 150px; text-align: right; margin: 0;">
                 <%= key %>
               </div>
-              <input type="text" class="form-control" style="text-align: left;" id="inlineForm<%= key %>" value="<%= settings[key] %>"
+              <input type="text" class="form-control" style="text-align: left;" name="<%= key %>" id="<%= key %>" value="<%= settings[key] %>"
                 placeholder="Enter <%= key %>">
             </div>
           </li>
