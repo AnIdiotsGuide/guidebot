@@ -14,7 +14,7 @@ module.exports = async client => {
   client.user.setStatus("dnd");
 
   const { version } = require("discord.js");
-  client.log(`Mem Usage  :: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
+  client.log(`Versions] Mem Usage  :: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
   	Discord.js :: v${version}
   	Node       :: ${process.version}`);
 };
