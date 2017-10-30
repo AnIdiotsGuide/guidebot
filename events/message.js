@@ -64,9 +64,4 @@ module.exports = (client, message) => {
   // If the command exists, **AND** the user has permission, run it.
   client.log("log", `${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "CMD");
   cmd.run(client, message, args, level);
-
-  //Attitude
-  const prefixMention = new RegExp(`^<@!?${client.user.id}> `);
-  prefix = prefixMention.match(message.content) ? message.content.match(prefixMention)[0] + " " : prefix;
-  message,reply('What tf do you want???')
 };
