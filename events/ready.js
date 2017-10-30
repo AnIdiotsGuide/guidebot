@@ -14,6 +14,6 @@ module.exports = async client => {
   client.user.setStatus("dnd");
 
   const { version } = require("discord.js");
-  client.log('Discord.js :: v${version}\
+  client.log(' Discord.js :: v${version}\n\
   Node       :: ${process.version}');
 };
