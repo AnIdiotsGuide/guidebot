@@ -12,4 +12,9 @@ module.exports = async client => {
 
   //Set status
   client.user.setStatus("dnd");
+
+  const { version } = require("discord.js");
+  message.channel.send(`= STATISTICS =
+  Discord.js :: v${version}
+  Node       :: ${process.version}`, {code: "asciidoc"});
 };
