@@ -9,7 +9,7 @@ const config = {
   "support": [],
 
   // Your Bot's Token. Available on https://discordapp.com/developers/applications/me
-  "token": "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0",
+  //"token": "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0",
 
   // Default per-server settings. New guilds have these settings. 
 
@@ -19,8 +19,8 @@ const config = {
   "defaultSettings" : {
     "prefix": ",",
     "modLogChannel": "mod-log",
-    "modRole": "Moderator",
-    "adminRole": "Administrator",
+    "modRole": "Mod",
+    "adminRole": "Admin",
     "systemNotice": "true", // This gives a notice when a user tries to run a command that they do not have permission to use.
     "welcomeChannel": "welcome",
     "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
