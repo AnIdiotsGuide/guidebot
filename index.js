@@ -36,8 +36,8 @@ client.aliases = new Enmap();
 // and makes things extremely easy for this purpose.
 client.settings = new Enmap({provider: new EnmapLevel({name: "settings"})});
 
-// We're doing real fancy NodeJS 8 async/await stuff here, and to do that
-// we need to wrap stuff in an anonymous function. It's annoying but it works.
+// We're going to do some real fancy NodeJS 8 async/await stuff here, and to do that
+// we need to wrap our code in an anonymous function. It's may be annoying, but it works.
 
 const init = async () => {
 
@@ -51,7 +51,7 @@ const init = async () => {
     if (response) console.log(response);
   });
 
-  // Then we load events, which will include our message and ready event.
+  // Then we load events, which will include our messageCreate (new message) and [client]ready events.
   const evtFiles = await readdir("./events/");
   client.log("log", `Loading a total of ${evtFiles.length} events.`);
   evtFiles.forEach(file => {
@@ -62,14 +62,19 @@ const init = async () => {
     delete require.cache[require.resolve(`./events/${file}`)];
   });
 
-  // Generate a cache of client permissions for pretty perms
+  // Generate a cache of client permissions for pretty permsissions
   client.levelCache = {};
   for (let i = 0; i < client.config.permLevels.length; i++) {
     const thisLevel = client.config.permLevels[i];
     client.levelCache[thisLevel.name] = thisLevel.level;
   }
 
-  // Here we login the client.
+  // Here, the client logs in to our bot's account through the Discord API
+  // Please, please, please don't show ANYONE the token inside the config file,
+  // if someone has your bot's token, they can log into your bot's account and make it do anything.
+  // If someone for some reason wan't to screw with you, and they have your token, they can make your bot do anything,
+  // even violate Discord's Terms of Service, which can get you and your bot banned.
+  // TL;DR - DON'T SHARE YOUR TOKEN... EVER!
   client.login(client.config.token);
 
 // End top-level async/await function.
