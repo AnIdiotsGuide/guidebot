@@ -51,7 +51,7 @@ const config = {
     },
     { level: 10,
       name: "Bot Owner", 
-      check: (message) => message.client.config.ownerID === message.author.id
+      check: (message) => message.client.appInfo.owner.id === message.author.id
     }
   ]
 };

@@ -10,7 +10,7 @@ exports.run = (client, message, args, level) => {
   // If no specific command is called, show all filtered commands.
   if (!args[0]) {
     // Load guild settings (for prefixes and eventually per-guild tweaks)
-    const settings = message.guild ? client.settings.get(message.guild.id) : client.config.defaultSettings;
+    const settings = message.settings;
 
     // Filter all commands by which are available for the user's level, using the <Collection>.filter() method.
     const myCommands = message.guild ? client.commands.filter(cmd => client.levelCache[cmd.conf.permLevel] <= level) : client.commands.filter(cmd => client.levelCache[cmd.conf.permLevel] <= level &&  cmd.conf.guildOnly !== true);
