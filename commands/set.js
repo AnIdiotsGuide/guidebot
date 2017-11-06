@@ -13,24 +13,10 @@ const { inspect } = require("util");
 // OR the same as:
 // const [action, key, ...value] = args;
 exports.run = async (client, message, [action, key, ...value], level) => { // eslint-disable-line no-unused-vars
-
+  
   // Retrieve current guild settings
   const settings = message.settings;
   const defaults = client.settings.get("default");
-  
-  // First, if a user does `-set add <key> <new value>`, let's add it
-  if (action === "add") {
-    if (!key) return message.reply("Please specify a key to add");
-    if (defaults[key]) return message.reply("This key already exists in the settings");
-    if (value.length < 1) return message.reply("Please specify a value");
-
-    // `value` being an array, we need to join it first.
-    defaults[key] = value.join(" ");
-  
-    // One the settings is modified, we write it back to the collection
-    client.settings.set("default", defaults);
-    message.reply(`${key} successfully added with the value of ${value.join(" ")}`);
-  } else
   
   // Secondly, if a user does `-set edit <key> <new value>`, let's change it
   if (action === "edit") {
@@ -45,12 +31,12 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
   } else
   
   // Thirdly, if a user does `-set del <key>`, let's ask the user if they're sure...
-  if (action === "del") {
-    if (!key) return message.reply("Please specify a key to delete.");
+  if (action === "del" || action === "reset") {
+    if (!key) return message.reply("Please specify a key to delete (reset).");
     if (!settings[key]) return message.reply("This key does not exist in the settings");
     
     // Throw the 'are you sure?' text at them.
-    const response = await client.awaitReply(message, `Are you sure you want to permanently delete ${key}? This **CANNOT** be undone.`);
+    const response = await client.awaitReply(message, `Are you sure you want to reset \`${key}\` to the default \`${defaults[key]}\`?`);
 
     // If they respond with y or yes, continue.
     if (["y", "yes"].includes(response)) {
@@ -62,16 +48,19 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     } else
     // If they respond with n or no, we inform them that the action has been cancelled.
     if (["n","no","cancel"].includes(response)) {
-      message.reply("Action cancelled.");
+      message.reply(`Your setting for \`${key}\` remains at \`${settings[key]}\``);
     }
   } else
   
+  // Using `-set get <key>` we simply return the current value for the guild.
   if (action === "get") {
     if (!key) return message.reply("Please specify a key to view");
     if (!settings[key]) return message.reply("This key does not exist in the settings");
     message.reply(`The value of ${key} is currently ${settings[key]}`);
+  
+  // Otherwise, the default action is to return the whole configuration in JSON format (to be prettified!);
   } else {
-    await message.channel.send(inspect(settings), {code: "json"});
+    await message.channel.send(`***__Current Guild Settings__***\n\`\`\`json\n${inspect(settings)}\n\`\`\``);
     message.channel.send(`See the Dashboard on <${client.config.dashboard.callbackURL.split("/").slice(0, -1).join("/")}>`);
   }
 };
@@ -79,7 +68,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
 exports.conf = {
   enabled: true,
   guildOnly: true,
-  aliases: ["setting", "settings", "conf"],
+  aliases: ["setting", "settings"],
   permLevel: "Administrator"
 };
 

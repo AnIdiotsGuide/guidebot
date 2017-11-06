@@ -13,6 +13,13 @@ module.exports = async client => {
     client.appInfo = await client.fetchApplication();
   }, 60000);
 
+  // Check whether the "Default" guild settings are loaded in the enmap.
+  // If they're not, write them in. This should only happen on first load.
+  if (!client.settings.has("default")) {
+    if (!client.config.defaultSettings) throw new Error("defaultSettings not preset in config.js or settings database. Bot cannot load.");
+    client.settings.set("default", client.config.defaultSettings);
+  }
+
   // Initializes the dashboard, which must be done on ready otherwise some data
   // may be missing from the dashboard. 
   require("../modules/dashboard")(client);  
