@@ -57,8 +57,8 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
       client.settings.set("default", defaults);
       
       // then we loop on all the guilds and remove this key if it exists.
-      for (const [guildid, conf] of client.settings) {
-        if (guildid === 'default' || !conf[key]) return;
+      // "if it exists" is done with the filter (if the key is present and it's not the default config!)
+      for (const [guildid, conf] of client.settings.filter((setting, id) => setting[key] && id !== "default")) {
         delete conf[key];
         client.settings.set(guildid, conf);
       }
