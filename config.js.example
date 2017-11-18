@@ -1,4 +1,7 @@
 const config = {
+  // Debug mode.
+  "debug": false,
+  
   // Bot Owner, level 10 by default. A User ID. Should never be anything else than the bot owner's ID.
   "ownerID": "123456789123456",
 
