@@ -31,7 +31,7 @@ exports.run = (client, message, args, level) => {
       }
       output += `${settings.prefix}${c.help.name}${" ".repeat(longest - c.help.name.length)} :: ${c.help.description}\n`;
     });
-      message.channel.send(output, {code:'asciidoc', split: { char: "\u200b" }});
+    message.channel.send(output, {code: "asciidoc", split: { char: "\u200b" }});
   } else {
     // Show individual command's help.
     let command = args[0];
