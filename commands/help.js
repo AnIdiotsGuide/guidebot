@@ -26,12 +26,12 @@ exports.run = (client, message, args, level) => {
     sorted.forEach( c => {
       const cat = c.help.category.toProperCase();
       if (currentCategory !== cat) {
-        output += `\n== ${cat} ==\n`;
+        output += `\u200b\n== ${cat} ==\n`;
         currentCategory = cat;
       }
       output += `${settings.prefix}${c.help.name}${" ".repeat(longest - c.help.name.length)} :: ${c.help.description}\n`;
     });
-    message.channel.send(output, {code:"asciidoc", split: true });
+    message.channel.send(output, {code:"asciidoc", split: { char: '\u200b' }});
   } else {
     // Show individual command's help.
     let command = args[0];
