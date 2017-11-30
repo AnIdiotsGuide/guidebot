@@ -9,4 +9,12 @@ module.exports = async client => {
 
   // We check for any guilds added while the bot was offline, if any were, they get a default configuration.
   client.guilds.filter(g => !client.settings.has(g.id)).forEach(g => client.settings.set(g.id, client.config.defaultSettings));
+
+  //Set status
+  client.user.setStatus("dnd");
+
+  const { version } = require("discord.js");
+  client.log(`Versions and stats] Mem Usage  :: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
+  		Discord.js :: v${version}
+  		Node       :: ${process.version}`);
 };
