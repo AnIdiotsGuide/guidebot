@@ -29,6 +29,7 @@ require("./modules/functions.js")(client);
 // catalogued, listed, etc.
 client.commands = new Enmap();
 client.aliases = new Enmap();
+client.workers = new Enmap();
 
 // Now we integrate the use of Evie's awesome Enhanced Map module, which
 // essentially saves a collection to disk. This is great for per-server configs,
@@ -59,6 +60,13 @@ const init = async () => {
     // This line is awesome by the way. Just sayin'.
     client.on(eventName, event.bind(null, client));
     delete require.cache[require.resolve(`./events/${file}`)];
+  });
+
+  const backgroundFiles = await readdir("./background/");
+  client.login("log", `Loading a total of ${evtFiles.length} background workers.`);
+  backgroundFiles.forEach(file => {
+    const workerName = file.split(".")[0];
+    client.loadBackgroundWorker(workerName);
   });
 
   // Generate a cache of client permissions for pretty perms
