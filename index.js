@@ -66,7 +66,7 @@ const init = async () => {
   client.login("log", `Loading a total of ${evtFiles.length} background workers.`);
   backgroundFiles.forEach(file => {
     const workerName = file.split(".")[0];
-    const worker = client.loadBackgroundWorker(workerName);
+    client.loadBackgroundWorker(workerName);
   });
 
   // Generate a cache of client permissions for pretty perms

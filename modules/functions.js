@@ -137,7 +137,7 @@ module.exports = (client) => {
     clearInterval(worker.intervalId);
 
     if (worker.shutdown) {
-      await (worker.shutdown(client));
+      await worker.shutdown(client);
     }
     delete require.cache[require.resolve(`../background/${workerName}.js`)];
     return false;
