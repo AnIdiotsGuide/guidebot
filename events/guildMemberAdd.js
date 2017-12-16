@@ -1,8 +1,8 @@
 // This event executes when a new member joins a server. Let's welcome them!
 
-module.exports = (client, member) => {
+module.exports = async (client, member) => {
   // Load the guild's settings
-  const settings = client.settings.get(member.guild.id);
+  const settings = await client.getSettings(member.guild.id);
 
   // If welcome is off, don't proceed (don't welcome the user)
   if (settings.welcomeEnabled !== "true") return;
