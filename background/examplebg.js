@@ -5,8 +5,12 @@ exports.conf = {
   interval: 3000 // milliseconds
 };
 
-exports.init = (client) => {
+exports.init = async (client) => {
   console.log("Worker has been initialized.");
+};
+
+exports.shutdown = async (client) => {
+  console.log("Worker is shutting down. Make sure you saved your changes.");
 };
 
 let ranTimes = 0;

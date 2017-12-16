@@ -106,9 +106,9 @@ module.exports = (client) => {
 
   client.loadBackgroundWorker = (workerName) => {
     const worker = require(`../background/${workerName}`);
-    client.log("log", `Loading Background Worker: ${worker.conf.slug}. 👌`);
+    client.logger.log("log", `Loading Background Worker: ${worker.conf.slug}. 👌`);
     if (worker.init) {
-      worker.init(client);
+      await worker.init(client);
     }
     client.workers.set(worker.conf.slug, worker);
     worker.intervalId = setInterval( (worker) => {
