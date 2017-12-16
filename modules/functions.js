@@ -38,7 +38,7 @@ module.exports = (client) => {
 
   */
   client.awaitReply = async (msg, question, limit = 60000) => {
-    const filter = m=>m.author.id = msg.author.id;
+    const filter = m => m.author.id = msg.author.id;
     await msg.channel.send(question);
     try {
       const collected = await msg.channel.awaitMessages(filter, { max: 1, time: limit, errors: ["time"] });
@@ -61,7 +61,7 @@ module.exports = (client) => {
     if (text && text.constructor.name == "Promise")
       text = await text;
     if (typeof evaled !== "string")
-      text = require("util").inspect(text, {depth: 0});
+      text = require("util").inspect(text, { depth: 0 });
 
     text = text
       .replace(/`/g, "`" + String.fromCharCode(8203))
@@ -96,7 +96,7 @@ module.exports = (client) => {
       command = client.commands.get(client.aliases.get(commandName));
     }
     if (!command) return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`;
-  
+
     if (command.shutdown) {
       await command.shutdown(client);
     }
@@ -104,22 +104,50 @@ module.exports = (client) => {
     return false;
   };
 
+  client.loadBackgroundWorker = (workerName) => {
+    const worker = require(`../background/${workerName}`);
+    client.logger.log("log", `Loading Background Worker: ${worker.conf.slug}. 👌`);
+    if (worker.init) {
+      await worker.init(client);
+    }
+    client.workers.set(worker.conf.slug, worker);
+    worker.intervalId = setInterval( (worker) => {
+      worker.run(client);
+    }, worker.conf.interval, worker);
+    return false;
+  };
+
+  client.unloadBackgroundWorker = (workerName) => {
+    let worker;
+    if (client.workers.has(workerName)) {
+      worker = client.workers.get(workerName);
+    }
+    if (!worker) return `The worker \`${workerName}\` doesn"t seem to exist. Try again!`;
+    clearInterval(worker.intervalId);
+
+    if (worker.shutdown) {
+      await worker.shutdown(client);
+    }
+    delete require.cache[require.resolve(`../background/${workerName}.js`)];
+    return false;
+  };
+
   /* MISCELANEOUS NON-CRITICAL FUNCTIONS */
-  
+
   // EXTENDING NATIVE TYPES IS BAD PRACTICE. Why? Because if JavaScript adds this
   // later, this conflicts with native code. Also, if some other lib you use does
   // this, a conflict also occurs. KNOWING THIS however, the following 2 methods
   // are, we feel, very useful in code. 
-  
+
   // <String>.toPropercase() returns a proper-cased string such as: 
   // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
-  String.prototype.toProperCase = function() {
-    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-  };    
-  
+  String.prototype.toProperCase = function () {
+    return this.replace(/([^\W_]+[^\s-]*) */g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+  };
+
   // <Array>.random() returns a single random element from an array
   // [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.
-  Array.prototype.random = function() {
+  Array.prototype.random = function () {
     return this[Math.floor(Math.random() * this.length)]
   };
 
