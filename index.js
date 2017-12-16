@@ -9,7 +9,10 @@ const Discord = require("discord.js");
 const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
 const Enmap = require("enmap");
-const EnmapLevel = require("enmap-level");
+const r = require("rethinkdbdash")({"db":"guidebot"});
+const chalk = require("chalk");
+const moment = require("moment");
+require("moment-duration-format");
 
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
@@ -30,10 +33,32 @@ require("./modules/functions.js")(client);
 client.commands = new Enmap();
 client.aliases = new Enmap();
 
-// Now we integrate the use of Evie's awesome Enhanced Map module, which
-// essentially saves a collection to disk. This is great for per-server configs,
-// and makes things extremely easy for this purpose.
-client.settings = new Enmap({provider: new EnmapLevel({name: "settings"})});
+client.settings = r.table("settings");
+
+client.log = (type, msg) => {
+  const timestamp = `[${moment().format("YYYY-MM-DD HH:mm:ss")}]:`;
+  switch (type) {
+    case "log": {
+      return console.log(`${timestamp} ${chalk.bgBlue(type.toUpperCase())} ${msg} `);
+    }
+    case "warn": {
+      return console.log(`${timestamp} ${chalk.black.bgYellow(type.toUpperCase())} ${msg} `);
+    }
+    case "error": {
+      return console.log(`${timestamp} ${chalk.bgRed(type.toUpperCase())} ${msg} `);
+    }
+    case "debug": {
+      return console.log(`${timestamp} ${chalk.green(type.toUpperCase())} ${msg} `);
+    }
+    case "cmd": {
+      return console.log(`${timestamp} ${chalk.black.bgWhite(type.toUpperCase())} ${msg}`);
+    }
+    case "ready": {
+      return console.log(`${timestamp} ${chalk.black.bgGreen(type.toUpperCase())} ${msg}`);
+    } 
+    default: throw new TypeError("Logger type must be either warn, debug, log, ready, cmd or error.");
+  } 
+};
 
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
