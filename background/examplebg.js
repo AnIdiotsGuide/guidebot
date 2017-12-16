@@ -17,4 +17,4 @@ module.exports.run = (client) => {
     console.log(`${slug} ran 4 times. Unloading..`);
     client.unloadBackgroundWorker(slug);
   }
-}
+};
