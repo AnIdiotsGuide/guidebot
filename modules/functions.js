@@ -104,9 +104,9 @@ module.exports = (client) => {
     return false;
   };
 
-  client.loadBackgroundWorker = (workerName) => {
+  client.loadBackgroundWorker = async (workerName) => {
     const worker = require(`../background/${workerName}`);
-    client.logger.log("log", `Loading Background Worker: ${worker.conf.slug}. 👌`);
+    client.logger.log(`Loading Background Worker: ${worker.conf.slug}. 👌`);
     if (worker.init) {
       await worker.init(client);
     }
@@ -117,7 +117,7 @@ module.exports = (client) => {
     return false;
   };
 
-  client.unloadBackgroundWorker = (workerName) => {
+  client.unloadBackgroundWorker = async (workerName) => {
     let worker;
     if (client.workers.has(workerName)) {
       worker = client.workers.get(workerName);

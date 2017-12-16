@@ -66,7 +66,7 @@ const init = async () => {
   });
 
   const backgroundFiles = await readdir("./background/");
-  client.logger.log(`Loading a total of ${evtFiles.length} background workers.`);
+  client.logger.log(`Loading a total of ${backgroundFiles.length} background workers.`);
   backgroundFiles.forEach(file => {
     const workerName = file.split(".")[0];
     client.loadBackgroundWorker(workerName);
