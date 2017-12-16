@@ -31,7 +31,7 @@ client.commands = new Enmap();
 client.aliases = new Enmap();
 
 // Using our logger
-client.logger = require("./util/Logger")
+client.logger = require("./util/Logger");
 
 // Now we integrate the use of Evie's awesome Enhanced Map module, which
 // essentially saves a collection to disk. This is great for per-server configs,
