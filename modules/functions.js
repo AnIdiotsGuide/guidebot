@@ -25,18 +25,6 @@ module.exports = (client) => {
     return permlvl;
   };
 
-
-  /*
-  LOGGING FUNCTION
-
-  Logs to console. Future patches may include time+colors
-  */
-  client.log = (type, msg, title) => {
-    if (!title) title = "Log";
-    console.log(`[${type}] [${title}]${msg}`);
-  };
-
-
   /*
   SINGLE-LINE AWAITMESSAGE
 
@@ -86,7 +74,7 @@ module.exports = (client) => {
   client.loadCommand = (commandName) => {
     try {
       const props = require(`../commands/${commandName}`);
-      client.log("log", `Loading Command: ${props.help.name}. 👌`);
+      client.logger.log(`Loading Command: ${props.help.name}. 👌`);
       if (props.init) {
         props.init(client);
       }
@@ -141,13 +129,13 @@ module.exports = (client) => {
   // These 2 process methods will catch exceptions and give *more details* about the error and stack trace.
   process.on("uncaughtException", (err) => {
     const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, "g"), "./");
-    console.error("Uncaught Exception: ", errorMsg);
+    client.logger.error(`Uncaught Exception: ${errorMsg}`);
     // Always best practice to let the code crash on uncaught exceptions. 
     // Because you should be catching them anyway.
     process.exit(1);
   });
 
   process.on("unhandledRejection", err => {
-    console.error("Uncaught Promise Error: ", err);
+    client.logger.error(`Unhandled rejection: ${error}`);
   });
 };
