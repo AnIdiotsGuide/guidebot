@@ -30,6 +30,9 @@ require("./modules/functions.js")(client);
 client.commands = new Enmap();
 client.aliases = new Enmap();
 
+// Using our logger
+client.logger = require("./util/Logger")
+
 // Now we integrate the use of Evie's awesome Enhanced Map module, which
 // essentially saves a collection to disk. This is great for per-server configs,
 // and makes things extremely easy for this purpose.
@@ -43,7 +46,7 @@ const init = async () => {
   // Here we load **commands** into memory, as a collection, so they're accessible
   // here and everywhere else.
   const cmdFiles = await readdir("./commands/");
-  client.log("log", `Loading a total of ${cmdFiles.length} commands.`);
+  client.logger.log(`Loading a total of ${cmdFiles.length} commands.`);
   cmdFiles.forEach(f => {
     if (!f.endsWith(".js")) return;
     const response = client.loadCommand(f);
@@ -52,7 +55,7 @@ const init = async () => {
 
   // Then we load events, which will include our message and ready event.
   const evtFiles = await readdir("./events/");
-  client.log("log", `Loading a total of ${evtFiles.length} events.`);
+  client.logger.log(`Loading a total of ${evtFiles.length} events.`);
   evtFiles.forEach(file => {
     const eventName = file.split(".")[0];
     const event = require(`./events/${file}`);
