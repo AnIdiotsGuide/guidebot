@@ -15,7 +15,7 @@ const { inspect } = require("util");
 exports.run = async (client, message, [action, key, ...value], level) => { // eslint-disable-line no-unused-vars
 
   // Retrieve current guild settings
-  const settings = client.settings.get(message.guild.id);
+  const settings = await client.getSettings(message.guild.id);
   
   // First, if a user does `-set add <key> <new value>`, let's add it
   if (action === "add") {
@@ -27,7 +27,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     settings[key] = value.join(" ");
   
     // One the settings is modified, we write it back to the collection
-    client.settings.set(message.guild.id, settings);
+    client.settings.get(message.guild.id).update({"settings":settings}).run();
     message.reply(`${key} successfully added with the value of ${value.join(" ")}`);
   } else
   
@@ -39,7 +39,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
   
     settings[key] = value.join(" ");
 
-    client.settings.set(message.guild.id, settings);
+    client.settings.get(message.guild.id).update({"settings":settings}).run();
     message.reply(`${key} successfully edited to ${value.join(" ")}`);
   } else
   
@@ -56,7 +56,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
 
       // We delete the `key` here.
       delete settings[key];
-      client.settings.set(message.guild.id, settings);
+      client.settings.get(message.guild.id).update({"settings":settings}).run();
       message.reply(`${key} was successfully deleted.`);
     } else
     // If they respond with n or no, we inform them that the action has been cancelled.
