@@ -10,7 +10,7 @@ exports.init = async (client) => {
 };
 
 exports.shutdown = async (client) => {
-  console.log("Worker is shutting down. Make sure you saved your changes.");
+  client.logger.log("Worker is shutting down. Make sure you saved your changes.");
 };
 
 let ranTimes = 0;
@@ -18,7 +18,7 @@ let ranTimes = 0;
 exports.run = (client) => {
   console.log(`${slug} worker ran ${++ranTimes} times.`);
   if (ranTimes === 4) {
-    console.log(`${slug} ran 4 times. Unloading..`);
+    client.logger.log(`${slug} ran 4 times. Unloading..`);
     client.unloadBackgroundWorker(slug);
   }
 };
