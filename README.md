@@ -55,7 +55,7 @@ Once finished:
 
 The database needs to be running before you continue, if you're running Windows:
 
-- Download the zipped *.EXE from the RethinkDB [https://www.rethinkdb.com/docs/install](website)
+- Download the zipped *.EXE from the RethinkDB [website](https://www.rethinkdb.com/docs/install)
 - Extract and run the *.EXE
 
 If you're running Linux:
