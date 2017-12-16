@@ -6,7 +6,7 @@ exports.conf = {
 };
 
 exports.init = async (client) => {
-  console.log("Worker has been initialized.");
+  client.logger.log("Worker has been initialized.");
 };
 
 exports.shutdown = async (client) => {
