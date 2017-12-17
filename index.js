@@ -37,7 +37,7 @@ client.workers = new Enmap();
 // Now we integrate the use of Evie's awesome Enhanced Map module, which
 // essentially saves a collection to disk. This is great for per-server configs,
 // and makes things extremely easy for this purpose.
-client.settings = new Enmap({provider: new EnmapLevel({name: "settings"})});
+client.settings = new Enmap({ provider: new EnmapLevel({ name: "settings" }) });
 
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
@@ -57,20 +57,20 @@ const init = async () => {
   // Then we load events, which will include our message and ready event.
   const evtFiles = await readdir("./events/");
   client.logger.log(`Loading a total of ${evtFiles.length} events.`);
-  evtFiles.forEach(file => {
+  await Promise.all(evtFiles.map(file => {
     const eventName = file.split(".")[0];
     const event = require(`./events/${file}`);
     // This line is awesome by the way. Just sayin'.
     client.on(eventName, event.bind(null, client));
     delete require.cache[require.resolve(`./events/${file}`)];
-  });
+  }));
 
   const backgroundFiles = await readdir("./background/");
   client.logger.log(`Loading a total of ${backgroundFiles.length} background workers.`);
-  backgroundFiles.forEach(file => {
+  await Promise.all(backgroundFiles.map(file => {
     const workerName = file.split(".")[0];
-    client.loadBackgroundWorker(workerName);
-  });
+    return client.loadBackgroundWorker(workerName);
+  }));
 
   // Generate a cache of client permissions for pretty perms
   client.levelCache = {};
@@ -82,7 +82,7 @@ const init = async () => {
   // Here we login the client.
   client.login(client.config.token);
 
-// End top-level async/await function.
+  // End top-level async/await function.
 };
 
 init();

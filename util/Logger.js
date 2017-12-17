@@ -11,13 +11,13 @@ exports.log = (content, type = "log") => {
       return console.log(`${timestamp} ${chalk.bgBlue(type.toUpperCase())} ${content} `);
     }
     case "warn": {
-      return console.log(`${timestamp} ${chalk.black.bgYellow(type.toUpperCase())} ${content} `);
+      return console.warn(`${timestamp} ${chalk.black.bgYellow(type.toUpperCase())} ${content} `);
     }
     case "error": {
-      return console.log(`${timestamp} ${chalk.bgRed(type.toUpperCase())} ${content} `);
+      return console.error(`${timestamp} ${chalk.bgRed(type.toUpperCase())} ${content} `);
     }
     case "debug": {
-      return console.log(`${timestamp} ${chalk.green(type.toUpperCase())} ${content} `);
+      return console.debug(`${timestamp} ${chalk.green(type.toUpperCase())} ${content} `);
     }
     case "cmd": {
       return console.log(`${timestamp} ${chalk.black.bgWhite(type.toUpperCase())} ${content}`);
@@ -27,12 +27,12 @@ exports.log = (content, type = "log") => {
     }
     default: throw new TypeError("Logger type must be either warn, debug, log, ready, cmd or error.");
   }
-} 
+}
 
-exports.error = (...args) => this.log(...args, "error");
+exports.error = (content) => this.log(content, "error");
 
-exports.warn = (...args) => this.log(...args, "warn");
+exports.warn = (content) => this.log(content, "warn");
 
-exports.debug = (...args) => this.log(...args, "debug");
+exports.debug = (content) => this.log(content, "debug");
 
-exports.cmd = (...args) => this.log(...args, "cmd");
+exports.cmd = (content) => this.log(content, "cmd");

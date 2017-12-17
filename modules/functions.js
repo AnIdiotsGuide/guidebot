@@ -57,11 +57,14 @@ module.exports = (client) => {
   and stringifies objects!
   This is mostly only used by the Eval and Exec commands.
   */
+  
+  var util = require("util");
+
   client.clean = async (client, text) => {
     if (text && text.constructor.name == "Promise")
       text = await text;
     if (typeof evaled !== "string")
-      text = require("util").inspect(text, { depth: 0 });
+      text = util.inspect(text, { depth: 0 });
 
     text = text
       .replace(/`/g, "`" + String.fromCharCode(8203))
@@ -118,10 +121,7 @@ module.exports = (client) => {
   };
 
   client.unloadBackgroundWorker = async (workerName) => {
-    let worker;
-    if (client.workers.has(workerName)) {
-      worker = client.workers.get(workerName);
-    }
+    const worker = client.workers.has(workerName) ? client.workers.get(workerName) : null;
     if (!worker) return `The worker \`${workerName}\` doesn"t seem to exist. Try again!`;
     clearInterval(worker.intervalId);
 
