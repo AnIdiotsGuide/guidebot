@@ -1,6 +1,6 @@
 {
   "name": "guidebot",
-  "version": "2.2.4",
+  "version": "2.4.5",
   "description": "A boilerplate example bot with command handler and reloadable commands. Updated and Maintained by the Idiot's Guide Community",
   "main": "index.js",
   "scripts": {
