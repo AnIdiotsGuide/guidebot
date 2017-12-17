@@ -57,7 +57,7 @@ const init = async () => {
   // Then we load events, which will include our message and ready event.
   const evtFiles = await readdir("./events/");
   client.logger.log(`Loading a total of ${evtFiles.length} events.`);
-  await Promise.all(evtFiles.map(file => {
+  await Promise.all(evtFiles.map(async (file) => {
     const eventName = file.split(".")[0];
     const event = require(`./events/${file}`);
     // This line is awesome by the way. Just sayin'.
@@ -67,7 +67,7 @@ const init = async () => {
 
   const backgroundFiles = await readdir("./background/");
   client.logger.log(`Loading a total of ${backgroundFiles.length} background workers.`);
-  await Promise.all(backgroundFiles.map(file => {
+  await Promise.all(backgroundFiles.map(async (file) => {
     const workerName = file.split(".")[0];
     return client.loadBackgroundWorker(workerName);
   }));

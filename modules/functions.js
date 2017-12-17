@@ -58,7 +58,7 @@ module.exports = (client) => {
   This is mostly only used by the Eval and Exec commands.
   */
   
-  var util = require("util");
+  const util = require("util");
 
   client.clean = async (client, text) => {
     if (text && text.constructor.name == "Promise")
