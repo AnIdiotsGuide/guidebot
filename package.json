@@ -1,6 +1,6 @@
 {
   "name": "guidebot",
-  "version": "2.2.4",
+  "version": "2.3.5",
   "description": "A boilerplate example bot with command handler and reloadable commands. Updated and Maintained by the Idiot's Guide Community",
   "main": "index.js",
   "scripts": {
@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/An-Idiots-Guide/guidebot#readme",
   "dependencies": {
+    "chalk": "^2.3.0",
     "discord.js": "^11.2.1",
     "enmap": "^0.4.1",
     "enmap-level": "^1.0.0",
