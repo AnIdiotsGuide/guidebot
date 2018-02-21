@@ -16,7 +16,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
     const MAX_CHARS = 3 + 2 + clean.length + 3;
     if (MAX_CHARS > 2000) {
       message.channel.send("Output exceeded 2000 characters. Sending as a file.", { files: [{ attachment: Buffer.from(clean), name: "output.txt" }] });
-     }
+    }
     message.channel.send(`\`\`\`js\n${clean}\n\`\`\``);
   } catch (err) {
     message.channel.send(`\`ERROR\` \`\`\`xl\n${await client.clean(client, err)}\n\`\`\``);
