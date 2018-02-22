@@ -10,7 +10,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   const cleaned = await client.clean(client, output);
   // sends output as a file if it exceeds the character limit
   // note: if the output is an error, it will have the ERROR heading, hence the extra 7 
-  const MAX_CHARS = error ? 3 + 2 + 7 + cleaned.length + 2 + 3 : 3 + 2 + cleaned.length + 2 + 3;
+  const MAX_CHARS = error ? 17 + cleaned.length : 10 + cleaned.length;
   if (MAX_CHARS > 2000) {
     message.channel.send("Output exceeded 2000 characters. Sending as a file.", { files: [{ attachment: Buffer.from(cleaned), name: "output.txt" }] });
   }
