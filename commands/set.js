@@ -15,7 +15,7 @@ const { inspect } = require("util");
 exports.run = async (client, message, [action, key, ...value], level) => { // eslint-disable-line no-unused-vars
 
   // Retrieve current guild settings
-  const settings = client.settings.get(message.guild.id);
+  const settings = client.getGuildSettings(message);
   
   // First, if a user does `-set add <key> <new value>`, let's add it
   if (action === "add") {
