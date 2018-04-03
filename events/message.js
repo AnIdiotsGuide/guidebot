@@ -7,15 +7,9 @@ module.exports = (client, message) => {
   // and not get into a spam loop (we call that "botception").
   if (message.author.bot) return;
 
-  // Grab the settings for this server from the PersistentCollection
+  // Grab the settings for this server from Enmap.
   // If there is no guild, get default conf (DMs)
-  const settings = message.guild
-    ? client.settings.get(message.guild.id)
-    : client.config.defaultSettings;
-
-  // For ease of use in commands and functions, we'll attach the settings
-  // to the message object, so `message.settings` is accessible.
-  message.settings = settings;
+  const settings = message.settings = client.getGuildSettings(message.guild);
 
   // Also good practice to ignore any message that does not start with our prefix,
   // which is set in the configuration file.
