@@ -33,14 +33,15 @@ module.exports = (client) => {
   the default settings are used.
 
   */
-  client.getGuildSettings = message => {
+  client.getGuildSettings = (guild) => {
     const def = client.config.defaultSettings;
-    if (!message.guild) return def;
-    const overrides = client.settings.get(message.guild.id) || {};
+    if (!guild) return def;
+    const returns = {};
+    const overrides = client.settings.get(guild.id) || {};
     for (const key in def) {
-      overrides[key] = overrides[key] || def[key];
+      returns[key] = overrides[key] || def[key];
     }
-    return overrides;
+    return returns;
   };
 
   /*
@@ -79,7 +80,7 @@ module.exports = (client) => {
     if (text && text.constructor.name == "Promise")
       text = await text;
     if (typeof evaled !== "string")
-      text = require("util").inspect(text, {depth: 0});
+      text = require("util").inspect(text, {depth: 1});
 
     text = text
       .replace(/`/g, "`" + String.fromCharCode(8203))

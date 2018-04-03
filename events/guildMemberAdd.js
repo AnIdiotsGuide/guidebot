@@ -2,7 +2,7 @@
 
 module.exports = (client, member) => {
   // Load the guild's settings
-  const settings = client.settings.get(member.guild.id);
+  const settings = client.getGuildSettings(member.guild);
 
   // If welcome is off, don't proceed (don't welcome the user)
   if (settings.welcomeEnabled !== "true") return;
