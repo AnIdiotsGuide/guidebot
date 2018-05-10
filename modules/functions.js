@@ -123,7 +123,7 @@ module.exports = (client) => {
     return false;
   };
 
-  /* MISCELANEOUS NON-CRITICAL FUNCTIONS */
+  /* MISCELLANEOUS NON-CRITICAL FUNCTIONS */
   
   // EXTENDING NATIVE TYPES IS BAD PRACTICE. Why? Because if JavaScript adds this
   // later, this conflicts with native code. Also, if some other lib you use does
