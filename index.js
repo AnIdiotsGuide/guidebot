@@ -61,7 +61,14 @@ const init = async () => {
     const event = require(`./events/${file}`);
     // This line is awesome by the way. Just sayin'.
     client.on(eventName, event.bind(null, client));
+    const mod = require.cache[require.resolve(`./events/${file}`)];
     delete require.cache[require.resolve(`./events/${file}`)];
+    for (let i = 0; i < mod.parent.children.length; i++) {
+      if (mod.parent.children[i] === mod) {
+        mod.parent.children.splice(i, 1);
+        break;
+      }
+    }
   });
 
   // Generate a cache of client permissions for pretty perms
