@@ -1,7 +1,16 @@
-// This will check if the node version you are running is the required
-// Node version, if it isn't it will throw the following error to inform
-// you.
-if (process.version.slice(1).split(".")[0] < 8) throw new Error("Node 8.0.0 or higher is required. Update Node on your system.");
+const http = require('http');
+const express = require('express');
+const app = express();
+app.get("/", (request, response) => {
+  console.log(Date.now() + " Ping Received");
+  response.sendStatus(200);
+});
+app.listen(process.env.PORT);
+setInterval(() => {
+  http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
+}, 280000);
+
+
 
 // Load up the discord.js library
 const Discord = require("discord.js");
@@ -37,7 +46,7 @@ client.aliases = new Enmap();
 // essentially saves a collection to disk. This is great for per-server configs,
 // and makes things extremely easy for this purpose.
 client.settings = new Enmap({provider: new EnmapLevel({name: "settings"})});
-
+const cooldowns = new Discord.Collection();
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
 
@@ -77,6 +86,28 @@ const init = async () => {
     const thisLevel = client.config.permLevels[i];
     client.levelCache[thisLevel.name] = thisLevel.level;
   }
+
+  //xp message event
+const SQLite = require("better-sqlite3");
+const sql = new SQLite("./xp.sqlite");
+client.on("message", async message => {
+    if (message.author.bot) return;
+    if (message.channel.type === "dm") return;
+    let score;
+  if (message.guild) {
+    score = client.getScore.get(message.author.id, message.guild.id);
+    if (!score) {
+      score = { id: `${message.guild.id}-${message.author.id}`, user: message.author.id, guild: message.guild.id, points: 0, level: 1 }
+    }
+    score.points++;
+    const curLevel = Math.floor(0.1 * Math.sqrt(score.points));
+    if(score.level < curLevel) {
+      message.reply(`YEET! You've leveled up to **${curLevel}**!`);
+    }
+    client.setScore.run(score);
+  }
+
+})
 
   // Here we login the client.
   client.login(client.config.token);
