@@ -7,7 +7,9 @@ let os = require('os')
 let cpuStat = require("cpu-stat")
 
 exports.run = (client, message, args) => { // eslint-disable-line no-unused-vars
+  message.channel.startTyping();
   let cpuLol;
+
   cpuStat.usagePercent(function(err, percent, seconds) {
     if (err) {
       return console.log(err);
@@ -31,6 +33,7 @@ exports.run = (client, message, args) => { // eslint-disable-line no-unused-vars
     .addField("• Arch", `\`${os.arch()}\``,true)
     .addField("• Platform", `\`\`${os.platform()}\`\``,true)
     message.channel.send(embedStats)
+    message.channel.stopTyping(true);
   });
 };
 

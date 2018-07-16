@@ -1,7 +1,7 @@
 const shorten = require('isgd');
 
 exports.run = (client, message, args, tools) => {
-
+  message.channel.startTyping();
   // The command will take one require argument, and one optional (link, title)
 
   // We also want to check if they typed anything at all, if not run this
@@ -26,6 +26,7 @@ exports.run = (client, message, args, tools) => {
       // Make sure you return, so it doesn't run the rest of the code
 
       message.channel.send(`**<${res}>**`); // If no errors encountered, it will return the link.
+      message.channel.stopTyping(true);
 
 
     }) // We also can use <> to make sure it doesn't show an embed, now let's test it!

@@ -3,8 +3,12 @@ const figlet = require('figlet');
 module.exports.run = (client, message, args, tools) => {
 
   var maxLen = 14 // You can modify the max characters here
+  const embed = {
+  "title": "Under 14 characters only"
+};
 
-  if(args.join(' ').length > maxLen) return message.channel.send('Only 14 characters admitted!')
+
+  if(args.join(' ').length > maxLen) return message.channel.send(embed)
 
   if(!args[0]) return message.channel.send('Please specify a test to asciify!');
 
