@@ -9,7 +9,7 @@ const Discord = require("discord.js");
 const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
 const Enmap = require("enmap");
-const EnmapLevel = require("enmap-level");
+const EnmapLevel = require("enmap-sqlite");
 
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
@@ -22,7 +22,7 @@ client.config = require("./config.js");
 // client.config.prefix contains the message prefix
 
 // Require our logger
-client.logger = require("./util/Logger");
+client.logger = require("./modules/Logger");
 
 // Let's start by getting some useful functions that we'll use throughout
 // the bot, like logs and elevation features.
@@ -58,20 +58,15 @@ const init = async () => {
   client.logger.log(`Loading a total of ${evtFiles.length} events.`);
   evtFiles.forEach(file => {
     const eventName = file.split(".")[0];
+    client.logger.log(`Loading Event: ${eventName}`);
     const event = require(`./events/${file}`);
+    // Bind the client to any event, before the existing arguments
+    // provided by the discord.js event. 
     // This line is awesome by the way. Just sayin'.
     client.on(eventName, event.bind(null, client));
-    const mod = require.cache[require.resolve(`./events/${file}`)];
-    delete require.cache[require.resolve(`./events/${file}`)];
-    for (let i = 0; i < mod.parent.children.length; i++) {
-      if (mod.parent.children[i] === mod) {
-        mod.parent.children.splice(i, 1);
-        break;
-      }
-    }
   });
 
-  // Generate a cache of client permissions for pretty perms
+  // Generate a cache of client permissions for pretty perm names in commands.
   client.levelCache = {};
   for (let i = 0; i < client.config.permLevels.length; i++) {
     const thisLevel = client.config.permLevels[i];

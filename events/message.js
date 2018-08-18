@@ -2,7 +2,7 @@
 // Note that due to the binding of client to every event, every event
 // goes `client, other, args` when this function is run.
 
-module.exports = (client, message) => {
+module.exports = async (client, message) => {
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop (we call that "botception").
   if (message.author.bot) return;
@@ -10,6 +10,12 @@ module.exports = (client, message) => {
   // Grab the settings for this server from Enmap.
   // If there is no guild, get default conf (DMs)
   const settings = message.settings = client.getGuildSettings(message.guild);
+
+  // Checks if the bot was mentioned, with no message after it, returns the prefix.
+  const prefixMention = new RegExp(`^<@!?${client.user.id}>( |)$`);
+  if (message.content.match(prefixMention)) {
+    return message.reply(`My prefix on this guild is \`${settings.prefix}\``);
+  }
 
   // Also good practice to ignore any message that does not start with our prefix,
   // which is set in the configuration file.
@@ -21,6 +27,9 @@ module.exports = (client, message) => {
   // args = ["Is", "this", "the", "real", "life?"]
   const args = message.content.slice(settings.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
+
+  // If the member on a guild is invisible or not cached, fetch them.
+  if (message.guild && !message.member) await message.guild.members.fetch(message.author);
 
   // Get the user or member's permission level from the elevation
   const level = client.permlevel(message);
