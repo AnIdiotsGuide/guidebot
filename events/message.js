@@ -29,7 +29,7 @@ module.exports = async (client, message) => {
   const command = args.shift().toLowerCase();
 
   // If the member on a guild is invisible or not cached, fetch them.
-  if (message.guild && !message.member) await message.guild.members.fetch(message.author);
+  if (message.guild && !message.member) await message.guild.fetchMember(message.author);
 
   // Get the user or member's permission level from the elevation
   const level = client.permlevel(message);
