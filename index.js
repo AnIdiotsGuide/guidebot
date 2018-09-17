@@ -36,7 +36,7 @@ client.aliases = new Enmap();
 // Now we integrate the use of Evie's awesome Enhanced Map module, which
 // essentially saves a collection to disk. This is great for per-server configs,
 // and makes things extremely easy for this purpose.
-client.settings = new Enmap({provider: new EnmapLevel({name: "settings"})});
+client.settings = new Enmap({name: "settings"});
 
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
