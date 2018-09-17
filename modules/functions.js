@@ -44,7 +44,63 @@ module.exports = (client) => {
     }
     return returns;
   };
-
+  /**
+   * Converts a given string or number to blocktext
+   * @constructor
+   * @param {String} string The string to be converted
+   * @returns {String} A blocktext version of the passed string
+   */
+  // TODO: Make a better way of getting the emojiConvert variable. In config maybe?
+  client.toBlocktext = (string, emojiConvert = {
+    "0": ":zero:",
+    "1": ":one:",
+    "2": ":two:",
+    "3": ":three:",
+    "4": ":four:",
+    "5": ":five:",
+    "6": ":six:",
+    "7": ":seven:",
+    "8": ":eight:",
+    "9": ":nine:",
+    "A": ":regional_indicator_a:",
+    "B": ":regional_indicator_b:",
+    "C": ":regional_indicator_c:",
+    "D": ":regional_indicator_d:",
+    "E": ":regional_indicator_e:",
+    "F": ":regional_indicator_f:",
+    "G": ":regional_indicator_g:",
+    "H": ":regional_indicator_h:",
+    "I": ":regional_indicator_i:",
+    "J": ":regional_indicator_j:",
+    "K": ":regional_indicator_k:",
+    "L": ":regional_indicator_l:",
+    "M": ":regional_indicator_m:",
+    "N": ":regional_indicator_n:",
+    "O": ":regional_indicator_o:",
+    "P": ":regional_indicator_p:",
+    "Q": ":regional_indicator_q:",
+    "R": ":regional_indicator_r:",
+    "S": ":regional_indicator_s:",
+    "T": ":regional_indicator_t:",
+    "U": ":regional_indicator_u:",
+    "V": ":regional_indicator_v:",
+    "W": ":regional_indicator_w:",
+    "X": ":regional_indicator_x:",
+    "Y": ":regional_indicator_y:",
+    "Z": ":regional_indicator_z:",
+    " ": "     ",
+    ".": ":large_blue_circle:",
+    "!": ":exclamation:",
+    "?": ":question:"
+  }) => {
+    if (typeof string === "number") string = string.toString();
+    string = string.toUpperCase().split("");
+    let blocktext = "";
+    for (let i = 0; i < string.length; i++) {
+      blocktext = blocktext + emojiConvert[string[i]] ? emojiConvert[string[i]] : string[i];
+    }
+    return blocktext;
+  };
   /*
   SINGLE-LINE AWAITMESSAGE
 
@@ -64,7 +120,11 @@ module.exports = (client) => {
     const filter = m => m.author.id === msg.author.id;
     await msg.channel.send(question);
     try {
-      const collected = await msg.channel.awaitMessages(filter, { max: 1, time: limit, errors: ["time"] });
+      const collected = await msg.channel.awaitMessages(filter, {
+        max: 1,
+        time: limit,
+        errors: ["time"]
+      });
       return collected.first().content;
     } catch (e) {
       return false;
@@ -105,7 +165,7 @@ module.exports = (client) => {
    */
   client.errorEmbed = (channel, description) => client.coloredEmbed(channel, "Error", description, 0xF04747);
   /**
-   * Gets user's nickname given a context, if a nickname is not set, the username wil be returned
+   * Gets user's nickname given a context, if a nickname is not set, the username will be returned
    * @constructor
    * @param {Guild|Message|TextChannel|VoiceChannel|MessageReaction} context The context to check the nickname in
    * @param {User} [user=client.user] The user who's name to check
@@ -131,16 +191,16 @@ module.exports = (client) => {
       if (options.length == 0) return reject(new Error("No options"));
       if (options.length == 1) return resolve(options[0]);
       if (options.length > 9) return reject(new Error("Too many options"));
-      channel.send(description.constructor.name == "Embed" || "String" ? description : new Discord.RichEmbed({
+      channel.send(description && ["Embed", "String"].includes(description.constructor.name) ? description : new Discord.RichEmbed({
         "title": "Multiple Choice",
         "description": "React to this message to choose.\n\n" + options.map(i => client.toBlocktext(options.indexOf(i) + 1) + " " + i).join("\n")
       })).then(async (prompt) => {
         prompt.reactives = [];
-        prompt.createReactionCollector((reaction, user) => reaction.message && reaction.message.reactives.includes(reaction) && subject ? user.id == subject || subject.id : true, {
+        prompt.createReactionCollector((reaction, user) => user != client.user && reaction.message.reactives.includes(reaction) && (subject ? [subject, subject.id].includes(user.id) : true), {
           "maxEmojis": 1
         }).on("collect", r => {
           r.message.delete();
-          if (r.emoji.name == "❌") return reject(2);
+          if (r.emoji.name == "❌") return reject(new Error("User Rejected"));
           resolve(options[parseInt(r.emoji.identifier.charAt(0)) - 1]);
         });
         await prompt.react("❌").then(r => {
@@ -167,7 +227,9 @@ module.exports = (client) => {
     if (text && text.constructor.name == "Promise")
       text = await text;
     if (typeof evaled !== "string")
-      text = require("util").inspect(text, {depth: 1});
+      text = require("util").inspect(text, {
+        depth: 1
+      });
 
     text = text
       .replace(/`/g, "`" + String.fromCharCode(8203))
@@ -227,8 +289,10 @@ module.exports = (client) => {
   // <String>.toPropercase() returns a proper-cased string such as: 
   // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
   String.prototype.toProperCase = function() {
-    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-  };    
+    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+  };
 
   // <Array>.random() returns a single random element from an array
   // [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.
