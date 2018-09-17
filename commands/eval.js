@@ -11,9 +11,25 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   try {
     const evaled = eval(code);
     const clean = await client.clean(client, evaled);
-    message.channel.send(`\`\`\`js\n${clean}\n\`\`\``);
+    if (clean.length > 1990) {
+      if (this.logLongOutput) {
+        console.log(evaled);
+        return client.successEmbed(message.channel, "Execution complete and output to console");
+      } else {
+        return message.channel.send("Execution complete, output has been trimmed```\n" + clean.substring(0, 1949) + "```");
+      }
+    }
+    message.channel.send("```js\n" + clean + "```");
   } catch (err) {
-    message.channel.send(`\`ERROR\` \`\`\`xl\n${await client.clean(client, err)}\n\`\`\``);
+    if (err.length > 1990) {
+      if (this.logLongOutput) {
+        console.log(err);
+        return client.errorEmbed(message.channel, "Execution failed and stacktrace logged");
+      } else {
+        return client.errorEmbed(message.channel, "Execution failed, stacktrace has been trimmed```\n" + err.substring(0, 1947) + "```");
+      }
+    }
+    client.errorEmbed(message.channel, "```xl\n" + await client.clean(client, err) + "```");
   }
 };
 
@@ -21,7 +37,8 @@ exports.conf = {
   enabled: true,
   guildOnly: false,
   aliases: [],
-  permLevel: "Bot Owner"
+  permLevel: "Bot Owner",
+  logLongOutput: false
 };
 
 exports.help = {
