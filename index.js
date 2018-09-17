@@ -11,37 +11,35 @@ const readdir = promisify(require("fs").readdir);
 const Enmap = require("enmap");
 const EnmapLevel = require("enmap-sqlite");
 
+
+// Async function to start bot with. Allows bot to be run below top-level
+async function init() {
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're refering to. Your client.
-const client = new Discord.Client();
+  const client = new Discord.Client();
 
-// Here we load the config file that contains our token and our prefix values.
-client.config = require("./config.js");
-// client.config.token contains the bot's token
-// client.config.prefix contains the message prefix
+  // Here we load the config file that contains our token and our prefix values.
+  client.config = require("./config.js");
+  // client.config.token contains the bot's token
+  // client.config.prefix contains the message prefix
 
-// Require our logger
-client.logger = require("./modules/Logger");
+  // Require our logger
+  client.logger = require("./modules/Logger");
 
-// Let's start by getting some useful functions that we'll use throughout
-// the bot, like logs and elevation features.
-require("./modules/functions.js")(client);
+  // Let's start by getting some useful functions that we'll use throughout
+  // the bot, like logs and elevation features.
+  require("./modules/functions.js")(client);
 
-// Aliases and commands are put in collections where they can be read from,
-// catalogued, listed, etc.
-client.commands = new Enmap();
-client.aliases = new Enmap();
+  // Aliases and commands are put in collections where they can be read from,
+  // catalogued, listed, etc.
+  client.commands = new Enmap();
+  client.aliases = new Enmap();
 
-// Now we integrate the use of Evie's awesome Enhanced Map module, which
-// essentially saves a collection to disk. This is great for per-server configs,
-// and makes things extremely easy for this purpose.
-client.settings = new Enmap({provider: new EnmapLevel({name: "settings"})});
-
-// We're doing real fancy node 8 async/await stuff here, and to do that
-// we need to wrap stuff in an anonymous function. It's annoying but it works.
-
-const init = async () => {
+  // Now we integrate the use of Evie's awesome Enhanced Map module, which
+  // essentially saves a collection to disk. This is great for per-server configs,
+  // and makes things extremely easy for this purpose.
+  client.settings = new Enmap({name: "settings"});
 
   // Here we load **commands** into memory, as a collection, so they're accessible
   // here and everywhere else.
@@ -77,6 +75,6 @@ const init = async () => {
   client.login(client.config.token);
 
 // End top-level async/await function.
-};
-
+}
+exports.init = init;
 init();
