@@ -139,15 +139,19 @@ module.exports = (client) => {
   
   // <String>.toPropercase() returns a proper-cased string such as: 
   // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
-  String.prototype.toProperCase = function() {
-    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-  };    
-  
+  Object.defineProperty(String.prototype, "toProperCase", {
+    value: function() {
+      return this.replace(/([^\W_]+[^\s-]*) */g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+    }
+  });
+
   // <Array>.random() returns a single random element from an array
   // [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.
-  Array.prototype.random = function() {
-    return this[Math.floor(Math.random() * this.length)]
-  };
+  Object.defineProperty(Array.prototype, "random", {
+    value: function() {
+      return this[Math.floor(Math.random() * this.length)];
+    }
+  });
 
   // `await client.wait(1000);` to "pause" for 1 second.
   client.wait = require("util").promisify(setTimeout);
