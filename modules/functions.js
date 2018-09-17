@@ -50,6 +50,9 @@ module.exports = (client) => {
   A simple way to grab a single reply, from the user that initiated
   the command. Useful to get "precisions" on certain things...
 
+  Though useful, this is bad practice, as it holds the async thread
+  in memory indefinitely. Use callbacks where possible.
+
   USAGE
 
   const response = await client.awaitReply(msg, "Favourite Color?");
@@ -146,7 +149,7 @@ module.exports = (client) => {
   // <Array>.random() returns a single random element from an array
   // [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.
   Array.prototype.random = function() {
-    return this[Math.floor(Math.random() * this.length)]
+    return this[Math.floor(Math.random() * this.length)];
   };
 
   // `await client.wait(1000);` to "pause" for 1 second.
