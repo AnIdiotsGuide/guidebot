@@ -1,3 +1,4 @@
+#### GuideBotX is a fork of guidebot which I will keep up to date with both the upstream repo and any customisations I make to the boilerplate to make building comprehensive, dynamic bots simpler
 # Guide Bot
 An example of a Discord.js Bot Handler. Updated and Maintained by the Idiot's Guide Community.
 
