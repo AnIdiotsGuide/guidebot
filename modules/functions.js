@@ -117,6 +117,43 @@ module.exports = (client) => {
     context = context.members.get(user.id).nickname;
     return context ? context : user.username;
   };
+  /**
+   * Prompts user to choose string from array with reactions
+   * @constructor
+   * @param {Channel} channel Discord channel to send the prompt to
+   * @param {String[]} options An array of strings representing the choices for the user
+   * @param {(Embed|String)} [embed] Used as message to send to channel, will be given reactions up to the number of strings in [options]. Should explain what each option mean
+   * @param {(User|String)} [subject] Only allow this user to respond to the prompt
+   * @returns {Promise.<String|Error>} Resolves to the string the user chose
+   */
+  client.multiplePrompt = (channel, options, description, subject) => {
+    return new Promise((resolve, reject) => {
+      if (options.length == 0) return reject(new Error("No options"));
+      if (options.length == 1) return resolve(options[0]);
+      if (options.length > 9) return reject(new Error("Too many options"));
+      channel.send(description.constructor.name == "Embed" || "String" ? description : new Discord.RichEmbed({
+        "title": "Multiple Choice",
+        "description": "React to this message to choose.\n\n" + options.map(i => client.toBlocktext(options.indexOf(i) + 1) + " " + i).join("\n")
+      })).then(async (prompt) => {
+        prompt.reactives = [];
+        prompt.createReactionCollector((reaction, user) => reaction.message && reaction.message.reactives.includes(reaction) && subject ? user.id == subject || subject.id : true, {
+          "maxEmojis": 1
+        }).on("collect", r => {
+          r.message.delete();
+          if (r.emoji.name == "❌") return reject(2);
+          resolve(options[parseInt(r.emoji.identifier.charAt(0)) - 1]);
+        });
+        await prompt.react("❌").then(r => {
+          r.message.reactives.push(r);
+        });
+        for (let i = 0; i < options.length; i++) {
+          await prompt.react((i + 1) + "%E2%83%A3").then(r => {
+            r.message.reactives.push(r);
+          }).catch(() => { /* The message has already been deleted */ });
+        }
+      });
+    });
+  };
 
   /*
   MESSAGE CLEAN FUNCTION
