@@ -45,61 +45,22 @@ module.exports = (client) => {
     return returns;
   };
   /**
-   * Converts a given string or number to blocktext
+   * Converts a string or number to blocktext. Input must only be one character
+   * 
+   * Uses the client.config.emojiConvertReference (Set in config.js) to convert
+   * any characters that exist in that file, and has a fallback for
+   * alphabetical and numerical characters
    * @constructor
-   * @param {String} string The string to be converted
+   * @param {String|Number} string The value to be converted
    * @returns {String} A blocktext version of the passed string
    */
-  // TODO: Make a better way of getting the emojiConvert variable. In config maybe?
-  client.toBlocktext = (string, emojiConvert = {
-    "0": ":zero:",
-    "1": ":one:",
-    "2": ":two:",
-    "3": ":three:",
-    "4": ":four:",
-    "5": ":five:",
-    "6": ":six:",
-    "7": ":seven:",
-    "8": ":eight:",
-    "9": ":nine:",
-    "A": ":regional_indicator_a:",
-    "B": ":regional_indicator_b:",
-    "C": ":regional_indicator_c:",
-    "D": ":regional_indicator_d:",
-    "E": ":regional_indicator_e:",
-    "F": ":regional_indicator_f:",
-    "G": ":regional_indicator_g:",
-    "H": ":regional_indicator_h:",
-    "I": ":regional_indicator_i:",
-    "J": ":regional_indicator_j:",
-    "K": ":regional_indicator_k:",
-    "L": ":regional_indicator_l:",
-    "M": ":regional_indicator_m:",
-    "N": ":regional_indicator_n:",
-    "O": ":regional_indicator_o:",
-    "P": ":regional_indicator_p:",
-    "Q": ":regional_indicator_q:",
-    "R": ":regional_indicator_r:",
-    "S": ":regional_indicator_s:",
-    "T": ":regional_indicator_t:",
-    "U": ":regional_indicator_u:",
-    "V": ":regional_indicator_v:",
-    "W": ":regional_indicator_w:",
-    "X": ":regional_indicator_x:",
-    "Y": ":regional_indicator_y:",
-    "Z": ":regional_indicator_z:",
-    " ": "     ",
-    ".": ":large_blue_circle:",
-    "!": ":exclamation:",
-    "?": ":question:"
-  }) => {
-    if (typeof string === "number") string = string.toString();
-    string = string.toUpperCase().split("");
-    let blocktext = "";
-    for (let i = 0; i < string.length; i++) {
-      blocktext = blocktext + emojiConvert[string[i]] ? emojiConvert[string[i]] : string[i];
-    }
-    return blocktext;
+  client.toEmojiString = (input) => {
+    if (input.toString()) input = input.toString();
+    if (client.config.emojiConvertReference && client.config.emojiConvertReference[input]) return client.config.emojiConvertReference[input];
+    if (input.length > 1) return new Error("Input too long");
+    if (parseInt(input)) return [":zero:",":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:"][input];
+    if (/[a-z|A-Z]/.test(input)) return input.replace(/[a-z|A-Z]/, i => `:regional_indicator_${i.toLowerCase()}:`);
+    return input;
   };
   /*
   SINGLE-LINE AWAITMESSAGE
@@ -193,7 +154,7 @@ module.exports = (client) => {
       if (options.length > 9) return reject(new Error("Too many options"));
       channel.send(description && ["Embed", "String"].includes(description.constructor.name) ? description : new Discord.RichEmbed({
         "title": "Multiple Choice",
-        "description": "React to this message to choose.\n\n" + options.map(i => client.toBlocktext(options.indexOf(i) + 1) + " " + i).join("\n")
+        "description": "React to this message to choose.\n\n" + options.map(i => client.toEmojiString(options.indexOf(i) + 1) + " " + i).join("\n")
       })).then(async (prompt) => {
         prompt.reactives = [];
         prompt.createReactionCollector((reaction, user) => user != client.user && reaction.message.reactives.includes(reaction) && (subject ? [subject, subject.id].includes(user.id) : true), {
