@@ -44,11 +44,32 @@ module.exports = (client) => {
     return returns;
   };
 
+  /**
+   * Converts a string or number to blocktext. Input must only be one character
+   * 
+   * Uses the client.config.emojiConvertReference (Set in config.js) to convert
+   * any characters that exist in that file, and has a fallback for
+   * alphabetical and numerical characters
+   * @constructor
+   * @param {String|Number} input The value to be converted
+   * @returns {String} A blocktext version of the passed string
+   */
+  client.toEmojiString = (input) => {
+    if (input.toString()) input = input.toString();
+    if (client.config.emojiConvertReference && client.config.emojiConvertReference[input]) return client.config.emojiConvertReference[input];
+    if (input.length > 1) return new Error("Input too long");
+    if (parseInt(input)) return [":zero:",":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:"][input];
+    if (/[a-z|A-Z]/.test(input)) return input.replace(/[a-z|A-Z]/, i => `:regional_indicator_${i.toLowerCase()}:`);
+    return input;
+  };
   /*
   SINGLE-LINE AWAITMESSAGE
 
   A simple way to grab a single reply, from the user that initiated
   the command. Useful to get "precisions" on certain things...
+
+  Though useful, this is bad practice, as it holds the async thread
+  in memory indefinitely. Use callbacks where possible.
 
   USAGE
 
@@ -68,6 +89,19 @@ module.exports = (client) => {
   };
 
 
+  /**
+   * Gets user's nickname given a context, if a nickname is not set, the username will be returned
+   * @constructor
+   * @param {Guild|Message|TextChannel|VoiceChannel|MessageReaction} context The context to check the nickname in
+   * @param {User} [user=client.user] The user who's name to check
+   * @returns {String} The nickname of the user in the given context
+   */
+  client.getNickname = (context, user = client.user) => {
+    if (context.constructor.name == "MessageReaction") context = context.message;
+    if (context.constructor.name == "Message" || "TextChannel" || "VoiceChannel") context = context.guild;
+    context = context.members.get(user.id).nickname;
+    return context ? context : user.username;
+  };
   /*
   MESSAGE CLEAN FUNCTION
 
@@ -115,7 +149,7 @@ module.exports = (client) => {
       command = client.commands.get(client.aliases.get(commandName));
     }
     if (!command) return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`;
-  
+
     if (command.shutdown) {
       await command.shutdown(client);
     }
@@ -131,12 +165,12 @@ module.exports = (client) => {
   };
 
   /* MISCELANEOUS NON-CRITICAL FUNCTIONS */
-  
+
   // EXTENDING NATIVE TYPES IS BAD PRACTICE. Why? Because if JavaScript adds this
   // later, this conflicts with native code. Also, if some other lib you use does
   // this, a conflict also occurs. KNOWING THIS however, the following 2 methods
   // are, we feel, very useful in code. 
-  
+
   // <String>.toPropercase() returns a proper-cased string such as: 
   // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
   Object.defineProperty(String.prototype, "toProperCase", {
@@ -152,7 +186,7 @@ module.exports = (client) => {
       return this[Math.floor(Math.random() * this.length)];
     }
   });
-
+  
   // `await client.wait(1000);` to "pause" for 1 second.
   client.wait = require("util").promisify(setTimeout);
 
