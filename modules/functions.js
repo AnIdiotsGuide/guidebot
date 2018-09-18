@@ -33,15 +33,15 @@ module.exports = (client) => {
   the default settings are used.
 
   */
-  client.getGuildSettings = (guild) => {
-    const def = client.config.defaultSettings;
-    if (!guild) return def;
-    const returns = {};
-    const overrides = client.settings.get(guild.id) || {};
-    for (const key in def) {
-      returns[key] = overrides[key] || def[key];
-    }
-    return returns;
+  client.getSettings = (guild) => {
+    const defaults = client.config.defaultSettings || {};
+    if (!guild) return defaults;
+    const guildData = client.settings.get(guild) || {};
+    const returnObject = {};
+    Object.keys(defaults).forEach((key) => {
+      returnObject[key] = guildData[key] ? guildData[key] : defaults[key];
+    });
+    return returnObject;
   };
 
   /*
