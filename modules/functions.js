@@ -1,4 +1,3 @@
-const Discord = require("discord.js");
 module.exports = (client) => {
 
   /*
@@ -44,6 +43,7 @@ module.exports = (client) => {
     }
     return returns;
   };
+
   /**
    * Converts a string or number to blocktext. Input must only be one character
    * 
@@ -81,16 +81,14 @@ module.exports = (client) => {
     const filter = m => m.author.id === msg.author.id;
     await msg.channel.send(question);
     try {
-      const collected = await msg.channel.awaitMessages(filter, {
-        max: 1,
-        time: limit,
-        errors: ["time"]
-      });
+      const collected = await msg.channel.awaitMessages(filter, { max: 1, time: limit, errors: ["time"] });
       return collected.first().content;
     } catch (e) {
       return false;
     }
   };
+
+
   /**
    * Gets user's nickname given a context, if a nickname is not set, the username will be returned
    * @constructor
@@ -116,9 +114,7 @@ module.exports = (client) => {
     if (text && text.constructor.name == "Promise")
       text = await text;
     if (typeof evaled !== "string")
-      text = require("util").inspect(text, {
-        depth: 1
-      });
+      text = require("util").inspect(text, {depth: 1});
 
     text = text
       .replace(/`/g, "`" + String.fromCharCode(8203))
@@ -190,7 +186,7 @@ module.exports = (client) => {
       return this[Math.floor(Math.random() * this.length)];
     }
   });
-
+  
   // `await client.wait(1000);` to "pause" for 1 second.
   client.wait = require("util").promisify(setTimeout);
 
