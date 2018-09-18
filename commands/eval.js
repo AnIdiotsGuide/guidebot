@@ -14,7 +14,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
     if (clean.length > 1990) {
       if (this.logLongOutput) {
         console.log(evaled);
-        return client.successEmbed(message.channel, "Execution complete and output to console");
+        return message.channel.send("Execution complete and output to console");
       } else {
         return message.channel.send("Execution complete, output has been trimmed```\n" + clean.substring(0, 1949) + "```");
       }
@@ -24,12 +24,12 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
     if (err.length > 1990) {
       if (this.logLongOutput) {
         console.log(err);
-        return client.errorEmbed(message.channel, "Execution failed and stacktrace logged");
+        return message.channel.send("Execution failed and stacktrace logged");
       } else {
-        return client.errorEmbed(message.channel, "Execution failed, stacktrace has been trimmed```\n" + err.substring(0, 1947) + "```");
+        return message.channel.semd("Execution failed, stacktrace has been trimmed```\n" + err.substring(0, 1947) + "```");
       }
     }
-    client.errorEmbed(message.channel, "```xl\n" + await client.clean(client, err) + "```");
+    message.channel.semd("```xl\n" + await client.clean(client, err) + "```");
   }
 };
 
