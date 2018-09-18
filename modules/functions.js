@@ -51,7 +51,7 @@ module.exports = (client) => {
    * any characters that exist in that file, and has a fallback for
    * alphabetical and numerical characters
    * @constructor
-   * @param {String|Number} string The value to be converted
+   * @param {String|Number} input The value to be converted
    * @returns {String} A blocktext version of the passed string
    */
   client.toEmojiString = (input) => {
