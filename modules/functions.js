@@ -157,7 +157,7 @@ module.exports = (client) => {
       curMinute = objToday.getMinutes() < 10 ? "0" + objToday.getMinutes() : objToday.getMinutes(),
       curSeconds = objToday.getSeconds() < 10 ? "0" + objToday.getSeconds() : objToday.getSeconds(),
       curMeridiem = objToday.getHours() > 12 ? "PM" : "AM";
-    var timenow = curHour + ":" + curMinute + "." + curSeconds + curMeridiem;
+    var timenow = curHour + ":" + curMinute + ":" + curSeconds + curMeridiem;
     return timenow;
   };
 
