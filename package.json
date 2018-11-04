@@ -29,6 +29,7 @@
     "discord.js": "^11.4.2",
     "enmap": "^4.2.1",
     "moment": "^2.20.1",
+    "mathjs": "^5.2.3",
     "moment-duration-format": "^2.2.0"
   }
 }
