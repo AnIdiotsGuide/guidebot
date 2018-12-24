@@ -91,6 +91,8 @@ module.exports = (client) => {
   };
 
   client.loadCommand = (commandName) => {
+    if (client.aliases.has(commandName))
+        commandName = client.aliases.get(commandName);
     try {
       client.logger.log(`Loading Command: ${commandName}`);
       const props = require(`../commands/${commandName}`);
@@ -113,6 +115,7 @@ module.exports = (client) => {
       command = client.commands.get(commandName);
     } else if (client.aliases.has(commandName)) {
       command = client.commands.get(client.aliases.get(commandName));
+      commandName = client.aliases.get(commandName);
     }
     if (!command) return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`;
   
