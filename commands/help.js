@@ -18,7 +18,7 @@ exports.run = (client, message, args, level) => {
     const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
 
     let currentCategory = "";
-    let output = `= Command List =\n\n[Use ${message.settings.prefix}help <commandname> for details]\n`;
+    let output = `= Lista de Comandos =\n\n[Use ${message.settings.prefix}help <nome do comando> para detalhes.]\n`;
     const sorted = myCommands.array().sort((p, c) => p.help.category > c.help.category ? 1 :  p.help.name > c.help.name && p.help.category === c.help.category ? 1 : -1 );
     sorted.forEach( c => {
       const cat = c.help.category.toProperCase();
@@ -49,7 +49,7 @@ exports.conf = {
 
 exports.help = {
   name: "help",
-  category: "System",
-  description: "Displays all the available commands for your permission level.",
-  usage: "help [command]"
+  category: "Sistema",
+  description: "Mostra todos os comandos disponíveis para o teu nível de permissões.",
+  usage: "help [comando]"
 };
