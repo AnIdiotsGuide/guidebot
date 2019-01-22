@@ -1,15 +1,15 @@
 const config = {
   // Bot Owner, level 10 by default. A User ID. Should never be anything else than the bot owner's ID.
-  "ownerID": "123456789123456",
+  "ownerID": "472720369346936842",
 
   // Bot Admins, level 9 by default. Array of user ID strings.
-  "admins": [],
+  "admins": [450117630171414549],
 
   // Bot Support, level 8 by default. Array of user ID strings
   "support": [],
 
   // Your Bot's Token. Available on https://discordapp.com/developers/applications/me
-  "token": "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0",
+  "token": "NTM3MzMwODI0NTY4MTExMTM0.DyjsCQ.K6bnEsSaF9YMEPitq7WYJmRw9LQ",
 
   // Default per-server settings. New guilds have these settings. 
 
@@ -17,13 +17,13 @@ const config = {
   // VIA COMMANDS IN THE GUILD.
   
   "defaultSettings" : {
-    "prefix": "-",
+    "prefix": "/",
     "modLogChannel": "mod-log",
     "modRole": "Moderator",
     "adminRole": "Administrator",
     "systemNotice": "true", // This gives a notice when a user tries to run a command that they do not have permission to use.
     "welcomeChannel": "welcome",
-    "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
+    "welcomeMessage": "Digam olá ao {{user}}!",
     "welcomeEnabled": "false"
   },
 
@@ -41,7 +41,7 @@ const config = {
     // This is your permission level, the staff levels should always be above the rest of the roles.
     { level: 2,
       // This is the name of the role.
-      name: "Moderator",
+      name: "Moderador",
       // The following lines check the guild the message came from for the roles.
       // Then it checks if the member that authored the message has the role.
       // If they do return true, which will allow them to execute the command in question.
@@ -57,7 +57,7 @@ const config = {
     },
 
     { level: 3,
-      name: "Administrator", 
+      name: "Admin+", 
       check: (message) => {
         try {
           const adminRole = message.guild.roles.find(r => r.name.toLowerCase() === message.settings.adminRole.toLowerCase());
@@ -69,7 +69,7 @@ const config = {
     },
     // This is the server owner.
     { level: 4,
-      name: "Server Owner", 
+      name: "MASTER", 
       // Simple check, if the guild owner id matches the message author's ID, then it will return true.
       // Otherwise it will return false.
       check: (message) => message.channel.type === "text" ? (message.guild.ownerID === message.author.id ? true : false) : false
@@ -78,7 +78,7 @@ const config = {
     // Bot Support is a special inbetween level that has the equivalent of server owner access
     // to any server they joins, in order to help troubleshoot the bot on behalf of owners.
     { level: 8,
-      name: "Bot Support",
+      name: "Bot Mantainer",
       // The check is by reading if an ID is part of this array. Yes, this means you need to
       // change this and reboot the bot to add a support user. Make it better yourself!
       check: (message) => config.support.includes(message.author.id)
@@ -86,7 +86,7 @@ const config = {
 
     // Bot Admin has some limited access like rebooting the bot or reloading commands.
     { level: 9,
-      name: "Bot Admin",
+      name: "Bot Mantainer",
       check: (message) => config.admins.includes(message.author.id)
     },
 
@@ -94,7 +94,7 @@ const config = {
     // The reason this should be the highest level is because of dangerous commands such as eval
     // or exec (if the owner has that).
     { level: 10,
-      name: "Bot Owner", 
+      name: "Bot Mantainer", 
       // Another simple check, compares the message author id to the one stored in the config file.
       check: (message) => message.client.config.ownerID === message.author.id
     }
