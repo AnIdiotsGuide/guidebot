@@ -10,12 +10,12 @@ exports.conf = {
   enabled: true,
   guildOnly: false,
   aliases: [],
-  permLevel: "Bot Admin"
+  permLevel: "MASTER"
 };
 
 exports.help = {
   name: "reboot",
-  category: "System",
-  description: "Shuts down the bot. If running under PM2, bot will restart automatically.",
+  category: "Sistema",
+  description: "Desliga o bot. Se ele estiver a rodar em PM2, o bot vai reiniciar automáticamente.",
   usage: "reboot"
 };
