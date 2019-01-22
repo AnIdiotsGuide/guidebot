@@ -21,12 +21,12 @@ exports.conf = {
   enabled: true,
   guildOnly: false,
   aliases: [],
-  permLevel: "Bot Owner"
+  permLevel: "Bot Mantainer"
 };
 
 exports.help = {
   name: "eval",
-  category: "System",
-  description: "Evaluates arbitrary javascript.",
-  usage: "eval [...code]"
+  category: "Sistema",
+  description: "Avalia scripts de javascript.",
+  usage: "eval [...código]"
 };
