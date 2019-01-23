@@ -27,6 +27,16 @@ module.exports.run = async (bot, message, args) => {
 
 }
 
-module.exports.help = {
-  name: "level"
-}
+exports.conf = {
+  enabled: true,
+  guildOnly: false,
+  aliases: [],
+  permLevel: "User"
+};
+
+exports.help = {
+  name: "level",
+  category: "Discord",
+  description: "Mostra o teu nível e o teu XP.",
+  usage: "level"
+};
