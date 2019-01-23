@@ -11,6 +11,7 @@ const readdir = promisify(require("fs").readdir);
 const Enmap = require("enmap");
 // Load up the xp from leveling system
 let xp = require("./xp.json");
+let purple = botconfig_colors.purple;
 
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
@@ -73,6 +74,36 @@ const init = async () => {
     const thisLevel = client.config.permLevels[i];
     client.levelCache[thisLevel.name] = thisLevel.level;
   }
+  
+  
+  // Here we load the xp system
+  let xpAdd = Math.floor(Math.random() * 7) + 8;
+  console.log(xpAdd);
+
+  if(!xp[message.author.id]){
+    xp[message.author.id] = {
+      xp: 0,
+      level: 1
+    };
+  }
+
+
+  let curxp = xp[message.author.id].xp;
+  let curlvl = xp[message.author.id].level;
+  let nxtLvl = xp[message.author.id].level * 300;
+  xp[message.author.id].xp =  curxp + xpAdd;
+  if(nxtLvl <= xp[message.author.id].xp){
+    xp[message.author.id].level = curlvl + 1;
+    let lvlup = new Discord.RichEmbed()
+    .setTitle("Subiu de Nível!")
+    .setColor(purple)
+    .addField("Novo Nível!", curlvl + 1);
+
+    message.channel.send(lvlup).then(msg => {msg.delete(5000)});
+  }
+  fs.writeFile("./xp.json", JSON.stringify(xp), (err) => {
+    if(err) console.log(err)
+  });
 
   // Here we login the client.
   client.login(client.config.token);
