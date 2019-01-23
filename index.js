@@ -9,6 +9,7 @@ const Discord = require("discord.js");
 const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
 const Enmap = require("enmap");
+const botconfig_colors = require("./botconfig_colors.json");
 // Load up the xp from leveling system
 let xp = require("./xp.json");
 let purple = botconfig_colors.purple;
