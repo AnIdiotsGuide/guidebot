@@ -10,9 +10,6 @@ const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
 const Enmap = require("enmap");
 
-//Economy setup
-let userData = JSON.parse(fs.readFileSync('Storage/userData.json', 'utf8')); //This calls the JSON file.
-
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're refering to. Your client.
