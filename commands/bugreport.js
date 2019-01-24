@@ -36,3 +36,17 @@ exports.run = (client, message) => {
   .catch(e => logger.error(e))
 // In your command
 };
+
+exports.conf = {
+  enabled: true,
+  guildOnly: false,
+  aliases: [],
+  permLevel: "User"
+};
+
+exports.help = {
+  name: "bugreport",
+  category: "Sistema",
+  description: "Faz um reporte de bugs.",
+  usage: "bugreport [reporte]"
+};
