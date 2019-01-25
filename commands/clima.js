@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const settings = require('../config/settings.json');
+const settings = require('./config.js');
 
 exports.run = (client, message) => {
     let apiKey = settings.weatherAPI;
