@@ -3,7 +3,7 @@
 // goes `client, other, args` when this function is run.
 
 module.exports = async (client, message) => {
-  const config = require('../config.js');
+  const config = require("../config.js");
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop (we call that "botception").
   if (message.author.bot) return;
