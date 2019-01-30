@@ -91,8 +91,7 @@ module.exports = (client) => {
   };
 
   client.loadCommand = (commandName) => {
-    if (client.aliases.has(commandName))
-        commandName = client.aliases.get(commandName);
+    if (client.aliases.has(commandName)) commandName = client.aliases.get(commandName);
     try {
       client.logger.log(`Loading Command: ${commandName}`);
       const props = require(`../commands/${commandName}`);
