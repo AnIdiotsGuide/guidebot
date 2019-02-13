@@ -18,5 +18,5 @@ exports.help = {
   name: "say",
   category: "Outros",
   description: "Faz o bot dizer aquilo que escreves.",
-  usage: "say"
+  usage: "slotmachine"
 };
