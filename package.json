@@ -28,9 +28,7 @@
     "chalk": "^2.3.0",
     "discord.js": "^11.4.2",
     "enmap": "^4.2.1",
-    "express": "^4.16.4",
     "moment": "^2.20.1",
-    "moment-duration-format": "^2.2.0",
-    "node-fetch": "^2.3.0"
+    "moment-duration-format": "^2.2.0"
   }
 }

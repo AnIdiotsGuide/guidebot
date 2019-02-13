@@ -1,31 +1,42 @@
-exports.run = async (client, message, args, level) => {
-  const user = message.mentions.users.first();
-  // Parse Amount
-  const amount = !!parseInt(message.content.split(" ")[1]) ? parseInt(message.content.split(" ")[1]) : parseInt(message.content.split(" ")[2])
-  if (!amount) return message.reply("Must specify an amount to delete!");
-  if (!amount && !user) return message.reply("Must specify a user and amount, or just an amount, of messages to purge!");
-  // Fetch 100 messages (will be filtered and lowered up to max amount requested)
-  message.channel.fetchMessages({
-    limit: 100,
-  }).then((messages) => {
-    if (user) {
-      const filterBy = user ? user.id : Client.user.id;
-      messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
-    }
-    message.channel.bulkDelete(messages).catch(error => console.log(error.stack));
-  });
+const Discord = require("discord.js");
 
-  exports.conf = {
-    enabled: true,
-    guildOnly: false,
-    aliases: [],
-    permLevel: "User"
-  };
+module.exports.run = async (bot, message, args, messages) => {
 
-  exports.help = {
-    name: "purge",
-    category: "Sistema",
-    description: "Elimina as mensagens especificadas.",
-    usage: "purge <número>"
-  };
+  const deleteCount = parseInt(args[0], 10);
+  if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply("Não. Apenas não..");
+    
+  if (!deleteCount || deleteCount < 2 || deleteCount > 100)
+    return message.reply("Por favor esecifique um número entre 2 e 100 de mensagens para eliminar.");
+   
+  const fetched = await message.channel.fetchMessages({limit: deleteCount});
+  message.channel.bulkDelete(fetched)
+    .catch(error => message.reply(`Não pude eliminar as mensagens por causa de: ${error}`));
+  
+  let purgeEmbed = new Discord.RichEmbed()
+    .setAuthor("♻️ Action | Purge")
+    .setColor("RANDOM")
+    .addField("Executador", `<@${message.author.id}>`)
+    .addField("Purge", `${args[0]}`)
+    .addField("Deletado", `${args[0]}`)
+    .setFooter("Versão do bot 1.0.0", bot.user.displayAvatarURL);
+
+  let purgeChannel = message.guild.channels.find(`name`, "🚫mod-logs🚫");
+  if (!purgeChannel) return message.channel.send("Não foi possível localizar o canal mod-logs.");
+
+  purgeChannel.send(purgeEmbed);
+
 }
+
+exports.conf = {
+  enabled: true,
+  guildOnly: false,
+  aliases: ["p", "purga"],
+  permLevel: "User"
+};
+
+exports.help = {
+  name: "purge",
+  category: "Sistema",
+  description: "Elimina um número especificado de mensagens.",
+  usage: "purge [número entre 2 e 100]"
+};
