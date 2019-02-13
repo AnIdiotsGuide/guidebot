@@ -1,12 +1,11 @@
 const Discord = require('discord.js');
-const settings = require('./config.js');
 
 exports.run = (client, message) => {
-  const apiKey = settings.weatherAPI;
+  const apiKey = "b64df61990617ec30792e590907414ea";
   const fetch = require('node-fetch');
   const arg = message.content.split(' ').join(' ').slice(8);
   if (!arg) {
-    return message.reply('Preciso de uma cidade para verificar, LOL :wink:');
+    return message.reply("Preciso de uma cidade para verificar, LOL :wink:");
   }
   fetch('http://api.openweathermap.org/data/2.5/weather?q=' + arg + '&APPID=' + apiKey + '&units=metric')
     .then(res => {
