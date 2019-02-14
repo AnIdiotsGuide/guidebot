@@ -20,6 +20,19 @@ client.config = require("./config.js");
 // client.config.token contains the bot's token
 // client.config.prefix contains the message prefix
 
+//express.js module ping system
+const http = require('http');
+const express = require('express');
+const app = express();
+app.get("/", (request, response) => {
+  console.log(Date.now() + " Ping Received");
+  response.sendStatus(200);
+});
+app.listen(process.env.PORT);
+setInterval(() => {
+  http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
+}, 280000);
+
 // Require our logger
 client.logger = require("./modules/Logger");
 
