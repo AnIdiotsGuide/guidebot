@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const botconfig = require("./config.json");
+const botconfig = require("../config.json");
 
 function randomIntInc(low, high) {
   return Math.floor(Math.random() * (high - low + 1) + low);

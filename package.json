@@ -34,6 +34,10 @@
     "express-glitch-keepalive": "^0.2.0",
     "express": "^4.16.4",
     "node-superfetch": "^0.1.9",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "quick.db": "^6.3.2",
+    "quick.hook": "^1.5.1",
+    "currency-formatter": "^1.5.3",
+    "parse-ms": "^2.0.0"
   }
 }
