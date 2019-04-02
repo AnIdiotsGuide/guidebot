@@ -45,7 +45,7 @@ For session storage, Guidebot was setup to use mongodb. Fear not, it's fairly ea
 
 In a command prompt in your projects folder (wherever that may be) run the following:
 
-`git clone https://github.com/An-Idiots-Guide/guidebot-dashboard.git guidebot`
+`git clone https://github.com/An-Idiots-Guide/guidebot.git`
 
 You also need to switch to the `dashboard` branch, which is done with the following command:
 
