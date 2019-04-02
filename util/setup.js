@@ -105,7 +105,7 @@ let prompts = [
     .replace("{{token}}", `"${answers.token}"`)
     .replace("{{oauthSecret}}", `"${answers.oauthSecret}"`)
     .replace("{{sessionSecret}}", `"${answers.saltyKey}"`)
-    .replace("{{mongoconfig}}", "process.env.MONGO_CONNECTION")
+    .replace("{{mongoconfig}}", `"${answers.mongoConnection}"`)
   
   fs.writeFileSync("./config.js", baseConfig);
   console.log("REMEMBER TO NEVER SHARE YOUR TOKEN WITH ANYONE!");
