@@ -10,6 +10,7 @@ const config = {
     "domain": {{domain}},
     "port": {{port}}
   },
+  mongo: "{{mongoconfig}}",
   permLevels: [
     { level: 0,
       name: "User", 

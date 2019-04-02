@@ -36,7 +36,7 @@ require("moment-duration-format");
 // (so that when you come back to the page, it still remembers you're logged in).
 const passport = require("passport");
 const session = require("express-session");
-const LevelStore = require("level-session-store")(session);
+const MongoStore = require('connect-mongo')(session);
 const Strategy = require("passport-discord").Strategy;
 
 // Helmet is specifically a security plugin that enables some specific, useful 
@@ -98,7 +98,7 @@ module.exports = (client) => {
   // Session data, used for temporary storage of your visitor's session information.
   // the `secret` is in fact a "salt" for the data, and should not be shared publicly.
   app.use(session({
-    store: new LevelStore("./data/dashboard-session/"),
+    store: new MongoStore({ url: client.config.mongo }),
     secret: client.config.dashboard.sessionSecret,
     resave: false,
     saveUninitialized: false,

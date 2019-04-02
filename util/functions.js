@@ -92,7 +92,7 @@ module.exports = (client) => {
   */
   client.loadCommand = (commandName) => {
     try {
-      const props = require(`../commands/${commandName}`);
+      const props = require(`${process.cwd()}/commands/${commandName}`);
       client.log("log", `Loading Command: ${props.help.name}. 👌`);
       if (props.init) {
         props.init(client);
@@ -108,18 +108,17 @@ module.exports = (client) => {
   };
 
   client.unloadCommand = async (commandName) => {
-    let command;
-    if (client.commands.has(commandName)) {
-      command = client.commands.get(commandName);
-    } else if (client.aliases.has(commandName)) {
-      command = client.commands.get(client.aliases.get(commandName));
-    }
-    if (!command) return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`;
-  
+    console.log(`Trying to unload ${commandName}`);
+    const command = client.commands.get(commandName);
+    if (!command) return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
     if (command.shutdown) {
       await command.shutdown(client);
     }
-    delete require.cache[require.resolve(`../commands/${commandName}.js`)];
+    command.conf.aliases.forEach(alias => {
+      client.aliases.delete(alias);
+    });
+    client.commands.delete(command.help.name);
+    delete require.cache[require.resolve(`${process.cwd()}/commands/${command.help.name}.js`)];
     return false;
   };
 
@@ -166,6 +165,7 @@ module.exports = (client) => {
   // later, this conflicts with native code. Also, if some other lib you use does
   // this, a conflict also occurs. KNOWING THIS however, the following 2 methods
   // are, we feel, very useful in code. 
+  // Because YOLO, right? Carpe Diem!
   
   // <String>.toPropercase() returns a proper-cased string such as: 
   // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"

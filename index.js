@@ -9,7 +9,8 @@ const Discord = require("discord.js");
 const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
 const Enmap = require("enmap");
-const EnmapLevel = require("enmap-level");
+const klaw = require("klaw");
+const path = require("path");
 
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
@@ -23,17 +24,26 @@ client.config = require("./config.js");
 
 // Let's start by getting some useful functions that we'll use throughout
 // the bot, like logs and elevation features.
-require("./modules/functions.js")(client);
+require("./util/functions")(client);
 
 // Aliases and commands are put in collections where they can be read from,
 // catalogued, listed, etc.
-client.commands = new Enmap();
-client.aliases = new Enmap();
+client.commands = new Discord.Collection();
+client.aliases = new Discord.Collection();
 
 // Now we integrate the use of Evie's awesome Enhanced Map module, which
 // essentially saves a collection to disk. This is great for per-server configs,
 // and makes things extremely easy for this purpose.
-client.settings = new Enmap({provider: new EnmapLevel({name: "settings"})});
+client.settings = new Enmap({ 
+  name: "settings",
+  autoFetch: true,
+  fetchAll: false,
+  cloneLevel: 'deep',
+  ensureProps: true
+});
+
+// Basically just an async shortcut to using a setTimeout. Nothing fancy!
+client.wait = promisify(setTimeout);
 
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
@@ -44,21 +54,20 @@ const init = async () => {
   // here and everywhere else.
   const cmdFiles = await readdir("./commands/");
   client.log("log", `Loading a total of ${cmdFiles.length} commands.`);
-  cmdFiles.forEach(f => {
-    if (!f.endsWith(".js")) return;
-    const response = client.loadCommand(f);
+  klaw("./commands").on("data", (item) => {
+    const cmdFile = path.parse(item.path);
+    if (!cmdFile.ext || cmdFile.ext !== ".js") return;
+    const response = client.loadCommand(`${cmdFile.name}${cmdFile.ext}`);
     if (response) console.log(response);
   });
 
-  // Then we load events, which will include our message and ready event.
   const evtFiles = await readdir("./events/");
-  client.log("log", `Loading a total of ${evtFiles.length} events.`);
-  evtFiles.forEach(file => {
-    const eventName = file.split(".")[0];
-    const event = require(`./events/${file}`);
-    // This line is awesome by the way. Just sayin'.
-    client.on(eventName, event.bind(null, client));
-    delete require.cache[require.resolve(`./events/${file}`)];
+  client.log("log", `Loading a ${evtFiles.length} events.`);
+  klaw("./events").on("data", (item) => {
+    const evtFile = path.parse(item.path);
+    if (!evtFile.ext || evtFile.ext !== ".js") return;
+    const event = require(`./events/${evtFile.name}${evtFile.ext}`);
+    client.on(evtFile.name, event.bind(null, client));
   });
 
   // Generate a cache of client permissions for pretty perms

@@ -15,23 +15,47 @@ and 99% compatible with commands from [York's Tutorial Bot](https://github.com/A
 ## Requirements
 
 - `git` command line ([Windows](https://git-scm.com/download/win)|[Linux](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)|[MacOS](https://git-scm.com/download/mac)) installed
-- `node` [Version 8.0.0 or higher](https://nodejs.org)
+- `node` [Version 10.x or higher](https://nodejs.org)
+- [Pre-requisites for Enmap](https://enmap.evie.codes/install#pre-requisites)
 
 You also need your bot's token. This is obtained by creating an application in
 the Developer section of discordapp.com. Check the [first section of this page](https://anidiots.guide/getting-started/the-long-version.html) 
 for more info.
 
+For session storage, Guidebot was setup to use mongodb. Fear not, it's fairly easy to setup, and freely hosted on mongodb.com! Here's a real quick howto:
+- Get an account at [mongodb.com](https://www.mongodb.com/cloud/atlas)
+- Once created, setup your cluster: 
+  - Provider & Region: Up to you, I chose AWS in my test (but you might have a closer free region!). Make sure to select a "FREE TIER AVAILABLE" region!
+  - Keep the M0 cluster tier (the only free one). You may select backups if you want, other additional options are paid.
+  - Type in a cluster name of your choice. Something like `guidebot-cluster`.
+  - Click **Create Cluster**.
+  - Go make a sandwich, setup can take a while...
+  - Click the Collection button in the middle of the page.
+  - Click Create Database. Enter a name such as `guidebot-session` then a collection name such as `sessions`.
+- Now that the cluster is created, we now need to get a connection string. But we need to create a user, which there's a wizard for. 
+  - Click **Command Line Tools** at the top of the cluster window, then click **Connect Instructions**.
+  - Click **Add your Current IP** if you're on the machine that will host your bot. Otherwise, click **Add a Different IP Address** and enter it on the left. Click **Add IP Address**.
+  - Enter a database access *username* and *password*, then click **Create MongoDB User**.
+  - Click **Choose a connection method**.
+  - Click **Connect your Application**
+  - Change the driver version to **2.2.12 or later** (connect-mongo uses an older mongo driver).
+  - Your connection string is here! Keep the page open to copy it later in the setup stage.
+
 ## Downloading
 
 In a command prompt in your projects folder (wherever that may be) run the following:
 
-`git clone https://github.com/An-Idiots-Guide/guidebot.git`
+`git clone https://github.com/An-Idiots-Guide/guidebot-dashboard.git guidebot`
+
+You also need to switch to the `dashboard` branch, which is done with the following command:
+
+`git checkout dashboard`
 
 Once finished: 
 
 - In the folder from where you ran the git command, run `cd guidebot` and then run `npm install`
-- Rename or copy `config.js.example` to `config.js`
-- Edit `config.js` and fill in all the relevant details as indicated in the file's comments.
+- If any errors happen during install, check [Enmap's Docs](https://enmap.evie.codes/install) for troubleshooting tips.
+- Once the installation is done, the setup will automatically run. Follow the instructions given to finalize everything.
 
 ## Starting the bot
 
@@ -40,7 +64,8 @@ To start the bot, in the command prompt, run the following command:
 
 ## Inviting to a guild
 
-To add the bot to your guild, you have to get an oauth link for it. 
+To add the bot to your guild, you have to get an oauth link for it. See [this page in An Idiot's Guide](https://anidiots.guide/getting-started/getting-started-long-version#add-your-bot-to-a-server)
+for details on how to do this.
 
 You can use this site to help you generate a full OAuth Link, which includes a calculator for the permissions:
 [https://finitereality.github.io/permissions-calculator/?v=0](https://finitereality.github.io/permissions-calculator/?v=0)

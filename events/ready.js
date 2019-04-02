@@ -2,7 +2,7 @@ module.exports = async client => {
   // Why await here? Because the ready event isn't actually ready, sometimes
   // guild information will come in *after* ready. 1s is plenty, generally,
   // for all of them to be loaded.
-  // NOTE: client.wait and client.log are added by ./modules/functions.js !
+  // NOTE: client.wait and client.log are added by ./util/functions.js !
   await client.wait(1000);
 
   // This loop ensures that client.appInfo always contains up to date data
@@ -22,7 +22,7 @@ module.exports = async client => {
 
   // Initializes the dashboard, which must be done on ready otherwise some data
   // may be missing from the dashboard. 
-  require("../modules/dashboard")(client);  
+  require("../util/dashboard")(client);  
 
   // Set the game as the default help command + guild count.
   // NOTE: This is also set in the guildCreate and guildDelete events!
