@@ -57,6 +57,14 @@ Once finished:
 - If any errors happen during install, check [Enmap's Docs](https://enmap.evie.codes/install) for troubleshooting tips.
 - Once the installation is done, the setup will automatically run. Follow the instructions given to finalize everything.
 
+Some helpful hints: 
+- `bot token` is from the application page (see above in Requirements)
+- `bot owner's User ID` is obtained by right-clicking your username in Discord and selecting "Copy ID".
+- `Client Secret` is obtained from [your Discord Developer page](https://discordapp.com/developers/applications/), clicking your app, then copying the `Client Secret` on this page.
+- `session security passphrase` is your own choice. It acts like an internal password for sessions data storage. It should be a long sentence, without spaces or special characters.
+- `domain` should be your publicly accessible URL without the `/callback` at the end, or the http/https at the beginning. But it should have a port if you have one.
+- `mongodb connection string` is the one obtained from the mongo section above.
+
 ## Starting the bot
 
 To start the bot, in the command prompt, run the following command:
