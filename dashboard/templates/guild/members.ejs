@@ -107,7 +107,6 @@
     getMembers(start, function(data) {
       updateTable(data.members);
     })
-    console.log("Changing To Page: "+page)
   }
   
   function drawPagination() {
@@ -138,27 +137,22 @@
     getMembers(0, function(data) {
       pages.current = data.page;
       updateTable(data.members);
-      console.log(data);
       drawPagination();
     });
   });
   
   $( "#show-members" ).change(function() {
-    console.log("Changing display limit to: " + this.value)
     pages.limit = this.value;
     getMembers(0, function(data) {
       updateTable(data.members);
-      console.log(data);
       drawPagination();
     });
   });
   
   $( "#sort-by" ).change(function() {
-    console.log("Sorting By: " + this.value)
     pages.sortby = this.value;
     getMembers(pages.current, function(data) {
       updateTable(data.members);
-      console.log(data);
       drawPagination();
     });
   });

@@ -8,7 +8,7 @@
       <%- include('../blocks/guild-nav.ejs', {active: "manage", guild}) %>
       <form method="post">
         <ul class="list-group list-group-flush">
-        <% const settings = bot.getSettings(guild.id);
+        <% const settings = bot.getSettings(guild);
             const defaults = bot.config.defaultSettings;
             for (const key in settings) { %>
           <li class="list-group-item" style="padding: 0;">

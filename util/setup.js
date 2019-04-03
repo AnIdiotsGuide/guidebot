@@ -4,7 +4,7 @@ const fs = require("fs");
 
 let baseConfig = fs.readFileSync("./util/setup_base.txt", "utf8");
 
-const defaultSettings = `{
+const defaultSettings = {
   "prefix": "~",
   "modLogChannel": "mod-log",
   "modRole": "Moderator",
@@ -13,7 +13,7 @@ const defaultSettings = `{
   "welcomeChannel": "welcome",
   "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
   "welcomeEnabled": "false"
-}`;
+};
 
 const settings = new Enmap({ 
   name: "settings",
@@ -105,7 +105,7 @@ let prompts = [
     .replace("{{token}}", `"${answers.token}"`)
     .replace("{{oauthSecret}}", `"${answers.oauthSecret}"`)
     .replace("{{sessionSecret}}", `"${answers.saltyKey}"`)
-    .replace("{{mongoconfig}}", `"${answers.mongoConnection}"`)
+    .replace("{{mongoconfig}}", `${answers.mongoConnection}`)
   
   fs.writeFileSync("./config.js", baseConfig);
   console.log("REMEMBER TO NEVER SHARE YOUR TOKEN WITH ANYONE!");
