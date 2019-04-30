@@ -32,8 +32,7 @@ Once finished:
 
 - In the folder from where you ran the git command, run `cd guidebot` and then run `npm install`
 - **If you get any error about python or msibuild.exe or binding, read the requirements section again!**
-- Rename or copy `config.js.example` to `config.js`
-- Edit `config.js` and fill in all the relevant details as indicated in the file's comments.
+- Run `node setup.js` to generate a proper configuration file and settings.
 
 ## Starting the bot
 
