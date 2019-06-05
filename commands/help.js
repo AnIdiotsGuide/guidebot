@@ -18,7 +18,6 @@ exports.run = (client, message, args, level) => {
     const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
 
     let currentCategory = "";
-    console.log(message.settings);
     let output = `= Command List =\n\n[Use ${message.settings.prefix}help <commandname> for details]\n`;
     const sorted = myCommands.array().sort((p, c) => p.help.category > c.help.category ? 1 :  p.help.name > c.help.name && p.help.category === c.help.category ? 1 : -1 );
     sorted.forEach( c => {
