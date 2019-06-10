@@ -1,11 +1,11 @@
 {
   "name": "guidebot",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "A boilerplate example bot with command handler and reloadable commands. Updated and Maintained by the Idiot's Guide Community",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "prepublish": "node util/setup.js"
+    "postinstall": "node util/setup.js"
   },
   "engines": {
     "node": ">=8"
@@ -26,19 +26,20 @@
   "dependencies": {
     "better-sqlite-pool": "^0.2.2",
     "body-parser": "^1.18.3",
+    "chalk": "^2.4.2",
     "connect-mongo": "^2.0.3",
-    "discord.js": "^11.4.2",
+    "discord.js": "^11.5.1",
     "ejs": "^2.6.1",
-    "enmap": "^4.8.2",
+    "enmap": "^4.8.7",
     "express": "^4.16.4",
     "express-passport": "^0.1.0",
     "express-session": "^1.15.6",
     "helmet": "^3.16.0",
-    "inquirer": "^6.2.2",
+    "inquirer": "^6.3.1",
     "klaw": "^3.0.0",
     "marked": "^0.6.1",
     "moment": "^2.24.0",
-    "moment-duration-format": "^2.2.2",
+    "moment-duration-format": "^2.3.2",
     "passport": "^0.4.0",
     "passport-discord": "^0.1.3",
     "snekfetch": "^4.0.4"

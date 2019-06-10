@@ -1,22 +1,22 @@
 <%- include('../blocks/header', {bot, user, path}) %>
-<h2>Server Statistics (In Dev)</h2>
-
   <div class="row">
-    <div class="col col-4">
+    <div class="col col-3">
       <%- include('../blocks/guild-card', {guild}) %>
     </div>
     <div class="col">
-      <div class="card" style="width: 100%;">
+      <div class="card text-white mb-3" style="width: 100%;">
         <%- include('../blocks/guild-nav', {active: "stats", guild}) %>
-        <p>To Be Done</p>
+        <div class="bg-info">
+          <div class="card-body" width="100%">
+            <p class="card-text">This page is currently unfinished, and may never be included.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
   <% include ../blocks/guild-modals %>
   <script type="text/javascript">
     var ts = parseInt($('#guildCreate').text());
-    $('#guildCreate').html(`<strong>Created:</strong>: ${moment(ts).format('MMMM Do YYYY (h:mm a)')}`);
+    $('#guildCreate').html(`${moment(ts).format('MMMM Do YYYY')}`);
   </script>
-
 <% include ../blocks/footer %>

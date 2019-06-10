@@ -154,7 +154,7 @@ module.exports = (client) => {
     });
   };
 
-  /* MISCELANEOUS NON-CRITICAL FUNCTIONS */
+  /* MISCELLANEOUS NON-CRITICAL FUNCTIONS */
   
   // EXTENDING NATIVE TYPES IS BAD PRACTICE. Why? Because if JavaScript adds this
   // later, this conflicts with native code. Also, if some other lib you use does
@@ -181,6 +181,7 @@ module.exports = (client) => {
   process.on("uncaughtException", (err) => {
     const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, "g"), "./");
     console.error("Uncaught Exception: ", errorMsg);
+    console.error(err);
     // Always best practice to let the code crash on uncaught exceptions. 
     // Because you should be catching them anyway.
     process.exit(1);
@@ -188,5 +189,6 @@ module.exports = (client) => {
 
   process.on("unhandledRejection", err => {
     console.error("Uncaught Promise Error: ", err);
+    console.error(err);
   });
 };

@@ -9,11 +9,10 @@ module.exports = (client, message) => {
 
   // Grab the settings for this server from the PersistentCollection
   // If there is no guild, get default conf (DMs)
-  const settings = client.getSettings(message.guild);
-
   // For ease of use in commands and functions, we'll attach the settings
   // to the message object, so `message.settings` is accessible.
-  message.settings = settings;
+  
+  const settings = message.settings = client.getSettings(message.guild);
   
   // Also good practice to ignore any message that does not start with our prefix,
   // which is set in the configuration file.

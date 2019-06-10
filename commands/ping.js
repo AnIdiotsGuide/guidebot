@@ -12,7 +12,7 @@ exports.conf = {
 
 exports.help = {
   name: "ping",
-  category: "Miscelaneous",
+  category: "Miscellaneous",
   description: "It... like... pings. Then Pongs. And it\"s not Ping Pong.",
   usage: "ping"
 };

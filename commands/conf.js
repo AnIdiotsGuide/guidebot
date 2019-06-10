@@ -2,7 +2,6 @@ const { inspect } = require("util");
 
 /*
 FOR GUILD SETTINGS SEE set.js !
-
 This command is used to modify the bot's default configuration values, which affects all guilds. 
 If a default setting is not specifically overwritten by a guild, changing a default here will
 change it for that guild. The `add` action adds a key to the configuration of every guild in
