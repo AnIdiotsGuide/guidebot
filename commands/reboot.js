@@ -3,7 +3,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   await Promise.all(client.commands.map(cmd =>
     client.unloadCommand(cmd)
   ));
-  process.exit(1);
+  process.exit(0);
 };
 
 exports.conf = {
