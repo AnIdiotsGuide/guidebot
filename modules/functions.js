@@ -130,7 +130,8 @@ module.exports = (client) => {
       command = client.commands.get(client.aliases.get(commandName));
     }
     if (!command) return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`;
-  
+    commandName = command.help.name;
+    
     if (command.shutdown) {
       await command.shutdown(client);
     }
