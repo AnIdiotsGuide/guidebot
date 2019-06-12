@@ -59,7 +59,7 @@ let prompts = [
 
   baseConfig = baseConfig
     .replace("{{ownerID}}", answers.ownerID)
-    .replace("{{token}}", `"${answers.token}"`)
+    .replace("{{token}}", `"${answers.token}"`);
 
   fs.writeFileSync("./config.js", baseConfig);
   console.log("REMEMBER TO NEVER SHARE YOUR TOKEN WITH ANYONE!");
