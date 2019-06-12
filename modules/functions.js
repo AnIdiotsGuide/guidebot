@@ -130,13 +130,12 @@ module.exports = (client) => {
       command = client.commands.get(client.aliases.get(commandName));
     }
     if (!command) return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`;
-    commandName = command.help.name;
     
     if (command.shutdown) {
       await command.shutdown(client);
     }
-    const mod = require.cache[require.resolve(`../commands/${commandName}`)];
-    delete require.cache[require.resolve(`../commands/${commandName}.js`)];
+    const mod = require.cache[require.resolve(`../commands/${command.help.name}`)];
+    delete require.cache[require.resolve(`../commands/${command.help.name}.js`)];
     for (let i = 0; i < mod.parent.children.length; i++) {
       if (mod.parent.children[i] === mod) {
         mod.parent.children.splice(i, 1);
