@@ -44,7 +44,7 @@
           <% if(user) { %>
             <li class="nav-item dropdown">
               <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="userDropdown" >
-                <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png?size=32" width="25" height="25" class="d-inline-block align-middle rounded-circle" alt="">
+                <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>?size=32" width="25" height="25" class="d-inline-block align-middle rounded-circle" alt="">
                 <%= user.username %>#<%= user.discriminator %>
               </a>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
