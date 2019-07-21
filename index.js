@@ -37,6 +37,18 @@ client.aliases = new Enmap();
 // and makes things extremely easy for this purpose.
 client.settings = new Enmap({name: "settings"});
 
+///Make project alive and make UptimeRobot not saying down.
+var express = require("express");
+var app = express();
+var listener = app.listen(process.env.PORT, function() {
+  console.log("Your app is listening on port " + listener.address().port);
+});
+app.use(express.static("public"));
+app.get("/", function(request, response) {
+  response.sendFile(__dirname + "/views/index.html");
+});
+
+
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
 

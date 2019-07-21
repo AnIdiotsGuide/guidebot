@@ -8,7 +8,7 @@
     "postinstall": "node setup.js"
   },
   "engines": {
-    "node": ">=8"
+    "node": "12.6.0"
   },
   "repository": {
     "type": "git",
@@ -24,12 +24,13 @@
   },
   "homepage": "https://github.com/An-Idiots-Guide/guidebot#readme",
   "dependencies": {
-    "better-sqlite3": "^5.4.0",
+    "better-sqlite3": "^5.4.1",
     "chalk": "^2.4.2",
     "discord.js": "^11.5.1",
-    "enmap": "^5.0.0",
-    "inquirer": "^6.3.1",
+    "enmap": "^5.0.1",
+    "inquirer": "^6.5.0",
     "moment": "^2.24.0",
-    "moment-duration-format": "^2.3.2"
+    "moment-duration-format": "^2.3.2",
+    "express": "^4.16.4"
   }
 }
