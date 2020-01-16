@@ -11,7 +11,12 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   try {
     const evaled = eval(code);
     const clean = await client.clean(client, evaled);
-    message.channel.send(`\`\`\`js\n${clean}\n\`\`\``);
+    if (clean.length > 1090) { 
+      client.logger.debug(clean);
+      message.channel.send("```\nResponse too long. Check the console for full output.\n```");
+    } else {
+      message.channel.send(`\`\`\`js\n${clean}\n\`\`\``);
+    }
   } catch (err) {
     message.channel.send(`\`ERROR\` \`\`\`xl\n${await client.clean(client, err)}\n\`\`\``);
   }
