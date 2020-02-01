@@ -40,6 +40,12 @@ module.exports = async (client, message) => {
   // using this const varName = thing OR otherthign; is a pretty efficient
   // and clean way to grab one of 2 values!
   if (!cmd) return;
+  
+  //A command might be not enabled. This message informs the command invoker that the command is disabled.
+
+  if (cmd && !cmd.conf.enabled) {
+    return message.channel.send("Sorry, this command is disabled. Please wait until the bot owner enables the command.");
+  }
 
   // Some commands may not be useable in DMs. This check prevents those commands from running
   // and return a friendly error message.
