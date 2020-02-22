@@ -1,7 +1,7 @@
 // This event executes when a new guild (server) is left.
 
 module.exports = (client, guild) => {
-  if (!guild.available) return; // Check for an outage.
+  if (!guild.available) return; // if there is an outage, return.
   
   client.logger.cmd(`[GUILD LEAVE] ${guild.name} (${guild.id}) removed the bot.`);
 
