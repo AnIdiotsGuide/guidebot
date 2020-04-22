@@ -1,6 +1,8 @@
-// This event executes when a new guild (server) is joined.
+// This event executes when the bot joins a new guild (server).
 
 module.exports = (client, guild) => {
-  client.user.setPresence({game: {name: `${client.settings.get("default").prefix}help | ${client.guilds.size} Servers`, type:0}});
-  client.log("log", `New guild has been joined: ${guild.name} (${guild.id}) with ${guild.memberCount}`, "JOINED");
+  // Update the activity to show the updated number of guilds.
+  client.user.setActivity(`${client.getSettings("default").prefix}help | ${client.guilds.size} Servers`);
+  // Log the guild the bot just joined to the console.
+  client.logger.log(`Joined guild: ${guild.name} (${guild.id}) with ${guild.memberCount} members`);
 };

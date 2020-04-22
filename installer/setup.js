@@ -17,7 +17,7 @@ const defaultSettings = {
 
 const settings = new Enmap({ 
   name: "settings",
-  cloneLevel: 'deep',
+  cloneLevel: "deep",
   ensureProps: true
 });
 
@@ -54,11 +54,6 @@ let prompts = [
     name: "host",
     message: "Please enter your domain name and port (optional) : (e.g. localhost:8080 or www.example.com)"
   },
-  {
-    type: "input",
-    name: "mongoConnection",
-    message: "Please enter your mongodb connection string, or get one from mlab : (see Readme for details, e.g. mongodb://username:password@example.com:55258/enmap)"
-  }
 ];
 
 (async function() {
@@ -78,9 +73,7 @@ let prompts = [
       .replace("{{port}}", "process.env.PORT")
       .replace("{{token}}", "process.env.TOKEN")
       .replace("{{oauthSecret}}", "process.env.SECRET")
-      .replace("{{sessionSecret}}", "process.env.SESSION_SECRET")
-      .replace("{{mongoconfig}}", "process.env.MONGO_CONNECTION")
-    console.log("REMEMBER TO PLACE THE MONGO_CONNECTION, TOKEN, SECRET AND SESSION_SECRET IN YOUR .ENV FILE!!!");
+      .replace("{{sessionSecret}}", "process.env.SESSION_SECRET");
     const ownerID = await inquirer.prompt([{name: "data", message: "Please enter your User ID for the bot's Owner."}]);
     baseConfig = baseConfig.replace("{{ownerID}}", ownerID.data);
     fs.writeFileSync("./config.js", baseConfig);
@@ -104,8 +97,7 @@ let prompts = [
     .replace("{{port}}", port)
     .replace("{{token}}", `"${answers.token}"`)
     .replace("{{oauthSecret}}", `"${answers.oauthSecret}"`)
-    .replace("{{sessionSecret}}", `"${answers.saltyKey}"`)
-    .replace("{{mongoconfig}}", `${answers.mongoConnection}`)
+    .replace("{{sessionSecret}}", `"${answers.saltyKey}"`);
   
   fs.writeFileSync("./config.js", baseConfig);
   console.log("REMEMBER TO NEVER SHARE YOUR TOKEN WITH ANYONE!");

@@ -32,9 +32,9 @@
           text = "Manage";
           enabled = true;
         } else {
-          href = `https://discordapp.com/oauth2/authorize?client_id=${bot.appInfo.id}&scope=bot&guild_id=${guild.id}&response_type=code&redirect_uri=${encodeURIComponent(bot.config.dashboard.callbackURL)}`;
+          href = `https://discordapp.com/oauth2/authorize?client_id=${bot.application.id}&scope=bot&guild_id=${guild.id}&response_type=code&redirect_uri=${encodeURIComponent(bot.config.dashboard.callbackURL)}`;
           text = "Invite Bot";
-          enabled = bot.appInfo.botPublic;
+          enabled = bot.application.botPublic;
         }
         %> 
         <a class="btn btn-primary btn-lg<% if(!enabled) { %> disabled<% } %>" role="button" href="<%= href %>"><%= text %> <i class="fa fa-fw fa-chevron-circle-right" aria-hidden="true"></i></a>
@@ -43,4 +43,4 @@
   <% }); %>
   </ul>
 
-  <% include ./blocks/footer %>
+  <% include('./blocks/footer') %>

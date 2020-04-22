@@ -5,12 +5,15 @@ module.exports = async client => {
   // NOTE: client.wait and client.log are added by ./util/functions.js !
   await client.wait(1000);
 
-  // This loop ensures that client.appInfo always contains up to date data
+  // This loop ensures that client.application always contains up to date data
   // about the app's status. This includes whether the bot is public or not,
-  // its description, owner, etc. Used for the dashboard amongs other things.
-  client.appInfo = await client.fetchApplication();
+  // its description, owner(s), etc. Used for the dashboard amongs other things.
+  client.application = await client.fetchApplication();
+  if (client.owners.length < 1) client.application.team ? client.owners.push(...client.application.team.members.keys()) : client.owners.push(client.application.owner.id);
   setInterval( async () => {
-    client.appInfo = await client.fetchApplication();
+    client.owners = [];
+    client.application = await client.fetchApplication();
+    client.application.team ? client.owners.push(...client.application.team.members.keys()) : client.owners.push(client.application.owner.id);
   }, 60000);
 
   // Check whether the "Default" guild settings are loaded in the enmap.
@@ -26,8 +29,8 @@ module.exports = async client => {
 
   // Set the game as the default help command + guild count.
   // NOTE: This is also set in the guildCreate and guildDelete events!
-  client.user.setPresence({game: {name: `${client.settings.get("default").prefix}help | ${client.guilds.size} Servers`, type:0}});
+  client.user.setActivity(`${client.getSettings("default").prefix}help | ${client.guilds.size} Servers`);
 
   // Log that we're ready to serve, so we know the bot accepts commands.
-  client.log("log", `${client.user.tag}, ready to serve ${client.users.size} users in ${client.guilds.size} servers.`, "Ready!");
+  client.logger.log(`${client.user.tag}, ready to serve ${client.users.size} users in ${client.guilds.size} servers.`, "ready");
 };

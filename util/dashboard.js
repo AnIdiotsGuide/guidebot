@@ -36,7 +36,7 @@ require("moment-duration-format");
 // (so that when you come back to the page, it still remembers you're logged in).
 const passport = require("passport");
 const session = require("express-session");
-const MongoStore = require('connect-mongo')(session);
+const SQLiteStore = require("connect-sqlite3")(session);
 const Strategy = require("passport-discord").Strategy;
 
 // Helmet is specifically a security plugin that enables some specific, useful 
@@ -85,7 +85,7 @@ module.exports = (client) => {
   See config.js.example to set these up. 
   */
   passport.use(new Strategy({
-    clientID: client.appInfo.id,
+    clientID: client.application.id,
     clientSecret: client.config.dashboard.oauthSecret,
     callbackURL: client.config.dashboard.callbackURL,
     scope: ["identify", "guilds"]
@@ -98,7 +98,9 @@ module.exports = (client) => {
   // Session data, used for temporary storage of your visitor's session information.
   // the `secret` is in fact a "salt" for the data, and should not be shared publicly.
   app.use(session({
-    store: new MongoStore({ url: client.config.mongo }),
+    store: new SQLiteStore({ 
+      dir: "./data"
+    }),
     secret: client.config.dashboard.sessionSecret,
     resave: false,
     saveUninitialized: false,
@@ -154,7 +156,7 @@ module.exports = (client) => {
   // then throws the user to the Discord OAuth2 login page.
   app.get("/login", (req, res, next) => {
     if (req.session.backURL) {
-      req.session.backURL = req.session.backURL;
+      next();
     } else if (req.headers.referer) {
       const parsed = url.parse(req.headers.referer);
       if (parsed.hostname === app.locals.domain) {
@@ -171,11 +173,7 @@ module.exports = (client) => {
   // Here we check if the user was already on the page and redirect them
   // there, mostly.
   app.get("/callback", passport.authenticate("discord", { failureRedirect: "/autherror" }), (req, res) => {
-    if (req.user.id === client.appInfo.owner.id) {
-      req.session.isAdmin = true;
-    } else {
-      req.session.isAdmin = false;
-    }
+    client.owners.includes(req.user.id) ? req.session.isAdmin = true : req.session.isAdmin = false;
     if (req.session.backURL) {
       const url = req.session.backURL;
       req.session.backURL = null;
@@ -344,15 +342,6 @@ module.exports = (client) => {
     });
   });
 
-  // Displays general guild statistics. 
-  app.get("/dashboard/:guildID/stats", checkAuth, (req, res) => {
-    const guild = client.guilds.get(req.params.guildID);
-    if (!guild) return res.status(404);
-    const isManaged = guild && !!guild.member(req.user.id) ? guild.member(req.user.id).permissions.has("MANAGE_GUILD") : false;
-    if (!isManaged && !req.session.isAdmin) res.redirect("/");
-    renderTemplate(res, req, "guild/stats.ejs", {guild});
-  });
-  
   // Leaves the guild (this is triggered from the manage page, and only
   // from the modal dialog)
   app.get("/dashboard/:guildID/leave", checkAuth, async (req, res) => {

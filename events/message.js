@@ -3,6 +3,7 @@
 // goes `client, other, args` when this function is run.
 
 module.exports = (client, message) => {
+
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop (we call that "botception").
   if (message.author.bot) return;
@@ -11,18 +12,30 @@ module.exports = (client, message) => {
   // If there is no guild, get default conf (DMs)
   // For ease of use in commands and functions, we'll attach the settings
   // to the message object, so `message.settings` is accessible.
-  
   const settings = message.settings = client.getSettings(message.guild);
   
+  // Just in case we don't know what the current prefix is, mention the bot
+  // and the following regex will detect it and fire off letting you know
+  // what the current prefix is.
+  const mentionMatch = new RegExp(`^<@!?${client.user.id}> ?$`);
+  if (message.content.match(mentionMatch)) {
+    return message.channel.send(`My prefix on this guild is \`${settings.prefix}\``);
+  }
+
   // Also good practice to ignore any message that does not start with our prefix,
-  // which is set in the configuration file.
-  if (message.content.indexOf(settings.prefix) !== 0) return;
+  // which is set in the configuration file, but as a fall back we'll also use
+  // a mention as a prefix.
+  // So the prefixes array lists 2 items, the prefix from the settings and
+  // the bots user id (a mention).
+  const prefixes = [settings.prefix, `<@!${client.user.id}>`];
+  const prefix = prefixes.find(p => message.content.startsWith(p));
+  if (message.content.indexOf(prefix) !== 0) return;
 
   // Here we separate our "command" name, and our "arguments" for the command.
   // e.g. if we have the message "+say Is this the real life?" , we'll get the following:
   // command = say
   // args = ["Is", "this", "the", "real", "life?"]
-  const args = message.content.slice(settings.prefix.length).trim().split(/ +/g);
+  const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
   // Get the user or member's permission level from the elevation
@@ -31,7 +44,7 @@ module.exports = (client, message) => {
   // Check whether the command, or alias, exist in the collections defined
   // in app.js.
   const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
-  // using this const varName = thing OR otherthign; is a pretty efficient
+  // using this const varName = thing OR otherthing; is a pretty efficient
   // and clean way to grab one of 2 values!
   if (!cmd) return;
 
@@ -59,6 +72,6 @@ module.exports = (client, message) => {
     message.flags.push(args.shift().slice(1));
   }
   // If the command exists, **AND** the user has permission, run it.
-  client.log("log", `${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "CMD");
+  client.logger.log(`${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "cmd");
   cmd.run(client, message, args, level);
 };

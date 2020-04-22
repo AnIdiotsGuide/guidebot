@@ -31,9 +31,9 @@
       </form>
     </div>
   </div>
-  <% include ../blocks/guild-modals %>
+  <% include('../blocks/guild-modals') %>
   <script type="text/javascript">
     var ts = parseInt($('#guildCreate').text());
     $('#guildCreate').html(`${moment(ts).format('MMMM Do YYYY')}`);
   </script>
-<% include ../blocks/footer %>
+<% include('../blocks/footer') %>

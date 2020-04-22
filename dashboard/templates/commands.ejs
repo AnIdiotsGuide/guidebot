@@ -16,10 +16,10 @@ bot.commands.forEach((command) => {
       <% for (const command of help[category]) { %>
         <div class="card">
           <h3 class="card-header"><%= command.help.name %></h3>
-          <div class="card-body">
+          <div class="card-body" style="height: 100px;">
             <p class="card-text"><%= command.help.description %></p>
-            <h6 class="card-subtitle text-muted">Permission: <%= command.conf.permLevel %><br /><a href="#" data-toggle="modal" data-target="#<%= `${command.help.name}` %>Modal">more...</a></h6>
           </div>
+          <div class="card-footer">Permission Level: <%= command.conf.permLevel %><br /><a href="#" data-toggle="modal" data-target="#<%= `${command.help.name}` %>Modal">Click for more...</a></div>
         </div>
         <div id="<%= `${command.help.name}` %>Modal" class="modal fade" role="dialog">
           <div class="modal-dialog">
@@ -39,4 +39,4 @@ bot.commands.forEach((command) => {
       <% } %>
     </div>
   <% } %>
-<% include ./blocks/footer %>
+<% include('./blocks/footer') %>

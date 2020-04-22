@@ -1,8 +1,16 @@
 const config = {
+  // Bot Owner, level 10 by default. A User ID. Should never be anything else than the bot owner's ID.
   "ownerID": "{{ownerID}}",
+
+  // Bot Admins, level 9 by default. Array of user ID strings.
   "admins": [],
+
+  // Bot Support, level 8 by default. Array of user ID strings
   "support": [],
+
+  // Your Bot's Token. Available on https://discordapp.com/developers/applications/me
   "token": {{token}},
+
   "dashboard" : {
     "oauthSecret": {{oauthSecret}},
     "callbackURL": `http://{{fullURL}}/callback`,
@@ -10,13 +18,17 @@ const config = {
     "domain": {{domain}},
     "port": {{port}}
   },
-  mongo: "{{mongoconfig}}",
+
+  // PERMISSION LEVEL DEFINITIONS.
   permLevels: [
-    { level: 0,
+    {
+      level: 0,
       name: "User", 
       check: () => true
     },
-    { level: 2,
+
+    { 
+      level: 2,
       name: "Moderator",
       check: (message) => {
         try {
@@ -27,7 +39,9 @@ const config = {
         }
       }
     },
-    { level: 3,
+
+    {
+      level: 3,
       name: "Administrator", 
       check: (message) => {
         try {
@@ -38,21 +52,29 @@ const config = {
         }
       }
     },
-    { level: 4,
+
+    {
+      level: 4,
       name: "Server Owner", 
       check: (message) => message.channel.type === "text" ? (message.guild.owner.user.id === message.author.id ? true : false) : false
     },
-    { level: 8,
+
+    {
+      level: 8,
       name: "Bot Support",
       check: (message) => config.support.includes(message.author.id)
     },
-    { level: 9,
+
+    { 
+      level: 9,
       name: "Bot Admin",
       check: (message) => config.admins.includes(message.author.id)
     },
-    { level: 10,
+
+    { 
+      level: 10,
       name: "Bot Owner", 
-      check: (message) => message.client.appInfo.owner.id === message.author.id
+      check: (message) => message.client.owners.includes(message.author.id)
     }
   ]
 };

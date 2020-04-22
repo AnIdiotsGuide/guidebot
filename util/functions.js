@@ -26,17 +26,54 @@ module.exports = (client) => {
     return permlvl;
   };
 
-
   /*
-  LOGGING FUNCTION
+  GUILD SETTINGS FUNCTION
 
-  Logs to console. Future patches may include time+colors
+  This function merges the default settings (from config.defaultSettings) with any
+  guild override you might have for particular guild. If no overrides are present,
+  the default settings are used.
+
   */
-  client.log = (type, msg, title) => {
-    if (!title) title = "Log";
-    console.log(`[${type}] [${title}]${msg}`);
+  
+  // THIS IS HERE BECAUSE SOME PEOPLE DELETE ALL THE GUILD SETTINGS
+  // And then they're stuck because the default settings are also gone.
+  // So if you do that, you're resetting your defaults. Congrats.
+  const defaultSettings = {
+    "prefix": "~",
+    "modLogChannel": "mod-log",
+    "modRole": "Moderator",
+    "adminRole": "Administrator",
+    "systemNotice": "true",
+    "welcomeChannel": "welcome",
+    "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
+    "welcomeEnabled": "false"
   };
 
+  // getSettings merges the client defaults with the guild settings. guild settings in
+  // enmap should only have *unique* overrides that are different from defaults.
+  client.getSettings = (guild) => {
+    // This line coupled with the defaultSettings defined above will always make sure
+    // the bot is functional, if a user deletes the default settings from the database
+    // ensuring the data will re-set those defaults.
+    client.settings.ensure("default", defaultSettings);
+    return {
+      ...(client.settings.get("default") || {}),
+      ...(guild && client.settings.get(guild.id) || {})
+    };
+  };
+
+  // writeSettings overrides, or adds, any configuration item that is different
+  // than the defaults. This ensures less storage wasted and to detect overrides.
+  client.writeSettings = (id, newSettings) => {
+    const defaults = client.settings.get("default");
+    const settings = client.settings.get(id) || {};
+    // Using the spread operator again, and lodash's "pickby" function to remove any key
+    // from the settings that aren't in the defaults (meaning, they don't belong there)
+    client.settings.set(id, {
+      ..._.pickBy(settings, (v, k) => !_.isNil(defaults[k])),
+      ..._.pickBy(newSettings, (v, k) => !_.isNil(defaults[k]))
+    });
+  };
 
   /*
   SINGLE-LINE AWAITMESSAGE
@@ -51,7 +88,7 @@ module.exports = (client) => {
 
   */
   client.awaitReply = async (msg, question, limit = 60000) => {
-    const filter = m=>m.author.id = msg.author.id;
+    const filter = m => m.author.id === msg.author.id;
     await msg.channel.send(question);
     try {
       const collected = await msg.channel.awaitMessages(filter, { max: 1, time: limit, errors: ["time"] });
@@ -73,8 +110,8 @@ module.exports = (client) => {
   client.clean = async (client, text) => {
     if (text && text.constructor.name == "Promise")
       text = await text;
-    if (typeof evaled !== "string")
-      text = require("util").inspect(text, {depth: 0});
+    if (typeof text !== "string")
+      text = require("util").inspect(text, {depth: 1});
 
     text = text
       .replace(/`/g, "`" + String.fromCharCode(8203))
@@ -84,17 +121,10 @@ module.exports = (client) => {
     return text;
   };
 
-  /* 
-  COMMAND LOAD AND UNLOAD
-  
-  To simplify the loading and unloading of commands from multiple locations
-  including the index.js load loop, and the reload function, these 2 ensure
-  that unloading happens in a consistent manner across the board.
-  */
   client.loadCommand = (commandName) => {
     try {
-      const props = require(`${process.cwd()}/commands/${commandName}`);
-      client.log("log", `Loading Command: ${props.help.name}. 👌`);
+      client.logger.log(`Loading Command: ${commandName}`);
+      const props = require(`../commands/${commandName}`);
       if (props.init) {
         props.init(client);
       }
@@ -109,70 +139,50 @@ module.exports = (client) => {
   };
 
   client.unloadCommand = async (commandName) => {
-    console.log(`Trying to unload ${commandName}`);
-    const command = client.commands.get(commandName);
-    if (!command) return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
+    let command;
+    if (client.commands.has(commandName)) {
+      command = client.commands.get(commandName);
+    } else if (client.aliases.has(commandName)) {
+      command = client.commands.get(client.aliases.get(commandName));
+    }
+    if (!command) return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`;
+    
     if (command.shutdown) {
       await command.shutdown(client);
     }
-    command.conf.aliases.forEach(alias => {
-      client.aliases.delete(alias);
-    });
-    client.commands.delete(command.help.name);
-    delete require.cache[require.resolve(`${process.cwd()}/commands/${command.help.name}.js`)];
+    const mod = require.cache[require.resolve(`../commands/${command.help.name}`)];
+    delete require.cache[require.resolve(`../commands/${command.help.name}.js`)];
+    for (let i = 0; i < mod.parent.children.length; i++) {
+      if (mod.parent.children[i] === mod) {
+        mod.parent.children.splice(i, 1);
+        break;
+      }
+    }
     return false;
   };
 
-  /* SETTINGS FUNCTIONS
-
-  These functions are used by any and all location in the bot that wants to either
-  read the current *complete* guild settings (default + overrides, merged) or that
-  wants to change settings for a specific guild.
-
-  */
-
-  // getSettings merges the client defaults with the guild settings. guild settings in
-  // enmap should only have *unique* overrides that are different from defaults.
-  client.getSettings = (guild) => {
-    if(!guild) return client.settings.get("default");
-    const guildConf = client.settings.get(guild.id) || {};
-    // This "..." thing is the "Spread Operator". It's awesome!
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
-    return ({...client.settings.get("default"), ...guildConf});
-  }
-  
-  // writeSettings overrides, or adds, any configuration item that is different
-  // than the defaults. This ensures less storage wasted and to detect overrides.
-  client.writeSettings = (id, newSettings) => {
-    const defaults = client.settings.get("default");
-    let settings = client.settings.get(id) || {};
-    // Using the spread operator again, and lodash's "pickby" function to remove any key
-    // from the settings that aren't in the defaults (meaning, they don't belong there)
-    client.settings.set(id, {
-      ..._.pickBy(settings, (v, k) => !_.isNil(defaults[k])),
-      ..._.pickBy(newSettings, (v, k) => !_.isNil(defaults[k]))
-    });
-  };
-
-  /* MISCELLANEOUS NON-CRITICAL FUNCTIONS */
+  /* MISCELANEOUS NON-CRITICAL FUNCTIONS */
   
   // EXTENDING NATIVE TYPES IS BAD PRACTICE. Why? Because if JavaScript adds this
   // later, this conflicts with native code. Also, if some other lib you use does
   // this, a conflict also occurs. KNOWING THIS however, the following 2 methods
   // are, we feel, very useful in code. 
-  // Because YOLO, right? Carpe Diem!
   
   // <String>.toPropercase() returns a proper-cased string such as: 
   // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
-  String.prototype.toProperCase = function() {
-    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-  };    
-  
+  Object.defineProperty(String.prototype, "toProperCase", {
+    value: function() {
+      return this.replace(/([^\W_]+[^\s-]*) */g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+    }
+  });
+
   // <Array>.random() returns a single random element from an array
   // [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.
-  Array.prototype.random = function() {
-    return this[Math.floor(Math.random() * this.length)];
-  };
+  Object.defineProperty(Array.prototype, "random", {
+    value: function() {
+      return this[Math.floor(Math.random() * this.length)];
+    }
+  });
 
   // `await client.wait(1000);` to "pause" for 1 second.
   client.wait = require("util").promisify(setTimeout);
@@ -180,7 +190,7 @@ module.exports = (client) => {
   // These 2 process methods will catch exceptions and give *more details* about the error and stack trace.
   process.on("uncaughtException", (err) => {
     const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, "g"), "./");
-    console.error("Uncaught Exception: ", errorMsg);
+    client.logger.error(`Uncaught Exception: ${errorMsg}`);
     console.error(err);
     // Always best practice to let the code crash on uncaught exceptions. 
     // Because you should be catching them anyway.
@@ -188,7 +198,7 @@ module.exports = (client) => {
   });
 
   process.on("unhandledRejection", err => {
-    console.error("Uncaught Promise Error: ", err);
+    client.logger.error(`Unhandled rejection: ${err}`);
     console.error(err);
   });
 };
