@@ -26,7 +26,7 @@ for more info.
 
 In a command prompt in your projects folder (wherever that may be) run the following:
 
-`git clone https://github.com/An-Idiots-Guide/guidebot.git`
+`git clone https://github.com/AnIdiotsGuide/guidebot.git`
 
 You also need to switch to the `dashboard` branch, which is done with the following command:
 
