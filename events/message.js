@@ -27,10 +27,12 @@ module.exports = (client, message) => {
   // a mention as a prefix.
   // So the prefixes array lists 2 items, the prefix from the settings and
   // the bots user id (a mention).
-  const prefixes = [settings.prefix, `<@!${client.user.id}>`];
-  const prefix = prefixes.find(p => message.content.startsWith(p));
-  if (message.content.indexOf(prefix) !== 0) return;
+  const prefixes = [settings.prefix.toLowerCase(), `<@!${client.user.id}>`];
 
+  const content = message.content.toLowerCase();
+  const prefix = prefixes.find(p => content.startsWith(p));
+  if (!prefix) return;
+  
   // Here we separate our "command" name, and our "arguments" for the command.
   // e.g. if we have the message "+say Is this the real life?" , we'll get the following:
   // command = say
