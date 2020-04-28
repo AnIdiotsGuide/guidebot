@@ -29,13 +29,13 @@ module.exports = (client, message) => {
   // the bots user id (a mention).
   const prefixes = [settings.prefix, `<@!${client.user.id}>`];
   const prefix = prefixes.find(p => message.content.startsWith(p));
-  if (message.content.indexOf(prefix) !== 0) return;
+  if (message.content.indexOf(prefix.toLowerCase()) !== 0) return;
 
   // Here we separate our "command" name, and our "arguments" for the command.
   // e.g. if we have the message "+say Is this the real life?" , we'll get the following:
   // command = say
   // args = ["Is", "this", "the", "real", "life?"]
-  const args = message.content.slice(prefix.length).trim().split(/ +/g);
+  const args = message.content.slice(prefix.toLowerCase().length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
   // Get the user or member's permission level from the elevation
