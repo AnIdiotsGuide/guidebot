@@ -9,9 +9,6 @@ group of contributors, and no longer easily "understandable" by the majority
 of our newbies. So I've pulled the original Guide Bot out of the mothballs,
 gave it a fresh coat of paint and grease, and here it is back in its full glory!
 
-This command handler is 98% compatible with [my selfbot](https://github.com/eslachance/evie.selfbot) 
-and 99% compatible with commands from [York's Tutorial Bot](https://github.com/AnIdiotsGuide/Tutorial-Bot/tree/Episode-10-Part-1).
-
 ## Requirements
 
 - `git` command line ([Windows](https://git-scm.com/download/win)|[Linux](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)|[MacOS](https://git-scm.com/download/mac)) installed
