@@ -29,7 +29,7 @@ module.exports = async (client, message) => {
   const command = args.shift().toLowerCase();
 
   // If the member on a guild is invisible or not cached, fetch them.
-  if (message.guild && !message.member) await message.guild.fetchMember(message.author);
+  if (message.guild && !message.member) await message.guild.members.fetch(message.author);
 
   // Get the user or member's permission level from the elevation
   const level = client.permlevel(message);
@@ -37,7 +37,7 @@ module.exports = async (client, message) => {
   // Check whether the command, or alias, exist in the collections defined
   // in app.js.
   const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
-  // using this const varName = thing OR otherthign; is a pretty efficient
+  // using this const varName = thing OR otherThing; is a pretty efficient
   // and clean way to grab one of 2 values!
   if (!cmd) return;
 
