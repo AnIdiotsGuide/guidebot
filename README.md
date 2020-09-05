@@ -23,7 +23,7 @@ Guidebot uses intents which are required as of October 7, 2020. By default we us
 (the one you got your token from) under `Privileged Gateway Intents`.
 
 If you don't want to enable privileged intents you can change the `Intents.All` to 
-`Intents.NON_PRIVILEGED` in the `new Discord.Client` line in index.js.
+`Intents.NON_PRIVILEGED` in the `new Discord.Client` line in index.js. **WARNING This will disable welcome messages!**
 
 For more info about intents checkout the [official Discord.js guide page](https://discordjs.guide/popular-topics/intents.html) and the [official Discord docs page](https://discord.com/developers/docs/topics/gateway#gateway-intents).
 ## Downloading
