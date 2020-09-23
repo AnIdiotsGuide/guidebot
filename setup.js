@@ -39,6 +39,31 @@ let prompts = [
     name: "ownerID",
     message: "Please enter the bot owner's User ID"
   },
+  {
+    type: "checkbox",
+    name: "intents",
+    message: "Which intents would you like? \n" +
+      "By default GuideBot needs Guilds, Guild Messages and Direct Messages to work. \n" +
+      "For join messages to work you need Guild Members, which is privileged and requires extra setup.\n" +
+      "For more info about intents see the README.",
+    choices: [
+      { "name": "Guilds", "value": "GUILDS", "checked": true },
+      { "name": "Guild Messages", "value": "GUILD_MESSAGES", "checked": true },
+      { "name": "Direct Messages", "value": "DIRECT_MESSAGES", "checked": true },
+      { "name": "Guild Bans", "value": "GUILD_BANS" },
+      { "name": "Guild Emojis", "value": "GUILD_EMOJIS" },
+      { "name": "Guild Integrations", "value": "GUILD_INTEGRATIONS" },
+      { "name": "Guild Webhooks", "value": "GUILD_WEBHOOKS" },
+      { "name": "Guild Invites", "value": "GUILD_INVITES" },
+      { "name": "Guild Voice States", "value": "GUILD_VOICE_STATES" },
+      { "name": "Guild Message Reactions", "value": "GUILD_MESSAGE_REACTIONS" },
+      { "name": "Guild Message Typing", "value": "GUILD_MESSAGE_TYPING" },
+      { "name": "Direct Message Reactions", "value": "DIRECT_MESSAGE_REACTIONS" },
+      { "name": "Direct Message Typing", "value": "DIRECT_MESSAGE_TYPING" },
+      { "name": "Guild Presences (privileged)", "value": "GUILD_PRESENCES" },
+      { "name": "Guild Members (privileged)", "value": "GUILD_MEMBERS" },
+    ]
+  },
 ];
 
 (async function () {
@@ -59,7 +84,8 @@ let prompts = [
 
   baseConfig = baseConfig
     .replace("{{ownerID}}", answers.ownerID)
-    .replace("{{token}}", `"${answers.token}"`);
+    .replace("{{token}}", `"${answers.token}"`)
+    .replace("{{intents}}", JSON.stringify(answers.intents));
 
   fs.writeFileSync("./config.js", baseConfig);
   console.log("REMEMBER TO NEVER SHARE YOUR TOKEN WITH ANYONE!");

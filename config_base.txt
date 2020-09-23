@@ -11,6 +11,12 @@ const config = {
   // Your Bot's Token. Available on https://discord.com/developers/applications/me
   "token": {{token}},
 
+  // Intents the bot needs.
+  // By default GuideBot needs Guilds, Guild Messages and Direct Messages to work.
+  // For join messages to work you need Guild Members, which is privileged and requires extra setup.
+  // For more info about intents see the README.
+  intents: {{intents}},
+
   // PERMISSION LEVEL DEFINITIONS.
   permLevels: [
     // This is the lowest permisison level, this is for non-roled users.
