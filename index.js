@@ -13,7 +13,7 @@ const Enmap = require("enmap");
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're referring to. Your client.
-const client = new Discord.Client({ ws: { intents: Discord.Intents.ALL } });
+const client = new Discord.Client();
 
 // Here we load the config file that contains our token and our prefix values.
 client.config = require("./config.js");
