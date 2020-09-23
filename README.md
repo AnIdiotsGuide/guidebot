@@ -19,20 +19,18 @@ You also need your bot's token. This is obtained by creating an application in
 the [Developer section](https://discord.com/developers) of discord.com. Check the [first section of this page](https://anidiots.guide/getting-started/the-long-version.html) 
 for more info.
 
-Guidebot uses intents which are required as of October 7, 2020. By default we use `Intents.All`, however this has privileged intents. You can enable this in the bot page 
+# Intents
+
+Guidebot uses intents which are required as of October 7, 2020. 
+You can enable privileged intents in your bot page 
 (the one you got your token from) under `Privileged Gateway Intents`.
 
-If you don't want to enable privileged intents you can change the client from 
-```js
-const client = new Discord.Client({ ws: { intents: Discord.Intents.ALL } });
-```
-to 
-```js
-const client = new Discord.Client({ ws: { intents: Discord.Intents.NON_PRIVILEGED } });
-``` 
-in your index.js. 
+By default GuideBot needs Guilds, Guild Messages and Direct Messages to work.
+For join messages to work you need Guild Members, which is privileged.
+User counts that GuideBot has in places such as in the ready log, and the stats 
+command may be incorrect without the Guild Members intent.
 
-**WARNING: Changing this will disable welcome messages!**
+Intents are loaded from your config, and will get created by the setup scripts.
 
 For more info about intents checkout the [official Discord.js guide page](https://discordjs.guide/popular-topics/intents.html) and the [official Discord docs page](https://discord.com/developers/docs/topics/gateway#gateway-intents).
 ## Downloading

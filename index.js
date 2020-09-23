@@ -9,14 +9,19 @@ const Discord = require("discord.js");
 const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
 const Enmap = require("enmap");
+const config = require("./config.js");
 
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're referring to. Your client.
-const client = new Discord.Client();
+const client = new Discord.Client({
+  ws: {
+    intents: config.intents
+  }
+});
 
 // Here we load the config file that contains our token and our prefix values.
-client.config = require("./config.js");
+client.config = config
 // client.config.token contains the bot's token
 // client.config.prefix contains the message prefix
 
