@@ -19,13 +19,13 @@ You also need your bot's token. This is obtained by creating an application in
 the [Developer section](https://discord.com/developers) of discord.com. Check the [first section of this page](https://anidiots.guide/getting-started/the-long-version.html) 
 for more info.
 
-# Intents
+## Intents
 
 Guidebot uses intents which are required as of October 7, 2020. 
 You can enable privileged intents in your bot page 
 (the one you got your token from) under `Privileged Gateway Intents`.
 
-By default GuideBot needs Guilds, Guild Messages and Direct Messages to work.
+By default GuideBot needs the Guilds, Guild Messages and Direct Messages intents to work.
 For join messages to work you need Guild Members, which is privileged.
 User counts that GuideBot has in places such as in the ready log, and the stats 
 command may be incorrect without the Guild Members intent.
