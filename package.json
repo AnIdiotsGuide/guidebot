@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/An-Idiots-Guide/guidebot.git"
+    "url": "git+https://github.com/AnIdiotsGuide/guidebot.git"
   },
   "author": "Evelyne Lachance <eslachance@gmail.com> (http://evie.codes)",
   "contributors": [
@@ -20,9 +20,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/An-Idiots-Guide/guidebot/issues"
+    "url": "https://github.com/AnIdiotsGuide/guidebot/issues"
   },
-  "homepage": "https://github.com/An-Idiots-Guide/guidebot#readme",
+  "homepage": "https://github.com/AnIdiotsGuide/guidebot#readme",
   "dependencies": {
     "better-sqlite3": "^6.0.1",
     "chalk": "^4.0.0",

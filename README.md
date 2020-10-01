@@ -33,11 +33,15 @@ command may be incorrect without the Guild Members intent.
 Intents are loaded from your config, and will get created by the setup scripts.
 
 For more info about intents checkout the [official Discord.js guide page](https://discordjs.guide/popular-topics/intents.html) and the [official Discord docs page](https://discord.com/developers/docs/topics/gateway#gateway-intents).
+
+## Dashboard example
+You can checkout which [this document](dashboard/README.md) for full information
+
 ## Downloading
 
 In a command prompt in your projects folder (wherever that may be) run the following:
 
-`git clone https://github.com/An-Idiots-Guide/guidebot.git`
+`git clone https://github.com/AnIdiotsGuide/guidebot.git`
 
 Once finished: 
 
@@ -52,7 +56,8 @@ To start the bot, in the command prompt, run the following command:
 
 ## Inviting to a guild
 
-To add the bot to your guild, you have to get an oauth link for it. 
+To add the bot to your guild, you have to get an oauth link for it. See [this page in An Idiot's Guide](https://anidiots.guide/getting-started/getting-started-long-version#add-your-bot-to-a-server)
+for details on how to do this.
 
 You can use this site to help you generate a full OAuth Link, which includes a calculator for the permissions:
 [https://finitereality.github.io/permissions-calculator/?v=0](https://finitereality.github.io/permissions-calculator/?v=0)

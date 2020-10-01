@@ -42,16 +42,16 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
   
   // Resets a key to the default value
   if (action === "del" || action === "reset") {
-    if (!key) return message.reply("Please specify a key to reset.");
+    if (!key) return message.reply("Please specify a key to delete (reset).");
     if (!defaults[key]) return message.reply("This key does not exist in the settings");
     if (!overrides[key]) return message.reply("This key does not have an override and is already using defaults.");
     
     // Good demonstration of the custom awaitReply method in `./modules/functions.js` !
-    const response = await client.awaitReply(message, `Are you sure you want to reset ${key} to the default value?`);
+    const response = await client.awaitReply(message, `Are you sure you want to reset \`${key}\` to the default \`${defaults[key]}\`?`);
 
     // If they respond with y or yes, continue.
     if (["y", "yes"].includes(response.toLowerCase())) {
-      // We delete the `key` here.
+      // We delete (reset) the `key` here.
       client.settings.delete(message.guild.id, key);
       message.reply(`${key} was successfully reset to default.`);
     } else
@@ -60,7 +60,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
       message.reply(`Your setting for \`${key}\` remains at \`${settings[key]}\``);
     }
   } else
-  
+  // Get an existing key value
   if (action === "get") {
     if (!key) return message.reply("Please specify a key to view");
     if (!defaults[key]) return message.reply("This key does not exist in the settings");
@@ -79,7 +79,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
 exports.conf = {
   enabled: true,
   guildOnly: true,
-  aliases: ["setting", "settings", "conf"],
+  aliases: ["setting", "settings"],
   permLevel: "Administrator"
 };
 

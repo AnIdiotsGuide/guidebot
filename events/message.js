@@ -18,14 +18,21 @@ module.exports = async (client, message) => {
   }
 
   // Also good practice to ignore any message that does not start with our prefix,
-  // which is set in the configuration file.
-  if (message.content.indexOf(settings.prefix) !== 0) return;
+  // which is set in the configuration file, but as a fall back we'll also use
+  // a mention as a prefix.
+  // So the prefixes array lists 2 items, the prefix from the settings and
+  // the bots user id (a mention).
+  const prefixes = [settings.prefix.toLowerCase(), `<@${client.user.id}>`];
+
+  const content = message.content.toLowerCase();
+  const prefix = prefixes.find(p => content.startsWith(p));
+  if (!prefix) return;
 
   // Here we separate our "command" name, and our "arguments" for the command.
   // e.g. if we have the message "+say Is this the real life?" , we'll get the following:
   // command = say
   // args = ["Is", "this", "the", "real", "life?"]
-  const args = message.content.slice(settings.prefix.length).trim().split(/ +/g);
+  const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
   // If the member on a guild is invisible or not cached, fetch them.

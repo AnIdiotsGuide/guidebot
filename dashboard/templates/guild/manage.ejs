@@ -1,0 +1,46 @@
+<%- include('../blocks/header', {bot, user, path}) %>
+<%- include('../blocks/guild-nav.ejs', {active: "manage", guild}) %>
+
+<div class="container">
+  <h2>Server Management</h2>
+  <div class="row" style="margin-top: 25px;">
+    <div class="col">
+      <%- include('../blocks/guild-card', {guild}) %>
+    </div>
+    <div class="col">
+      <form method="post">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Setting Name</th>
+              <th scope="col">Current Setting</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% 
+              const settings = bot.getSettings(guild);
+              const defaults = bot.settings.get("default");
+              for (const key in settings) { 
+            %>
+            <tr>
+              <th scope="row" class="align-middle"><%= key %></th>
+              <td width="80%"><input type="text" class="form-control form-control-sm" style="text-align: left;" name="<%= key %>" id="<%= key %>" value="<%= settings[key] %>" placeholder="Enter <%= key %>"></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+        <div style="width: 100%; text-align: right; margin-top: 20px;">
+          <a class="btn btn-danger" data-toggle="modal" data-target="#settingsResetModal" role="button">Reset Defaults <i class="fa fa-fw fa-cogs" aria-hidden="true"></i></a>
+          <button type="submit" class="btn btn-primary">Save Changes <i class="fa fa-fw fa-save" aria-hidden="true"></i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('../blocks/guild-modals') %>
+<script type="text/javascript">
+  var ts = parseInt($('#guildCreate').text());
+  $('#guildCreate').html(`${moment(ts).format('MMMM Do YYYY')}`);
+</script>
+<%- include('../blocks/footer') %>

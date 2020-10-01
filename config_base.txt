@@ -17,6 +17,15 @@ const config = {
   // For more info about intents see the README.
   intents: {{intents}},
 
+  // Fill these if you want to enable dashboard
+  "dashboard" : {
+    "oauthSecret": "your oauth secret from the app page",
+    "callbackURL": "http://localhost:8080/callback",
+    "sessionSecret": "enterasecrethere",
+    "domain": "localhost",
+    "port": 8080
+  },
+  
   // PERMISSION LEVEL DEFINITIONS.
   permLevels: [
     // This is the lowest permisison level, this is for non-roled users.
