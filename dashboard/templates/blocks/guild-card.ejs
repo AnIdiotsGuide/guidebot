@@ -1,4 +1,4 @@
-<div class="card" style="width: 256px;">
+<div class="card" style="display: inline-block;">
   <% if (guild.icon) { %>
     <img class="card-img-top" style="width: 256px;" src="<%= `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=256` %>" alt="<%= guild.name %>">
   <% } else { %>
@@ -18,25 +18,25 @@
     <h3 class="card-header"><center><%= guild.name %></center></h3>
       <ul class="list-group list-group-flush" style="width: 100%">
       <li class="list-group-item d-flex justify-content-between align-items-center" style="width: 100%" data-toggle="tooltip" title="Date Created.">
-        <i class="fa fa-fw fa-clock-o" aria-hidden="true"></i> <span id="guildCreate"><%= guild.createdTimestamp %></span>
+        <i class="fa fa-fw fa-clock-o" aria-hidden="true"></i>Created on: <span id="guildCreate"><%= guild.createdTimestamp %></span>
       </li>
       <li class="list-group-item d-flex justify-content-between align-items-center" style="width: 100%" data-toggle="tooltip" title="Server Owner.">
-        <i class="fa fa-fw fa-user-circle-o" aria-hidden="true"></i> <%= `${guild.owner.user.tag}` %>
+        <i class="fa fa-fw fa-user-circle-o" aria-hidden="true"></i>Owner: <span id="owner"><%= `${guild.owner.user.tag}` %></span>
       </li>
         <li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" title="Members">
-          <i class="fa fa-fw fa-users" aria-hidden="true"></i> <span class="badge badge-primary badge-pill"><%= `${guild.memberCount}` %></span>
+          <i class="fa fa-fw fa-users" aria-hidden="true"></i>Members <span class="badge badge-primary badge-pill"><%= `${guild.memberCount}` %></span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" title="Bots">
-          <i class="fa fa-fw fa-android" aria-hidden="true"></i> <span class="badge badge-primary badge-pill"><%= `${guild.members.filter(m => m.user.bot).size}` %></span>
+          <i class="fa fa-fw fa-android" aria-hidden="true"></i>Bots <span class="badge badge-primary badge-pill"><%= `${guild.members.cache.filter(m => m.user.bot).size}` %></span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" title="Roles">
-          <i class="fa fa-fw fa-users" aria-hidden="true"></i><span class="badge badge-primary badge-pill"><%= guild.roles.size %></span>
+          <i class="fa fa-fw fa-users" aria-hidden="true"></i>Roles <span class="badge badge-primary badge-pill"><%= guild.roles.cache.size %></span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" title="Text Channels">
-              <i class="fa fa-fw fa-hashtag" aria-hidden="true"></i> <span class="badge badge-primary badge-pill"><%= `${guild.channels.filter(c => c.type === 'text').size}`%></span>
+              <i class="fa fa-fw fa-hashtag" aria-hidden="true"></i>Text Channels <span class="badge badge-primary badge-pill"><%= `${guild.channels.cache.filter(c => c.type === 'text').size}`%></span>
           </li>
           <li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" title="Voice Channels">
-              <i class="fa fa-fw fa-microphone" aria-hidden="true"></i> <span class="badge badge-primary badge-pill"><%= `${guild.channels.filter(c => c.type === 'voice').size}`%></span>
+              <i class="fa fa-fw fa-microphone" aria-hidden="true"></i>Voice Channels <span class="badge badge-primary badge-pill"><%= `${guild.channels.cache.filter(c => c.type === 'voice').size}`%></span>
           </li>
         </ul>
     <a class="btn btn-danger" data-toggle="modal" data-target="#serverLeaveModal" role="button" data-toggle="tooltip" data-placement="left" title="" data-original-title="Tooltip on left">Leave <i class="fa fa-fw fa-sign-out" aria-hidden="true"></i></a>

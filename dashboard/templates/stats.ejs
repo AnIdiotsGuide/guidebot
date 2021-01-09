@@ -1,5 +1,5 @@
 <%- include('blocks/header', {bot, user, path}) %>
-<div class="jumbotron">
+    <div class="jumbotron">
         <div class="row justify-content-md-center">
           <div class="col-5 text-nowrap"><i class="fa fa-fw fa-server" aria-hidden="true"></i> Servers:</div>
           <div class="col-5 text-nowrap"><strong><%= stats.servers %></strong></div>
@@ -33,4 +33,4 @@
           <div class="col-5 text-nowrap"><strong><%= stats.nVersion %></strong></div>
         </div>
     </div>
-    <% include('./blocks/footer') %>
+<%- include('./blocks/footer') %>

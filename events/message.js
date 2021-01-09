@@ -2,8 +2,7 @@
 // Note that due to the binding of client to every event, every event
 // goes `client, other, args` when this function is run.
 
-module.exports = (client, message) => {
-
+module.exports = async (client, message) => {
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop (we call that "botception").
   if (message.author.bot) return;
@@ -17,9 +16,10 @@ module.exports = (client, message) => {
   // Just in case we don't know what the current prefix is, mention the bot
   // and the following regex will detect it and fire off letting you know
   // what the current prefix is.
-  const mentionMatch = new RegExp(`^<@!?${client.user.id}> ?$`);
-  if (message.content.match(mentionMatch)) {
-    return message.channel.send(`My prefix on this guild is \`${settings.prefix}\``);
+  // Checks if the bot was mentioned, with no message after it, returns the prefix.
+  const prefixMention = new RegExp(`^<@!?${client.user.id}>( |)$`);
+  if (message.content.match(prefixMention)) {
+    return message.reply(`My prefix on this guild is \`${settings.prefix}\``);
   }
 
   // Also good practice to ignore any message that does not start with our prefix,
@@ -28,7 +28,6 @@ module.exports = (client, message) => {
   // So the prefixes array lists 2 items, the prefix from the settings and
   // the bots user id (a mention).
   const prefixes = [settings.prefix.toLowerCase(), `<@!${client.user.id}>`];
-
   const content = message.content.toLowerCase();
   const prefix = prefixes.find(p => content.startsWith(p));
   if (!prefix) return;
@@ -37,8 +36,11 @@ module.exports = (client, message) => {
   // e.g. if we have the message "+say Is this the real life?" , we'll get the following:
   // command = say
   // args = ["Is", "this", "the", "real", "life?"]
-  const args = message.content.slice(prefix.length).trim().split(/ +/g);
+  const args = message.content.slice(settings.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
+
+  // If the member on a guild is invisible or not cached, fetch them.
+  if (message.guild && !message.member) await message.guild.members.fetch(message.author);
 
   // Get the user or member's permission level from the elevation
   const level = client.permlevel(message);
@@ -46,7 +48,7 @@ module.exports = (client, message) => {
   // Check whether the command, or alias, exist in the collections defined
   // in app.js.
   const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
-  // using this const varName = thing OR otherthing; is a pretty efficient
+  // using this const varName = thing OR otherThing; is a pretty efficient
   // and clean way to grab one of 2 values!
   if (!cmd) return;
 
@@ -74,6 +76,6 @@ module.exports = (client, message) => {
     message.flags.push(args.shift().slice(1));
   }
   // If the command exists, **AND** the user has permission, run it.
-  client.logger.log(`${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`, "cmd");
+  client.logger.cmd(`[CMD] ${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`);
   cmd.run(client, message, args, level);
 };

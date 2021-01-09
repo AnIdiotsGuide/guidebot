@@ -1,4 +1,3 @@
-const _ = require("lodash");
 module.exports = (client) => {
 
   /*
@@ -56,14 +55,16 @@ module.exports = (client) => {
     // the bot is functional, if a user deletes the default settings from the database
     // ensuring the data will re-set those defaults.
     client.settings.ensure("default", defaultSettings);
-    return {
-      ...(client.settings.get("default") || {}),
-      ...(guild && client.settings.get(guild.id) || {})
-    };
+    if(!guild) return client.settings.get("default");
+    const guildConf = client.settings.get(guild.id) || {};
+    // This "..." thing is the "Spread Operator". It's awesome!
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
+    return ({...client.settings.get("default"), ...guildConf});
   };
 
   // writeSettings overrides, or adds, any configuration item that is different
   // than the defaults. This ensures less storage wasted and to detect overrides.
+  const _ = require("lodash");
   client.writeSettings = (id, newSettings) => {
     const defaults = client.settings.get("default");
     const settings = client.settings.get(id) || {};
@@ -74,7 +75,7 @@ module.exports = (client) => {
       ..._.pickBy(newSettings, (v, k) => !_.isNil(defaults[k]))
     });
   };
-
+  
   /*
   SINGLE-LINE AWAITMESSAGE
 

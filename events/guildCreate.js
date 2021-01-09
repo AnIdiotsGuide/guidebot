@@ -2,7 +2,7 @@
 
 module.exports = (client, guild) => {
   // Update the activity to show the updated number of guilds.
-  client.user.setActivity(`${client.getSettings("default").prefix}help | ${client.guilds.size} Servers`);
+  client.user.setActivity(`${client.settings.get("default").prefix}help | ${client.guilds.cache.size} Servers`);
   // Log the guild the bot just joined to the console.
-  client.logger.log(`Joined guild: ${guild.name} (${guild.id}) with ${guild.memberCount} members`);
+  client.logger.log(`Joined guild: ${guild.name} (${guild.id}) with ${guild.memberCount} members. Owner: ${guild.owner.user.tag} (${guild.owner.user.id})`);
 };

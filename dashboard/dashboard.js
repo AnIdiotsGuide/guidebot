@@ -109,6 +109,10 @@ module.exports = (client) => {
   // Initializes passport and session.
   app.use(passport.initialize());
   app.use(passport.session());
+  
+  // Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks
+  // visit this MDN site for more details https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src
+  // If images are blocked by your browser check above site for details on CSP
   app.use(helmet());
 
   // The domain name used in various endpoints to link between pages.
@@ -214,10 +218,10 @@ module.exports = (client) => {
   // not in the template, to simplify the page code. Most of it **could** be done on the page.
   app.get("/stats", (req, res) => {
     const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
-    const members = client.guilds.reduce((p, c) => p + c.memberCount, 0);
-    const textChannels = client.channels.filter(c => c.type === "text").size;
-    const voiceChannels = client.channels.filter(c => c.type === "voice").size;
-    const guilds = client.guilds.size;
+    const members = client.guilds.cache.reduce((p, c) => p + c.memberCount, 0);
+    const textChannels = client.channels.cache.filter(c => c.type === "text").size;
+    const voiceChannels = client.channels.cache.filter(c => c.type === "voice").size;
+    const guilds = client.guilds.cache.size;
     renderTemplate(res, req, "stats.ejs", {
       stats: {
         servers: guilds,
@@ -233,7 +237,7 @@ module.exports = (client) => {
   });
 
   app.get("/dashboard", checkAuth, (req, res) => {
-    const perms = Discord.EvaluatedPermissions;
+    const perms = Discord.Permissions;
     renderTemplate(res, req, "dashboard.ejs", {perms});
   });
 
@@ -253,7 +257,7 @@ module.exports = (client) => {
   // Settings page to change the guild configuration. Definitely more fancy than using
   // the `set` command!
   app.get("/dashboard/:guildID/manage", checkAuth, (req, res) => {
-    const guild = client.guilds.get(req.params.guildID);
+    const guild = client.guilds.cache.get(req.params.guildID);
     if (!guild) return res.status(404);
     const isManaged = guild && !!guild.member(req.user.id) ? guild.member(req.user.id).permissions.has("MANAGE_GUILD") : false;
     if (!isManaged && !req.session.isAdmin) res.redirect("/");
@@ -263,22 +267,22 @@ module.exports = (client) => {
   // When a setting is changed, a POST occurs and this code runs
   // Once settings are saved, it redirects back to the settings page.
   app.post("/dashboard/:guildID/manage", checkAuth, (req, res) => {
-    const guild = client.guilds.get(req.params.guildID);
+    const guild = client.guilds.cache.get(req.params.guildID);
     if (!guild) return res.status(404);
     const isManaged = guild && !!guild.member(req.user.id) ? guild.member(req.user.id).permissions.has("MANAGE_GUILD") : false;
     if (!isManaged && !req.session.isAdmin) res.redirect("/");
-    client.writeSettings(guild.id, req.body);
+    client.settings.set(guild.id, req.body);
     res.redirect("/dashboard/"+req.params.guildID+"/manage");
   });
   
   // Displays the list of members on the guild (paginated).
   // NOTE: to be done, merge with manage and stats in a single UX page.
   app.get("/dashboard/:guildID/members", checkAuth, async (req, res) => {
-    const guild = client.guilds.get(req.params.guildID);
+    const guild = client.guilds.cache.get(req.params.guildID);
     if (!guild) return res.status(404);
     renderTemplate(res, req, "guild/members.ejs", {
       guild: guild,
-      members: guild.members.array()
+      members: guild.members.cache.array()
     });
   });
 
@@ -287,15 +291,15 @@ module.exports = (client) => {
   // NOTE: This is the most complex endpoint simply because of this filtering
   // otherwise it would be on the client side and that would be horribly slow.
   app.get("/dashboard/:guildID/members/list", checkAuth, async (req, res) => {
-    const guild = client.guilds.get(req.params.guildID);
+    const guild = client.guilds.cache.get(req.params.guildID);
     if (!guild) return res.status(404);
     if (req.query.fetch) {
-      await guild.fetchMembers();
+      await guild.members.fetch();
     }
-    const totals = guild.members.size;
+    const totals = guild.members.cache.size;
     const start = parseInt(req.query.start, 10) || 0;
     const limit = parseInt(req.query.limit, 10) || 50;
-    let members = guild.members;
+    let members = guild.members.cache;
     
     if (req.query.filter && req.query.filter !== "null") {
       //if (!req.query.filtervalue) return res.status(400);
@@ -324,10 +328,10 @@ module.exports = (client) => {
         joinedAt: m.joinedTimestamp,
         createdAt: m.user.createdTimestamp,
         highestRole: {
-          hexColor: m.highestRole.hexColor
+          hexColor: m.roles.highest.hexColor
         },
         memberFor: moment.duration(Date.now() - m.joinedAt).format(" D [days], H [hrs], m [mins], s [secs]"),
-        roles: m.roles.map(r=>({
+        roles: m.roles.cache.map(r=>({
           name: r.name,
           id: r.id,
           hexColor: r.hexColor
@@ -345,7 +349,7 @@ module.exports = (client) => {
   // Leaves the guild (this is triggered from the manage page, and only
   // from the modal dialog)
   app.get("/dashboard/:guildID/leave", checkAuth, async (req, res) => {
-    const guild = client.guilds.get(req.params.guildID);
+    const guild = client.guilds.cache.get(req.params.guildID);
     if (!guild) return res.status(404);
     const isManaged = guild && !!guild.member(req.user.id) ? guild.member(req.user.id).permissions.has("MANAGE_GUILD") : false;
     if (!isManaged && !req.session.isAdmin) res.redirect("/");
@@ -355,7 +359,7 @@ module.exports = (client) => {
 
   // Resets the guild's settings to the defaults, by simply deleting them.
   app.get("/dashboard/:guildID/reset", checkAuth, async (req, res) => {
-    const guild = client.guilds.get(req.params.guildID);
+    const guild = client.guilds.cache.get(req.params.guildID);
     if (!guild) return res.status(404);
     const isManaged = guild && !!guild.member(req.user.id) ? guild.member(req.user.id).permissions.has("MANAGE_GUILD") : false;
     if (!isManaged && !req.session.isAdmin) res.redirect("/");
@@ -363,5 +367,7 @@ module.exports = (client) => {
     res.redirect("/dashboard/"+req.params.guildID);
   });
   
-  client.site = app.listen(client.config.dashboard.port);
+  client.site = app.listen(client.config.dashboard.port, function () {
+    console.log('Dashboard is online');
+  });
 };

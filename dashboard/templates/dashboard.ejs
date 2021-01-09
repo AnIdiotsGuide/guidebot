@@ -1,46 +1,79 @@
 <%- include('blocks/header', {bot, user, path}) %>
-<h1 class="display-3">Dashboard</h1>
-<ul class="list-unstyled">
-  <% user.guilds.forEach(guild => { 
-    const permsOnGuild = new perms(guild.permissions);
-    if(!permsOnGuild.has("MANAGE_GUILD")) return;
-  %>
-
-  <li class="media" style="padding: 10px;">
-    <% if (guild.icon) { %>
-      <img class="d-flex mr-3 rounded-circle" src="<%= `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=128` %>" style="width: 80px;" alt="">
-    <% } else { %>
-      <canvas style="background-color: #7289da" class="d-flex mr-3 rounded-circle" id="<%= guild.name.split(' ').join('').replace(`'`, ``) %>" width="80px" height="80px"></canvas>
-      <script>
-        function draw() {
-          const ctx = document.getElementById("<%= guild.name.split(' ').join('').replace(`'`, ``) %>").getContext('2d');
-          ctx.font = '30px Arial';
-          ctx.textAlign = "center";
-          ctx.fillStyle = "white";
-          ctx.fillText("<%= guild.name.split(' ').map(v => v[0]).join('') %>", 40, 50);
-        };
-        draw();
-      </script>
-    <% } %>
-    <div class="media-body">
-        <h5 class="mt-0 mb-1"><%= guild.name %></h5>
-        <% 
+<div class="container"><h2>Dashboard</h2></div>
+<div class="d-flex justify-content-center">
+  <div class="card-columns"> 
+    <ul class="list-unstyled">
+      <% 
+      let guilds = [];
+      user.guilds.forEach(guild => { 
+        const permsOnGuild = new perms(guild.permissions);
+        if(!permsOnGuild.has("MANAGE_GUILD")) return;
+        if(bot.guilds.cache.get(guild.id)) guilds.unshift(guild);
+        else guilds.push(guild);
+      });
+      guilds.forEach(guild => { 
         let href, text;
         let enabled;
-        if(bot.guilds.get(guild.id)) {
+        if(bot.guilds.cache.get(guild.id)) {
           href = `/dashboard/${guild.id}/manage`;
           text = "Manage";
           enabled = true;
         } else {
-          href = `https://discordapp.com/oauth2/authorize?client_id=${bot.application.id}&scope=bot&guild_id=${guild.id}&response_type=code&redirect_uri=${encodeURIComponent(bot.config.dashboard.callbackURL)}`;
           text = "Invite Bot";
           enabled = bot.application.botPublic;
         }
-        %> 
-        <a class="btn btn-primary btn-lg<% if(!enabled) { %> disabled<% } %>" role="button" href="<%= href %>"><%= text %> <i class="fa fa-fw fa-chevron-circle-right" aria-hidden="true"></i></a>
-      </div>
-    </li>
-  <% }); %>
+      %>
+      <li>
+        <div class="card text-white bg-primary mb-3" style="width: 200px;" >
+        <% if(text == "Manage") { %>
+          <div class="img">
+            <% if (guild.icon) { %>
+              <img class="d-block img-thumbnail " style="width: 100%; display: block;" src= "https://cdn.discordapp.com/icons/<%=guild.id%>/<%=guild.icon%>.png?size=128" alt="Card image">
+            <% } else { %>
+              <canvas class="d-block img-thumbnail" style="background-color: #7289da; width: 100%; display: block;" id="<%= guild.name.split(' ').join('').replace(`'`, ``) %>" width="128px" height="128px"></canvas>
+            <script>
+              function draw() {
+                const ctx = document.getElementById("<%= guild.name.split(' ').join('').replace(`'`, ``) %>").getContext('2d');
+                ctx.font = '50px Arial';
+                ctx.textAlign = "center";
+                ctx.fillStyle = "white";
+                ctx.fillText("<%= guild.name.split(' ').map(v => v[0]).join('') %>", 60, 80);
+              };
+              draw();
+            </script>
+            <% } %>
+          </div>
+          <div class="card-footer bg-primary">
+            <h6><%= guild.name %></h6>
+            <a href="<%= href %>"> <%= text %> <i class="fa fa-fw fa-chevron-circle-right" aria-hidden="true"></i></a>
+          </div>
+        <% } else { %>
+          <div class="img-gray">
+          <% if (guild.icon) { %>
+            <img class="d-block img-thumbnail " style="width: 100%; display: block;" src= "https://cdn.discordapp.com/icons/<%=guild.id%>/<%=guild.icon%>.png?size=128" alt="Card image">
+          <% } else { %>
+            <canvas class="d-block img-thumbnail" style="background-color: #7289da; width: 100%; display: block;" id="<%= guild.name.split(' ').join('').replace(`'`, ``) %>" width="128px" height="128px"></canvas>
+            <script>
+              function draw() {
+                const ctx = document.getElementById("<%= guild.name.split(' ').join('').replace(`'`, ``) %>").getContext('2d');
+                ctx.font = '50px Arial';
+                ctx.textAlign = "center";
+                ctx.fillStyle = "white";
+                ctx.fillText("<%= guild.name.split(' ').map(v => v[0]).join('') %>", 60, 80);
+              };
+              draw();
+            </script>
+          <% } %>
+          </div>
+          <div class="card-footer">
+            <h6><%= guild.name %></h6>
+            <a href="https://discordapp.com/oauth2/authorize?client_id=<%= bot.application.id %>&scope=bot&permissions=<%= bot.config.dashboard.permissions %>&response_type=code&redirect_uri=<%= encodeURIComponent(bot.config.dashboard.callbackURL) %>"> <%= text %> <i class="fa fa-fw fa-chevron-circle-right" aria-hidden="true"></i></a>
+          </div>
+        <% } %>
+        </div>
+      </li>    
+    <% }); %>
   </ul>
-
-  <% include('./blocks/footer') %>
+  </div>
+</div>
+<%- include('./blocks/footer') %>
