@@ -2,7 +2,7 @@
 
 module.exports = (client, member) => {
   // Load the guild's settings
-  const settings = client.settings.get(member.guild.id);
+  const settings = client.getSettings(member.guild);
 
   // If welcome is off, don't proceed (don't welcome the user)
   if (settings.welcomeEnabled !== "true") return;
@@ -12,5 +12,5 @@ module.exports = (client, member) => {
 
   // Send the welcome message to the welcome channel
   // There's a place for more configs here.
-  member.guild.channels.find("name", settings.welcomeChannel).send(welcomeMessage).catch(console.error);
+  member.guild.channels.cache.find(c => c.name === settings.welcomeChannel).send(welcomeMessage).catch(console.error);
 };

@@ -9,18 +9,30 @@ group of contributors, and no longer easily "understandable" by the majority
 of our newbies. So I've pulled the original Guide Bot out of the mothballs,
 gave it a fresh coat of paint and grease, and here it is back in its full glory!
 
-This command handler is 98% compatible with [my selfbot](https://github.com/eslachance/evie.selfbot) 
-and 99% compatible with commands from [York's Tutorial Bot](https://github.com/AnIdiotsGuide/Tutorial-Bot/tree/Episode-10-Part-1).
-
 ## Requirements
 
 - `git` command line ([Windows](https://git-scm.com/download/win)|[Linux](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)|[MacOS](https://git-scm.com/download/mac)) installed
-- `node` [Version 8.0.0 or higher](https://nodejs.org)
+- `node` [Version 12.0.0 or higher](https://nodejs.org)
+- The node-gyp build tools. This is a pre-requisite for Enmap, but also for a **lot** of other modules. See [The Enmap Guide](https://enmap.evie.codes/install#pre-requisites) for details and requirements for your OS. Just follow what's in the tabbed block only, then come back here!
 
 You also need your bot's token. This is obtained by creating an application in
-the Developer section of discordapp.com. Check the [first section of this page](https://anidiots.guide/getting-started/the-long-version.html) 
+the [Developer section](https://discord.com/developers) of discord.com. Check the [first section of this page](https://anidiots.guide/getting-started/the-long-version.html) 
 for more info.
 
+## Intents
+
+Guidebot uses intents which are required as of October 7, 2020. 
+You can enable privileged intents in your bot page 
+(the one you got your token from) under `Privileged Gateway Intents`.
+
+By default GuideBot needs the Guilds, Guild Messages and Direct Messages intents to work.
+For join messages to work you need Guild Members, which is privileged.
+User counts that GuideBot has in places such as in the ready log, and the stats 
+command may be incorrect without the Guild Members intent.
+
+Intents are loaded from your config, and will get created by the setup scripts.
+
+For more info about intents checkout the [official Discord.js guide page](https://discordjs.guide/popular-topics/intents.html) and the [official Discord docs page](https://discord.com/developers/docs/topics/gateway#gateway-intents).
 ## Downloading
 
 In a command prompt in your projects folder (wherever that may be) run the following:
@@ -30,8 +42,8 @@ In a command prompt in your projects folder (wherever that may be) run the follo
 Once finished: 
 
 - In the folder from where you ran the git command, run `cd guidebot` and then run `npm install`
-- Rename or copy `config.js.example` to `config.js`
-- Edit `config.js` and fill in all the relevant details as indicated in the file's comments.
+- **If you get any error about python or msibuild.exe or binding, read the requirements section again!**
+- Run `node setup.js` to generate a proper configuration file and settings.
 
 ## Starting the bot
 

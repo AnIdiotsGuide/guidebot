@@ -1,6 +1,6 @@
 const config = {
   // Bot Owner, level 10 by default. A User ID. Should never be anything else than the bot owner's ID.
-  "ownerID": "123456789123456",
+  "ownerID": "{{ownerID}}",
 
   // Bot Admins, level 9 by default. Array of user ID strings.
   "admins": [],
@@ -9,32 +9,15 @@ const config = {
   "support": [],
 
   // Your Bot's Token. Available on https://discord.com/developers/applications/me
-  "token": "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0",
+  "token": {{token}},
 
   // Intents the bot needs.
   // By default GuideBot needs Guilds, Guild Messages and Direct Messages to work.
   // For join messages to work you need Guild Members, which is privileged and requires extra setup.
   // For more info about intents see the README.
-  intents: ["GUILDS","GUILD_MESSAGES","DIRECT_MESSAGES"],
-
-  // Default per-server settings. New guilds have these settings. 
-
-  // DO NOT LEAVE ANY OF THESE BLANK, AS YOU WILL NOT BE ABLE TO UPDATE THEM
-  // VIA COMMANDS IN THE GUILD.
-  
-  "defaultSettings" : {
-    "prefix": "-",
-    "modLogChannel": "mod-log",
-    "modRole": "Moderator",
-    "adminRole": "Administrator",
-    "systemNotice": "true", // This gives a notice when a user tries to run a command that they do not have permission to use.
-    "welcomeChannel": "welcome",
-    "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
-    "welcomeEnabled": "false"
-  },
+  intents: {{intents}},
 
   // PERMISSION LEVEL DEFINITIONS.
-
   permLevels: [
     // This is the lowest permisison level, this is for non-roled users.
     { level: 0,
