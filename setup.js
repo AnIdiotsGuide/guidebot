@@ -17,7 +17,7 @@ const defaultSettings = {
 
 const settings = new Enmap({
   name: "settings",
-  cloneLevel: 'deep',
+  cloneLevel: "deep",
   ensureProps: true
 });
 
@@ -66,7 +66,7 @@ let prompts = [
   },
 ];
 
-(async function () {
+(async function() {
   console.log("Setting Up GuideBot Configuration...");
   await settings.defer;
   if (!settings.has("default")) {
