@@ -1,3 +1,4 @@
+const _ = require("lodash");
 module.exports = (client) => {
 
   /*
@@ -64,7 +65,6 @@ module.exports = (client) => {
 
   // writeSettings overrides, or adds, any configuration item that is different
   // than the defaults. This ensures less storage wasted and to detect overrides.
-  const _ = require("lodash");
   client.writeSettings = (id, newSettings) => {
     const defaults = client.settings.get("default");
     const settings = client.settings.get(id) || {};
