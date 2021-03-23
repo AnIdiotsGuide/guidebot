@@ -91,5 +91,5 @@ let prompts = [
   console.log("REMEMBER TO NEVER SHARE YOUR TOKEN WITH ANYONE!");
   console.log("Configuration has been written, enjoy!");
   await settings.close();
+  process.exit();
 }());
-process.exit();
