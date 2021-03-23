@@ -66,7 +66,7 @@ let prompts = [
   },
 ];
 
-(async function() {
+(async () => {
   console.log("Setting Up GuideBot Configuration...");
   await settings.defer;
   if (!settings.has("default")) {
@@ -91,4 +91,5 @@ let prompts = [
   console.log("REMEMBER TO NEVER SHARE YOUR TOKEN WITH ANYONE!");
   console.log("Configuration has been written, enjoy!");
   await settings.close();
+  process.exit();
 }());
