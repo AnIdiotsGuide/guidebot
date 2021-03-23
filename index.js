@@ -28,7 +28,7 @@ const client = new Discord.Client({
 });
 
 // Here we load the config file that contains our token and our prefix values.
-client.config = config
+client.config = config;
 // client.config.token contains the bot's token
 // client.config.prefix contains the message prefix
 
@@ -38,6 +38,10 @@ client.logger = require("./modules/Logger");
 // Let's start by getting some useful functions that we'll use throughout
 // the bot, like logs and elevation features.
 require("./modules/functions.js")(client);
+
+// Application Owners, useful for Teams and multiple developers.
+// Autofilled by the Ready event by polling the Bot Application.
+client.owners = [];
 
 // Aliases and commands are put in collections where they can be read from,
 // catalogued, listed, etc.

@@ -17,7 +17,7 @@ const defaultSettings = {
 
 const settings = new Enmap({
   name: "settings",
-  cloneLevel: 'deep',
+  cloneLevel: "deep",
   ensureProps: true
 });
 
