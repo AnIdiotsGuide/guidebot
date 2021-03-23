@@ -8,7 +8,7 @@ try {
 } catch {
   console.log("Creating a config.js file for the bot");
   require("./setup.js");
-  return;
+  process.exit();
 }
 
 // Load up the discord.js library
