@@ -1,4 +1,5 @@
 # Guide Bot
+
 An example of a Discord.js Bot Handler. Updated and Maintained by the Idiot's Guide Community.
 
 Ages ago, Guide Bot was actually a little bot I had on the official discord.js server.
@@ -18,7 +19,7 @@ This command handler is 99% compatible with commands from [York's Tutorial Bot](
 - The node-gyp build tools. This is a pre-requisite for Enmap, but also for a **lot** of other modules. See [The Enmap Guide](https://enmap.evie.codes/install#pre-requisites) for details and requirements for your OS. Just follow what's in the tabbed block only, then come back here!
 
 You also need your bot's token. This is obtained by creating an application in
-the [Developer section](https://discord.com/developers) of discord.com. Check the [first section of this page](https://anidiots.guide/getting-started/the-long-version.html)
+the [Developer section](https://discord.com/developers) of discord.com. Check the [first section of this page](https://anidiots.guide/getting-started/the-long-version.html) 
 for more info.
 
 ## Intents
@@ -49,10 +50,13 @@ You also need to switch to the `dashboard` branch, which is done with the follow
 Once finished:
 
 - In the folder from where you ran the git command, run `cd guidebot` and then run `npm install`
-- **If you get any error about python or msibuild.exe or binding, read the requirements section again!**
+- If any errors happen during install, check [Enmap's Docs](https://enmap.evie.codes/install) for troubleshooting tips.
 - Once the installation is done, the setup will automatically run. Follow the instructions given to finalize everything.
+- **If you get any error about python or msibuild.exe or binding, read the requirements section again!**
 
-## Some helpful hints:
+Run `node setup.js` to generate a proper configuration file and settings.
+
+Some helpful hints:
 
 - `bot token` is from the application page (see above in Requirements)
 - `bot owner's User ID` is obtained by right-clicking your username in Discord and selecting "Copy ID".

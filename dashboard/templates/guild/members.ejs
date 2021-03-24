@@ -2,7 +2,7 @@
 <%- include('../blocks/guild-nav.ejs', {active: "members", guild}) %>
 
 <div class="container">
-  <h2>Member List</h2>
+  <h2 class="mt-2">Member List</h2>
   <div class="row" style="margin-top: 25px;">
     <div class="col-6">
       <form class="form-inline">
@@ -35,7 +35,7 @@
   </div>
 </div>
 
-<table class="table table-hover table-bordered">
+<table class="table table-hover table-bordered mt-2">
   <thead class="thead-default">
     <tr>
       <th>Display Name:</th>
@@ -81,8 +81,8 @@
     $("table tbody").empty();
     for(var i = 0; i < members.length; i++) {
       member = members[i];
-      var color = member.roles.highest.hexColor === "#000000" ? '#FFFFFF' : member.roles.highest.hexColor;
-      var roles = member.roles.cache.filter(r=>r.name !== "@everyone").map(r=> {
+      var color = member.highestRole.hexColor === "#000000" ? '#FFFFFF' : member.highestRole.hexColor;
+      var roles = member.roles.filter(r=>r.name !== "@everyone").map(r=> {
         var rc = r.hexColor === "#000000" ? {r:255,g:255,b:255} : hexToRgb(r.hexColor);
         return `<span class="roleBox" style="color: rgb(${rc.r}, ${rc.g}, ${rc.b}); background-color: rgba(${rc.r}, ${rc.g}, ${rc.b}, 0.0980392); border: 1px solid rgba(${rc.r}, ${rc.g}, ${rc.b}, 0.498039);">${r.name}</span>`;
       }).join(" ");

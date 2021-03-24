@@ -1,3 +1,5 @@
+const { inspect } = require("util");
+
 /*
 FOR GUILD SETTINGS SEE set.js !
 This command is used to modify the bot's default configuration values, which affects all guilds. 
@@ -76,12 +78,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
 
   // Display all default settings.
   } else {
-    const array = [];
-    Object.entries(client.settings.get("default")).forEach(([key, value]) => {
-      array.push(`${key}${" ".repeat(20 - key.length)}::  ${value}`); 
-    });
-    await message.channel.send(`= Bot Default Settings =
-${array.join("\n")}`, { code: "asciidoc" });
+    await message.channel.send(`***__Bot Default Settings__***\n\`\`\`json\n${inspect(defaults)}\n\`\`\``);
   }
 };
 

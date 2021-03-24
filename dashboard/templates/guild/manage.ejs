@@ -19,7 +19,7 @@
           <tbody>
             <% 
               const settings = bot.getSettings(guild);
-              const defaults = bot.settings.get("default");
+              const defaults = bot.getSettings();
               for (const key in settings) { 
             %>
             <tr>

@@ -110,9 +110,8 @@ module.exports = (client) => {
   app.use(passport.initialize());
   app.use(passport.session());
   
-  // Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks
-  // visit this MDN site for more details https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src
-  // If images are blocked by your browser check above site for details on CSP
+  // If images or links are blocked by your browser as per Content Security Policy (CSP), 
+  // As a temporary fix remove app.use(helmet()); 
   app.use(helmet());
 
   // The domain name used in various endpoints to link between pages.
@@ -367,7 +366,7 @@ module.exports = (client) => {
     res.redirect("/dashboard/"+req.params.guildID);
   });
   
-  client.site = app.listen(client.config.dashboard.port, function () {
-    console.log('Dashboard is online');
+  client.site = app.listen(client.config.dashboard.port, function() {
+    client.logger.log(`Dashboard is online and running on port ${client.config.dashboard.port}!`, "ready");
   });
 };

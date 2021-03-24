@@ -11,14 +11,6 @@ const config = {
   // Your Bot's Token. Available on https://discord.com/developers/applications/me
   "token": "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0",
 
-  "dashboard" : {
-    "oauthSecret": "your oauth secret from the app page",
-    "callbackURL": "http://localhost:8080/callback",
-    "sessionSecret": "enterasecrethere",
-    "domain": "localhost",
-    "port": 8080
-  },
-  
   // Intents the bot needs.
   // By default GuideBot needs Guilds, Guild Messages and Direct Messages to work.
   // For join messages to work you need Guild Members, which is privileged and requires extra setup.
@@ -29,6 +21,14 @@ const config = {
 
   // DO NOT LEAVE ANY OF THESE BLANK, AS YOU WILL NOT BE ABLE TO UPDATE THEM
   // VIA COMMANDS IN THE GUILD.
+  
+  "dashboard" : {
+    "oauthSecret": "your oauth secret from the app page",
+    "callbackURL": "http://localhost:8080/callback",
+    "sessionSecret": "enterasecrethere",
+    "domain": "localhost",
+    "port": 8080
+  },
   
   "defaultSettings" : {
     "prefix": "-",
@@ -44,7 +44,7 @@ const config = {
   // PERMISSION LEVEL DEFINITIONS.
 
   permLevels: [
-    // This is the lowest permisison level, this is for non-roled users.
+    // This is the lowest permisison level.
     { level: 0,
       name: "User", 
       // Don't bother checking, just return true which allows them to execute any command their
@@ -107,10 +107,11 @@ const config = {
     // This is the bot owner, this should be the highest permission level available.
     // The reason this should be the highest level is because of dangerous commands such as eval
     // or exec (if the owner has that).
+    // Updated to utilize the Teams type from the Application, pulls a list of "Owners" from it.
     { level: 10,
       name: "Bot Owner", 
-      // Another simple check, compares the message author id to the one stored in the config file.
-      check: (message) => message.client.config.ownerID === message.author.id
+      // Another simple check, compares the message author id to a list of owners found in the bot application.
+      check: (message) => message.client.owners.includes(message.author.id)
     }
   ]
 };

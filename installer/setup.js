@@ -17,7 +17,7 @@ const defaultSettings = {
 
 const settings = new Enmap({
   name: "settings",
-  cloneLevel: 'deep',
+  cloneLevel: "deep",
   ensureProps: true
 });
 
@@ -38,6 +38,21 @@ let prompts = [
     type: "input",
     name: "ownerID",
     message: "Please enter the bot owner's User ID"
+  },
+  {
+    type: "input",
+    name: "oauthSecret",
+    message: "Please enter the Client Secret from the application page."
+  },
+  {
+    type: "input",
+    name: "saltyKey",
+    message: "Please enter a session security passphrase (used to encrypt session data)."
+  },
+  {
+    type: "input",
+    name: "host",
+    message: "Please enter your domain name and port (optional) : (e.g. localhost:8080 or www.example.com)"
   },
   {
     type: "checkbox",
@@ -64,24 +79,9 @@ let prompts = [
       { "name": "Guild Members (privileged)", "value": "GUILD_MEMBERS" },
     ]
   },
-  {
-    type: "input",
-    name: "oauthSecret",
-    message: "Please enter the Client Secret from the application page."
-  },
-  {
-    type: "input",
-    name: "saltyKey",
-    message: "Please enter a session security passphrase (used to encrypt session data)."
-  },
-  {
-    type: "input",
-    name: "host",
-    message: "Please enter your domain name and port (optional) : (e.g. localhost:8080 or www.example.com)"
-  },
 ];
 
-(async function () {
+(async () => {
   console.log("Setting Up GuideBot Configuration...");
   await settings.defer;
   if (!settings.has("default")) {
@@ -89,9 +89,8 @@ let prompts = [
     console.log("First Start! Inserting default guild settings in the database...");
     await settings.set("default", defaultSettings);
   }
-  
   const isGlitch = await inquirer.prompt([{type: "confirm", name: "glitch", message: "Are you hosted on Glitch.com?", default: false}]);
-  
+
   if (isGlitch.glitch) {
     baseConfig = baseConfig
       .replace("{{fullURL}}", "${process.env.PROJECT_DOMAIN}")
@@ -118,16 +117,17 @@ let prompts = [
 
   baseConfig = baseConfig
     .replace("{{ownerID}}", answers.ownerID)
-    .replace("{{token}}", `"${answers.token}"`)
-    .replace("{{intents}}", JSON.stringify(answers.intents))
     .replace("{{fullURL}}", answers.host)
     .replace("{{domain}}", `"${answers.host.split(":")[0]}"`)
     .replace("{{port}}", port)
+    .replace("{{token}}", `"${answers.token}"`)
     .replace("{{oauthSecret}}", `"${answers.oauthSecret}"`)
-    .replace("{{sessionSecret}}", `"${answers.saltyKey}"`);
-  
+    .replace("{{sessionSecret}}", `"${answers.saltyKey}"`)
+    .replace("{{intents}}", JSON.stringify(answers.intents));
+
   fs.writeFileSync("./config.js", baseConfig);
   console.log("REMEMBER TO NEVER SHARE YOUR TOKEN WITH ANYONE!");
   console.log("Configuration has been written, enjoy!");
   await settings.close();
-}());
+  process.exit();
+})();

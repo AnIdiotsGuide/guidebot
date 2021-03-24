@@ -21,21 +21,26 @@ const client = new Discord.Client({
 });
 
 // Here we load the config file that contains our token and our prefix values.
-client.config = config
+client.config = config;
 // client.config.token contains the bot's token
 // client.config.prefix contains the message prefix
 
 // Require our logger
-client.logger = require("./util/Logger");
+client.logger = require("./util/logger.js");
 
 // Let's start by getting some useful functions that we'll use throughout
 // the bot, like logs and elevation features.
 require("./util/functions.js")(client);
 
+// Application Owners, useful for Teams and multiple developers.
+// Autofilled by the Ready event by pulling the Bot Application.
+client.owners = [];
+
 // Aliases and commands are put in collections where they can be read from,
 // catalogued, listed, etc.
 client.commands = new Enmap();
 client.aliases = new Enmap();
+client.cooldowns = new Discord.Collection();
 
 // Now we integrate the use of Evie's awesome EnMap module, which
 // essentially saves a collection to disk. This is great for per-server configs,

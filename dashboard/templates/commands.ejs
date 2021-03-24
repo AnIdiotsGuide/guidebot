@@ -16,7 +16,7 @@ bot.commands.forEach((command) => {
       <% for (const command of help[category]) { %>
         <div class="card">
           <h3 class="card-header"><%= command.help.name %></h3>
-          <div class="card-body" style="height: 100px;">
+          <div class="card-body">
             <p class="card-text"><%= command.help.description %></p>
           </div>
           <div class="card-footer">Permission Level: <%= command.conf.permLevel %><br /><a href="#" data-toggle="modal" data-target="#<%= `${command.help.name}` %>Modal">Click for more...</a></div>

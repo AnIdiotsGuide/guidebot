@@ -75,7 +75,7 @@ module.exports = (client) => {
       ..._.pickBy(newSettings, (v, k) => !_.isNil(defaults[k]))
     });
   };
-  
+
   /*
   SINGLE-LINE AWAITMESSAGE
 
