@@ -50,9 +50,8 @@ You also need to switch to the `dashboard` branch, which is done with the follow
 Once finished:
 
 - In the folder from where you ran the git command, run `cd guidebot` and then run `npm install`
-- If any errors happen during install, check [Enmap's Docs](https://enmap.evie.codes/install) for troubleshooting tips.
+- If you get any error about python or msibuild.exe or binding during install, check [Enmap's Docs](https://enmap.evie.codes/install) for troubleshooting tips.
 - Once the installation is done, the setup will automatically run. Follow the instructions given to finalize everything.
-- **If you get any error about python or msibuild.exe or binding, read the requirements section again!**
 
 Run `node setup.js` to generate a proper configuration file and settings.
 

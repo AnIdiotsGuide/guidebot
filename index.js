@@ -40,7 +40,6 @@ client.owners = [];
 // catalogued, listed, etc.
 client.commands = new Enmap();
 client.aliases = new Enmap();
-client.cooldowns = new Discord.Collection();
 
 // Now we integrate the use of Evie's awesome EnMap module, which
 // essentially saves a collection to disk. This is great for per-server configs,

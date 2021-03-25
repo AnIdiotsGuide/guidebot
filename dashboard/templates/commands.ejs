@@ -13,11 +13,17 @@ bot.commands.forEach((command) => {
     <h3><%= category %></h3>
     <br>
     <div class="card-columns">
-      <% for (const command of help[category]) { %>
+      <% for (const command of help[category]) { 
+        let description = command.help.description;
+        let lines = description.split(/\r\n|\r|\n/);
+        if(lines.length > 2) description = lines[0] + "\n" + lines[1];
+        if(description.length > 60) description = description.substring(0, 60);
+        if(lines.length > 2 || description.length >= 60) description = description + "......more";
+      %>
         <div class="card">
           <h3 class="card-header"><%= command.help.name %></h3>
-          <div class="card-body">
-            <p class="card-text"><%= command.help.description %></p>
+          <div class="card-body" style="height: 100px;">
+            <p class="card-text"><%= description %></p>
           </div>
           <div class="card-footer">Permission Level: <%= command.conf.permLevel %><br /><a href="#" data-toggle="modal" data-target="#<%= `${command.help.name}` %>Modal">Click for more...</a></div>
         </div>
@@ -29,6 +35,7 @@ bot.commands.forEach((command) => {
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
               <div class="modal-body">
+                <p>Description: <%= command.help.description %></p>
                 <p>Usage Example: <%= command.help.usage %></p>
                 <p>Command Aliases: <%= `${command.conf.aliases.join(', ')}` %></p>
               </div>

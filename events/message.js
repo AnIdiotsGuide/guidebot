@@ -17,6 +17,7 @@ module.exports = async (client, message) => {
   // Just in case we don't know what the current prefix is, mention the bot
   // and the following regex will detect it and fire off letting you know
   // what the current prefix is.
+  // Checks if the bot was mentioned, with no message after it, returns the prefix.
   const mentionMatch = new RegExp(`^<@!?${client.user.id}>( |)$`);
   if (message.content.match(mentionMatch)) {
     return message.channel.send(`My prefix on this guild is \`${settings.prefix}\``);
@@ -67,23 +68,6 @@ module.exports = async (client, message) => {
       return;
     }
   }
-
-  //Cooldowns 
-  if (!client.cooldowns.has(command.name)) {
-		client.cooldowns.set(command.name, new Map ());
-	}
-	let now = Date.now();
-	let timestamps = client.cooldowns.get(command.name);
-	let cooldownAmount = (cmd.conf.cooldown || 3) * 1000;
-	if (timestamps.has(message.author.id)) {
-		let expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-		if (now < expirationTime) {
-			let timeLeft = (expirationTime - now) / 1000;
-			return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
-		}
-	}
-	timestamps.set(message.author.id, now);
-	setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
   // To simplify message arguments, the author's level is now put on level (not member so it is supported in DMs)
   // The "level" command module argument will be deprecated in the future.
