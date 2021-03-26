@@ -82,10 +82,11 @@ const config = {
     // This is the bot owner, this should be the highest permission level available.
     // The reason this should be the highest level is because of dangerous commands such as eval
     // or exec (if the owner has that).
+    // Updated to utilize the Teams type from the Application, pulls a list of "Owners" from it.
     { level: 10,
       name: "Bot Owner", 
-      // Another simple check, compares the message author id to the one stored in the config file.
-      check: (message) => message.client.config.ownerID === message.author.id
+      // Another simple check, compares the message author id to a list of owners found in the bot application.
+      check: (message) => message.client.owners.includes(message.author.id)
     }
   ]
 };

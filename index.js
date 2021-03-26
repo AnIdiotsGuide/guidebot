@@ -3,6 +3,13 @@
 // you.
 if (Number(process.version.slice(1).split(".")[0]) < 12) throw new Error("Node 12.0.0 or higher is required. Update Node on your system.");
 
+try {
+  require("./config.js");
+} catch {
+  console.log("Creating a config.js file for the bot");
+  require("./setup.js");
+}
+
 // Load up the discord.js library
 const Discord = require("discord.js");
 // We also load the rest of the things we need in this file:
@@ -21,7 +28,7 @@ const client = new Discord.Client({
 });
 
 // Here we load the config file that contains our token and our prefix values.
-client.config = config
+client.config = config;
 // client.config.token contains the bot's token
 // client.config.prefix contains the message prefix
 
@@ -31,6 +38,10 @@ client.logger = require("./modules/Logger");
 // Let's start by getting some useful functions that we'll use throughout
 // the bot, like logs and elevation features.
 require("./modules/functions.js")(client);
+
+// Application Owners, useful for Teams and multiple developers.
+// Autofilled by the Ready event by polling the Bot Application.
+client.owners = [];
 
 // Aliases and commands are put in collections where they can be read from,
 // catalogued, listed, etc.
