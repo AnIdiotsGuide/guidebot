@@ -92,4 +92,4 @@ let prompts = [
   console.log("Configuration has been written, enjoy!");
   await settings.close();
   process.exit();
-}());
+})();
