@@ -12,7 +12,7 @@ gave it a fresh coat of paint and grease, and here it is back in its full glory!
 ## Requirements
 
 - `git` command line ([Windows](https://git-scm.com/download/win)|[Linux](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)|[MacOS](https://git-scm.com/download/mac)) installed
-- `node` [Version 12.0.0 or higher](https://nodejs.org)
+- `node` [Version 14 or 16 required](https://nodejs.org)
 - The node-gyp build tools. This is a pre-requisite for Enmap, but also for a **lot** of other modules. See [The Enmap Guide](https://enmap.evie.codes/install#pre-requisites) for details and requirements for your OS. Just follow what's in the tabbed block only, then come back here!
 
 You also need your bot's token. This is obtained by creating an application in
