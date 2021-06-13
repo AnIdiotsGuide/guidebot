@@ -52,7 +52,7 @@ module.exports = (client) => {
   // enmap should only have *unique* overrides that are different from defaults.
   client.getSettings = (guild) => {
     client.settings.ensure("default", defaultSettings);
-    if(!guild) return client.settings.get("default");
+    if (!guild) return client.settings.get("default");
     const guildConf = client.settings.get(guild.id) || {};
     // This "..." thing is the "Spread Operator". It's awesome!
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
