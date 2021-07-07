@@ -10,6 +10,7 @@ const defaultSettings = {
   "modRole": "Moderator",
   "adminRole": "Administrator",
   "systemNotice": "true",
+  "commandReply": "true",
   "welcomeChannel": "welcome",
   "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
   "welcomeEnabled": "false"
@@ -38,6 +39,21 @@ let prompts = [
     type: "input",
     name: "ownerID",
     message: "Please enter the bot owner's User ID"
+  },
+  {
+    type: "checkbox",
+    name: "partials",
+    message: "Which partials would you like? \n" +
+      "By default GuideBot needs Direct Messages to work. \n" +
+      "For join messages to work you need Guild Members, which is privileged and requires extra setup.\n" +
+      "For more info about partials see the README.",
+    choices: [
+      { "name": "Users", "value": "USER" },
+      { "name": "Channels", "value": "CHANNEL", "checked": true },
+      { "name": "Guild Members", "value": "GUILD_MEMBER"},
+      { "name": "Messages", "value": "MESSAGE" },
+      { "name": "Reactions", "value": "REACTION" },
+    ]
   },
   {
     type: "checkbox",

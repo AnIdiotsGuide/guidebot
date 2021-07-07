@@ -1,11 +1,11 @@
 // This will check if the node version you are running is the required
 // Node version, if it isn't it will throw the following error to inform
 // you.
-if (Number(process.version.slice(1).split(".")[0]) < 12) throw new Error("Node 12.0.0 or higher is required. Update Node on your system.");
+if (Number(process.version.slice(1).split(".")[0]) < 14) throw new Error("Node 14.0.0 or higher is required. Update Node on your system.");
 
 try {
   require("./config.js");
-} catch {
+} catch (e) {
   console.log("Creating a config.js file for the bot");
   require("./setup.js");
 }
@@ -22,9 +22,8 @@ const config = require("./config.js");
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're referring to. Your client.
 const client = new Discord.Client({
-  ws: {
-    intents: config.intents
-  }
+  intents: config.intents,
+  partials: config.partials
 });
 
 // Here we load the config file that contains our token and our prefix values.
@@ -40,7 +39,7 @@ client.logger = require("./modules/Logger");
 require("./modules/functions.js")(client);
 
 // Application Owners, useful for Teams and multiple developers.
-// Autofilled by the Ready event by pulling the Bot Application.
+// Auto filled by the Ready event by pulling the Bot Application.
 client.owners = [];
 
 // Aliases and commands are put in collections where they can be read from,
@@ -48,10 +47,10 @@ client.owners = [];
 client.commands = new Enmap();
 client.aliases = new Enmap();
 
-// Now we integrate the use of Evie's awesome EnMap module, which
+// Now we integrate the use of Evie's awesome Enmap module, which
 // essentially saves a collection to disk. This is great for per-server configs,
 // and makes things extremely easy for this purpose.
-client.settings = new Enmap({name: "settings"});
+client.settings = new Enmap({ name: "settings" });
 
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
