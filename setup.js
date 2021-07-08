@@ -101,6 +101,7 @@ let prompts = [
   baseConfig = baseConfig
     .replace("{{ownerID}}", answers.ownerID)
     .replace("{{token}}", `"${answers.token}"`)
+    .replace("{{partials}}", JSON.stringify(answers.partials))
     .replace("{{intents}}", JSON.stringify(answers.intents));
 
   fs.writeFileSync("./config.js", baseConfig);
