@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/AnIdiotsGuide/guidebot#readme",
   "dependencies": {
+    "@discordjs/builders": "^0.2.0",
     "chalk": "^4.1.1",
     "discord.js": "^13.0.0-dev.755c180.1625659372",
     "enmap": "^5.8.5",

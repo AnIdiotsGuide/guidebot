@@ -10,6 +10,8 @@
 // const action = args[0]; const key = args[1]; const value = args.slice(2);
 // OR the same as:
 // const [action, key, ...value] = args;
+const { codeBlock } = require("@discordjs/builders");
+
 exports.run = async (client, message, [action, key, ...value], level) => { // eslint-disable-line no-unused-vars
 
   // Retrieve current guild settings (merged) and overrides only.
@@ -73,8 +75,8 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     Object.entries(settings).forEach(([key, value]) => {
       array.push(`${key}${" ".repeat(20 - key.length)}::  ${value}`); 
     });
-    await message.channel.send(`\`\`\`asciidoc\n= Current Guild Settings =
-${array.join("\n")}\`\`\``);    
+    await message.channel.send(codeBlock("asciidoc", `= Current Guild Settings =
+${array.join("\n")}`));    
   }
 };
 
