@@ -87,6 +87,11 @@ const init = async () => {
     client.levelCache[thisLevel.name] = thisLevel.level;
   }
 
+  // Threads are currently in BETA.
+  // This event will fire when a thread is created, if you want to expand
+  // the logic, throw this in it's own event file like the rest.
+  client.on("threadCreate", (thread) => thread.join());
+
   // Here we login the client.
   client.login(client.config.token);
 
