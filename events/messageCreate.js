@@ -46,6 +46,8 @@ module.exports = async (client, message) => {
   if (cmd && !message.guild && cmd.conf.guildOnly)
     return message.channel.send("This command is unavailable via private message. Please run this command in a guild.");
 
+  if (!cmd.conf.enabled) return;
+
   if (level < client.levelCache[cmd.conf.permLevel]) {
     if (settings.systemNotice === "true") {
       return message.channel.send(`You do not have permission to use this command.
