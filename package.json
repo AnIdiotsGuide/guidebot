@@ -4,9 +4,8 @@
   "description": "A boilerplate example bot with command handler and reloadable commands. Updated and Maintained by the Idiot's Guide Community",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "prepublish": "node util/setup.js"
+    "postinstall": "node util/setup.js"
   },
   "engines": {
     "node": ">=14"
@@ -26,14 +25,13 @@
   "homepage": "https://github.com/anidiotsguide/guidebot-class#readme",
   "dependencies": {
     "@discordjs/builders": "^0.2.0",
-    "better-sqlite3": "^5.4.1",
-    "chalk": "^2.4.1",
+    "chalk": "^4.1.1",
     "discord.js": "^13.0.0-dev.755c180.1625659372",
     "enmap": "^5.8.6",
-    "inquirer": "^8.1.1",
+    "inquirer": "^8.0.0",
     "klaw": "^2.1.1",
     "moment": "^2.29.1",
-    "moment-duration-format": "^2.2.2"
+    "moment-duration-format": "^2.3.2"
   },
   "devDependencies": {
     "eslint": "^7.30.0",

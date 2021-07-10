@@ -12,7 +12,7 @@ class Reload extends Command {
   }
 
   async run(message, args, level) { // eslint-disable-line no-unused-vars
-    const replying = this.client.settings.get(message.guild.id).commandReply;
+    const replying = this.client.settings.ensure(message.guild.id, this.client.config.defaultSettings).commandReply;
     if (!args || args.length < 1) return message.reply({ content: "Must provide a command to reload. Derp.", allowedMentions: { repliedUser: (replying === "true") }});    
 
     const commands = this.client.commands.get(args[0]) || this.client.commands.get(this.client.aliases.get(args[0]));

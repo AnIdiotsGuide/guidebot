@@ -25,7 +25,7 @@ class Conf extends Command {
     
     // Retrieve Default Values from the default settings in the bot.
     const defaults = this.client.settings.get("default");
-    const replying = this.client.settings.get(message.guild.id).commandReply;
+    const replying = this.client.settings.ensure(message.guild.id, this.client.config.defaultSettings).commandReply;
 
     // Adding a new key adds it to every guild (it will be visible to all of them)
     if (action === "add") {

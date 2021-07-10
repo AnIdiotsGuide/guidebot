@@ -12,7 +12,7 @@ class MyLevel extends Command {
 
   async run(message, args, level) {
     const friendly = this.client.config.permLevels.find(l => l.level === level).name;
-    const replying = this.client.settings.get(message.guild.id).commandReply;
+    const replying = this.client.settings.ensure(message.guild.id, this.client.config.defaultSettings).commandReply;
     message.reply({ content: `Your permission level is: ${level} - ${friendly}`, allowedMentions: { repliedUser: (replying === "true") }});
   }
 }

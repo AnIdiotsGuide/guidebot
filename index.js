@@ -3,13 +3,6 @@
 // you.
 if (Number(process.version.slice(1).split(".")[0]) < 14) throw new Error("Node 14.0.0 or higher is required. Update Node on your system.");
 
-// try {
-//   require("./config.js");
-// } catch (e) {
-//   console.log("Creating a config.js file for the bot");
-//   require("./util/setup.js");
-// }
-
 // Load up the discord.js library
 const { Client, Collection } = require("discord.js");
 // We also load the rest of the things we need in this file:
@@ -40,7 +33,7 @@ class GuideBot extends Client {
     // Now we integrate the use of Evie's awesome Enhanced Map module, which
     // essentially saves a collection to disk. This is great for per-server configs,
     // and makes things extremely easy for this purpose.
-    this.settings = new Enmap({ name: "settings", cloneLevel: "deep", fetchAll: false, autoFetch: true });
+    this.settings = new Enmap({ name: "settings" });
 
     //requiring the Logger class for easy console logging
     this.logger = require("./util/logger.js");
