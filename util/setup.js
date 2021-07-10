@@ -2,7 +2,7 @@ const inquirer = require("inquirer");
 const Enmap = require("enmap");
 const fs = require("fs");
 
-let baseConfig = fs.readFileSync("./config_base.txt", "utf8");
+let baseConfig = fs.readFileSync("./util/setup_base.txt", "utf8");
 
 const defaultSettings = {
   "prefix": "~",
@@ -10,16 +10,13 @@ const defaultSettings = {
   "modRole": "Moderator",
   "adminRole": "Administrator",
   "systemNotice": "true",
+  "commandReply": "true",
   "welcomeChannel": "welcome",
   "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
   "welcomeEnabled": "false"
 };
 
-const settings = new Enmap({
-  name: "settings",
-  cloneLevel: "deep",
-  ensureProps: true
-});
+const settings = new Enmap({ name: "settings", cloneLevel: "deep", ensureProps: true });
 
 
 let prompts = [
@@ -35,9 +32,19 @@ let prompts = [
     message: "Please enter the bot token from the application page."
   },
   {
-    type: "input",
-    name: "ownerID",
-    message: "Please enter the bot owner's User ID"
+    type: "checkbox",
+    name: "partials",
+    message: "Which partials would you like? \n" +
+      "By default GuideBot needs Direct Messages to work. \n" +
+      "For join messages to work you need Guild Members, which is privileged and requires extra setup.\n" +
+      "For more info about partials see the README.",
+    choices: [
+      { "name": "Users", "value": "USER" },
+      { "name": "Channels", "value": "CHANNEL", "checked": true },
+      { "name": "Guild Members", "value": "GUILD_MEMBER"},
+      { "name": "Messages", "value": "MESSAGE" },
+      { "name": "Reactions", "value": "REACTION" },
+    ]
   },
   {
     type: "checkbox",
@@ -85,6 +92,7 @@ let prompts = [
   baseConfig = baseConfig
     .replace("{{ownerID}}", answers.ownerID)
     .replace("{{token}}", `"${answers.token}"`)
+    .replace("{{partials}}", JSON.stringify(answers.partials))
     .replace("{{intents}}", JSON.stringify(answers.intents));
 
   fs.writeFileSync("./config.js", baseConfig);

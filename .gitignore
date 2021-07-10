@@ -7,7 +7,6 @@ yarn-error.log*
 config.json
 config.js
 data/
-test.js
 
 # Runtime data
 pids
@@ -61,3 +60,4 @@ typings/
 # dotenv environment variables file
 .env
 
+/.vscode/
