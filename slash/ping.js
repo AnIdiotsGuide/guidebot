@@ -6,13 +6,13 @@ class Ping extends slashCommand {
     super(client, {
       name: "ping",
       description: "Pongs when pinged.",
-      options: []
+      options: [],
+      guildOnly: true // Set this to false if you want it to be global.
     });
   }
 
   async run(client, interaction) {
     try {
-      await interaction.defer();
       const reply = await interaction.editReply("Ping?");
       await interaction.editReply(`Pong! Latency is ${reply.createdTimestamp - interaction.createdTimestamp}ms. API Latency is ${Math.round(client.ws.ping)}ms.`);
         
