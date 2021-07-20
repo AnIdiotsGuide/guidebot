@@ -13,6 +13,7 @@ class Ping extends slashCommand {
 
   async run(client, interaction) {
     try {
+      await interaction.defer();
       const reply = await interaction.editReply("Ping?");
       await interaction.editReply(`Pong! Latency is ${reply.createdTimestamp - interaction.createdTimestamp}ms. API Latency is ${Math.round(client.ws.ping)}ms.`);
         
