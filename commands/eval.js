@@ -34,7 +34,7 @@ class Eval extends Command {
       }
       message.channel.send(codeBlock("js", clean));
     } catch (err) {
-      message.channel.send(codeBlock("xl", await this.client.clean(this.client, err)));
+      console.log(err);
     }
   }
 }
