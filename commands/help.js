@@ -36,7 +36,7 @@ class Help extends Command {
       const commandNames = enabledCommands.keyArray();
       const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
       let currentCategory = "";
-      let output = `= Command List =\n\n[Use ${this.client.config.defaultSettings.prefix}help <commandname> for details]\n`;
+      let output = `= Command List =\n\n[Use ${settings.prefix}help <commandname> for details]\n`;
       const sorted = enabledCommands.array().sort((p, c) => p.help.category > c.help.category ? 1 :  p.help.name > c.help.name && p.help.category === c.help.category ? 1 : -1 );
       sorted.forEach( c => {
         const cat = c.help.category.toProperCase();
