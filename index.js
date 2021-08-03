@@ -28,6 +28,7 @@ class GuideBot extends Client {
     this.commands = new Collection();
     this.aliases = new Collection();
     this.slashcmds = new Collection();
+    this.events = new Collection();
 
     this.owners = new Array();
 
@@ -109,6 +110,8 @@ class GuideBot extends Client {
     delete require.cache[require.resolve(`${commandPath}${path.sep}${commandName}.js`)];
     return false;
   }
+
+
 
   /*
   MESSAGE CLEAN FUNCTION
@@ -232,15 +235,35 @@ const init = async () => {
   });
 
   // Then we load events, which will include our message and ready event.
-  const evtFiles = await readdir("./events/");
-  evtFiles.forEach(file => {
-    const eventName = file.split(".")[0];
-    client.logger.log(`Loading Event: ${eventName}. 👌`, "log");
-    const event = new (require(`./events/${file}`))(client);
-    // This line is awesome by the way. Just sayin'.
-    client.on(eventName, (...args) => event.run(...args));
-    delete require.cache[require.resolve(`./events/${file}`)];
-  });
+  // const evtFiles = await readdir("./events/");
+  // evtFiles.forEach(file => {
+  //   const eventName = file.split(".")[0];
+  //   client.logger.log(`Loading Event: ${eventName}. 👌`, "log");
+  //   const event = new (require(`./events/${file}`))(client);
+  //   // This line is awesome by the way. Just sayin'.
+  //   client.on(eventName, (...args) => event.run(...args));
+  //   delete require.cache[require.resolve(`./events/${file}`)];
+  // });
+
+  const eventList = [];
+  klaw("./events").on("data", item => {
+    const { dir, name, ext } = path.parse(item.path);
+    if (!ext || ext !== ".js") return;
+    const eventName = name.split(".")[0];
+    try {
+      const event = new(require(`${dir}${path.sep}${name}${ext}`))(client);
+      eventList.push(event);
+      event.conf.location = dir;
+      client.events.set(event.conf.name, event);
+      client.on(eventName, (...args) => event.run(...args));
+      delete require.cache[require.resolve(`${dir}${path.sep}${name}${ext}`)];
+    } catch (error) {
+      client.logger.error(`Error loading event ${name}: ${error}`);
+    }
+  }).on("end", () => {
+    client.logger.load(`Loaded a total of ${eventList.length} events.`);
+  }).on("error", (error) => client.logger.error(error));
+
 
   client.levelCache = {};
   for (let i = 0; i < client.config.permLevels.length; i++) {

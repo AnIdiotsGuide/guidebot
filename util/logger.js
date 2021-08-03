@@ -5,7 +5,7 @@ const chalk = require("chalk");
 const moment = require("moment");
 
 class Logger {
-  static log (content, type = "log") {
+  static log(content, type = "log") {
     const timestamp = `[${moment().format("YYYY-MM-DD HH:mm:ss")}]:`;
     switch (type) {
       case "log": {
@@ -30,19 +30,19 @@ class Logger {
     } 
   }
   
-  static error (content) {
+  static error(content) {
     return this.log(content, "error");
   }
   
-  static warn (content) {
+  static warn(content) {
     return this.log(content, "warn");
   }
   
-  static debug (content) {
+  static debug(content) {
     return this.log(content, "debug");
   } 
   
-  static cmd (content) {
+  static cmd(content) {
     return this.log(content, "cmd");
   } 
 }
