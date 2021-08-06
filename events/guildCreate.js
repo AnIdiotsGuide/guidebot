@@ -1,4 +1,4 @@
-// // This event executes when a new guild (server) is joined.
+// This event executes when a new guild (server) is joined.
 
 const Event = require("../base/Event");
 

@@ -111,11 +111,11 @@ class GuideBot extends Client {
     return false;
   }
 
-  async reloadEvent(client, eventPath, eventName) {
-    delete require.cache[require.resolve(`${eventPath}${path.sep}${eventName}.js`)];
-    const event = new(require(`${eventPath}${path.sep}${eventName}.js`))(client);
+  async reloadEvent(client, eventName) {
+    delete require.cache[require.resolve(`./events/${eventName}.js`)];
+    const event = new(require(`./events/${eventName}.js`))(client);
     client.on(eventName, (...args) => event.run(...args));
-    delete require.cache[require.resolve(`${eventPath}${path.sep}${eventName}.js`)];
+    delete require.cache[require.resolve(`./events/${eventName}.js`)];
   }
 
   /*
@@ -239,25 +239,16 @@ const init = async () => {
     });
   });
 
-  const eventList = [];
-  klaw("./events").on("data", item => {
-    const { dir, name, ext } = path.parse(item.path);
-    if (!ext || ext !== ".js") return;
-    const eventName = name.split(".")[0];
-    try {
-      const event = new(require(`${dir}${path.sep}${name}${ext}`))(client);
-      eventList.push(event);
-      event.conf.location = dir;
-      client.events.set(event.conf.name, event);
-      client.on(eventName, (...args) => event.run(...args));
-      delete require.cache[require.resolve(`${dir}${path.sep}${name}${ext}`)];
-    } catch (error) {
-      client.logger.error(`Error loading event ${name}: ${error}`);
-    }
-  }).on("end", () => {
-    client.logger.log(`Loaded a total of ${eventList.length} events.`);
-  }).on("error", (error) => client.logger.error(error));
-
+  const evtFiles = await readdir("./events/");
+  evtFiles.forEach(file => {
+    const eventName = file.split(".")[0];
+    client.logger.log(`Loading Event: ${eventName}. 👌`, "log");
+    const event = new (require(`./events/${file}`))(client);
+    client.events.set(event.conf.name, event);
+    // This line is awesome by the way. Just sayin'.
+    client.on(eventName, (...args) => event.run(...args));
+    delete require.cache[require.resolve(`./events/${file}`)];
+  });
 
   client.levelCache = {};
   for (let i = 0; i < client.config.permLevels.length; i++) {
