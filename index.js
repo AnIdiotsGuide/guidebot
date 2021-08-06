@@ -111,7 +111,12 @@ class GuideBot extends Client {
     return false;
   }
 
-
+  async reloadEvent(client, eventPath, eventName) {
+    delete require.cache[require.resolve(`${eventPath}${path.sep}${eventName}.js`)];
+    const event = new(require(`${eventPath}${path.sep}${eventName}.js`))(client);
+    client.on(eventName, (...args) => event.run(...args));
+    delete require.cache[require.resolve(`${eventPath}${path.sep}${eventName}.js`)];
+  }
 
   /*
   MESSAGE CLEAN FUNCTION
@@ -234,17 +239,6 @@ const init = async () => {
     });
   });
 
-  // Then we load events, which will include our message and ready event.
-  // const evtFiles = await readdir("./events/");
-  // evtFiles.forEach(file => {
-  //   const eventName = file.split(".")[0];
-  //   client.logger.log(`Loading Event: ${eventName}. 👌`, "log");
-  //   const event = new (require(`./events/${file}`))(client);
-  //   // This line is awesome by the way. Just sayin'.
-  //   client.on(eventName, (...args) => event.run(...args));
-  //   delete require.cache[require.resolve(`./events/${file}`)];
-  // });
-
   const eventList = [];
   klaw("./events").on("data", item => {
     const { dir, name, ext } = path.parse(item.path);
@@ -261,7 +255,7 @@ const init = async () => {
       client.logger.error(`Error loading event ${name}: ${error}`);
     }
   }).on("end", () => {
-    client.logger.load(`Loaded a total of ${eventList.length} events.`);
+    client.logger.log(`Loaded a total of ${eventList.length} events.`);
   }).on("error", (error) => client.logger.error(error));
 
 
