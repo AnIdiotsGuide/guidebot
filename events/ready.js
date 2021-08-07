@@ -1,11 +1,11 @@
 const { Team } = require("discord.js");
 
 module.exports = class {
-  constructor (client) {
+  constructor(client) {
     this.client = client;
   }
 
-  async run () {
+  async run() {
 
     // Why await here? Because the ready event isn't actually ready, sometimes
     // guild information will come in *after* ready. 1s is plenty, generally,

@@ -75,7 +75,12 @@ This command requires level ${this.client.levelCache[cmd.conf.permLevel]} (${cmd
     }
     
     // If the command exists, **AND** the user has permission, run it.
-    this.client.logger.log(`${this.client.config.permLevels.find(l => l.level === level).name} ${message.author.id} ran command ${cmd.help.name}`, "cmd");
-    cmd.run(message, args, level);
+    try {
+      await cmd.run(message, args, level);
+      this.client.logger.log(`${this.client.config.permLevels.find(l => l.level === level).name} ${message.author.id} ran command ${cmd.help.name}`, "cmd");
+    } catch (e) {
+      message.channel.send({ content: `There was a problem with your request.\n\`\`\`${e.message}\`\`\`` })
+        .catch(e => console.error("An error occurred replying on an error", e));
+    }
   }
 };

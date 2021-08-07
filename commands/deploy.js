@@ -1,6 +1,6 @@
 const Command = require("../base/Command.js");
 
-class Deploy extends Command {
+module.exports = class Deploy extends Command {
   constructor(client) {
     super(client, {
       name: "deploy",
@@ -32,6 +32,4 @@ class Deploy extends Command {
     // Reply to the user that the commands have been deployed.
     await message.channel.send("All commands deployed!");
   }
-}
-
-module.exports = Deploy;
+};

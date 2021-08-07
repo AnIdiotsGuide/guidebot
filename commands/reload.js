@@ -1,6 +1,6 @@
 const Command = require("../base/Command.js");
 
-class Reload extends Command {
+module.exports = class Reload extends Command {
   constructor(client) {
     super(client, {
       name: "reload",
@@ -26,5 +26,4 @@ class Reload extends Command {
 
     message.reply({ content: `The command \`${commands.help.name}\` has been reloaded`, allowedMentions: { repliedUser: (replying === "true") }});
   }
-}
-module.exports = Reload;
+};
