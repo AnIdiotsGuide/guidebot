@@ -14,7 +14,7 @@ const config = {
   // For more info about intents see the README.
   intents: {{intents}},
   // Partials your bot may need should go here, CHANNEL is required for DM's
-  partials: [{{partials}}],
+  partials: {{partials}},
 
   // Default per-server settings. These settings are entered in a database on first load, 
   // And are then completely ignored from this file. To modify default settings, use the `conf` command.
