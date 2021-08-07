@@ -13,7 +13,7 @@ module.exports = class Leave extends slashCommand {
 
   async run(client, interaction) {
     try {
-      await interaction.defer();
+      await interaction.deferReply();
       await interaction.member.send("You requested to leave the server, if you change your mind you can rejoin at a later date.");
       await interaction.member.kick(`${interaction.member.displayName} wanted to leave.`);
       await interaction.editReply(`${interaction.member.displayName} left in a hurry!`);
