@@ -1,7 +1,7 @@
 // This will check if the node version you are running is the required
 // Node version, if it isn't it will throw the following error to inform
 // you.
-if (Number(process.version.slice(1).split(".")[0]) < 14) throw new Error("Node 14.0.0 or higher is required. Update Node on your system.");
+if (Number(process.version.slice(1).split(".")[0]) < 16) throw new Error("Node 16.x or higher is required. Update Node on your system.");
 
 try {
   require("./config.js");
@@ -11,7 +11,7 @@ try {
 }
 
 // Load up the discord.js library
-const Discord = require("discord.js");
+const { Client, Collection} = require("discord.js");
 // We also load the rest of the things we need in this file:
 const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
@@ -21,7 +21,7 @@ const config = require("./config.js");
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're referring to. Your client.
-const client = new Discord.Client({
+const client = new Client({
   intents: config.intents,
   partials: config.partials
 });
@@ -42,10 +42,11 @@ require("./modules/functions.js")(client);
 // Auto filled by the Ready event by pulling the Bot Application.
 client.owners = [];
 
-// Aliases and commands are put in collections where they can be read from,
-// catalogued, listed, etc.
-client.commands = new Enmap();
-client.aliases = new Enmap();
+// Aliases, commands and slash commands are put in collections where they can be
+// read from, catalogued, listed, etc.
+client.commands = new Collection();
+client.aliases = new Collection();
+client.slashcmds = new Collection();
 
 // Now we integrate the use of Evie's awesome Enmap module, which
 // essentially saves a collection to disk. This is great for per-server configs,
@@ -60,19 +61,30 @@ const init = async () => {
   // Here we load **commands** into memory, as a collection, so they're accessible
   // here and everywhere else.
   const cmdFiles = await readdir("./commands/");
-  client.logger.log(`Loading a total of ${cmdFiles.length} commands.`);
   cmdFiles.forEach(f => {
     if (!f.endsWith(".js")) return;
     const response = client.loadCommand(f);
     if (response) console.log(response);
   });
 
+  // Now we load any **slash** commands you may have in the ./slash directory.
+  readdir("./slash", (err, files) => {
+    if (err) return console.error(err);
+    files.forEach(file => {
+      if (!file.endsWith(".js")) return;
+      const props = require(`./slash/${file}`);
+      const commandName = file.split(".")[0];
+      client.logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
+      // Now set the name of the command with it's properties.
+      client.slashcmds.set(props.commandData.name, props);
+    });
+  });
+
   // Then we load events, which will include our message and ready event.
   const evtFiles = await readdir("./events/");
-  client.logger.log(`Loading a total of ${evtFiles.length} events.`);
   evtFiles.forEach(file => {
     const eventName = file.split(".")[0];
-    client.logger.log(`Loading Event: ${eventName}`);
+    client.logger.log(`Loading Event: ${eventName}. 👌`, "log");
     const event = require(`./events/${file}`);
     // Bind the client to any event, before the existing arguments
     // provided by the discord.js event. 
