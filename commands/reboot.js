@@ -1,5 +1,5 @@
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
-  const replying = client.settings.get(message.guild.id).commandReply;
+  const replying = client.settings.ensure(message.guild.id, client.config.defaultSettings).commandReply;
   await message.reply({ content: "Bot is shutting down.", allowedMentions: { repliedUser: (replying === "true") }});
   await Promise.all(client.commands.map(cmd =>
     client.unloadCommand(cmd)

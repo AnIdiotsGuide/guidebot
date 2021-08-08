@@ -12,7 +12,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
 
   // Retrieve Default Values from the default settings in the bot.
   const defaults = client.settings.get("default");
-  const replying = client.settings.get(message.guild.id).commandReply;
+  const replying = client.settings.ensure(message.guild.id, client.config.defaultSettings).commandReply;
 
   // Adding a new key adds it to every guild (it will be visible to all of them)
   if (action === "add") {
