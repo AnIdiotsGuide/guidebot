@@ -60,7 +60,7 @@ module.exports = (client) => {
   };
 
   /*
-  SINGLE-LINE AWAITMESSAGE
+  SINGLE-LINE AWAIT MESSAGE
 
   A simple way to grab a single reply, from the user that initiated
   the command. Useful to get "precisions" on certain things...
@@ -75,7 +75,7 @@ module.exports = (client) => {
     const filter = m => m.author.id === msg.author.id;
     await msg.channel.send(question);
     try {
-      const collected = await msg.channel.awaitMessages(filter, { max: 1, time: limit, errors: ["time"] });
+      const collected = await msg.channel.awaitMessages({ filter, max: 1, time: limit, errors: ["time"] });
       return collected.first().content;
     } catch (e) {
       return false;
@@ -101,15 +101,15 @@ module.exports = (client) => {
       .replace(/`/g, "`" + String.fromCharCode(8203))
       .replace(/@/g, "@" + String.fromCharCode(8203));
 
-    text = replaceAll(text, client.token, "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0");
+    text = replaceAll(text, client.token, "[REDACTED]");
 
     return text;
   };
 
   client.loadCommand = (commandName) => {
     try {
-      client.logger.log(`Loading Command: ${commandName}`);
       const props = require(`../commands/${commandName}`);
+      client.logger.log(`Loading Command: ${props.help.name}. 👌`, "log");
       if (props.init) {
         props.init(client);
       }
@@ -130,7 +130,7 @@ module.exports = (client) => {
     } else if (client.aliases.has(commandName)) {
       command = client.commands.get(client.aliases.get(commandName));
     }
-    if (!command) return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`;
+    if (!command) return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
     
     if (command.shutdown) {
       await command.shutdown(client);
@@ -146,14 +146,14 @@ module.exports = (client) => {
     return false;
   };
 
-  /* MISCELANEOUS NON-CRITICAL FUNCTIONS */
+  /* MISCELLANEOUS NON-CRITICAL FUNCTIONS */
   
   // EXTENDING NATIVE TYPES IS BAD PRACTICE. Why? Because if JavaScript adds this
   // later, this conflicts with native code. Also, if some other lib you use does
   // this, a conflict also occurs. KNOWING THIS however, the following 2 methods
   // are, we feel, very useful in code. 
   
-  // <String>.toPropercase() returns a proper-cased string such as: 
+  // <String>.toProperCase() returns a proper-cased string such as: 
   // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
   Object.defineProperty(String.prototype, "toProperCase", {
     value: function() {
@@ -189,5 +189,5 @@ module.exports = (client) => {
 };
 
 function replaceAll(haystack, needle, replacement) {
-  return haystack.split(needle).join(replacement)
+  return haystack.split(needle).join(replacement);
 }

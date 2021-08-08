@@ -1,6 +1,6 @@
 {
   "name": "guidebot",
-  "version": "2.3.8",
+  "version": "1.0.0",
   "description": "A boilerplate example bot with command handler and reloadable commands. Updated and Maintained by the Idiot's Guide Community",
   "main": "index.js",
   "scripts": {
@@ -8,11 +8,11 @@
     "postinstall": "node setup.js"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=16"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/An-Idiots-Guide/guidebot.git"
+    "url": "git+https://github.com/AnIdiotsGuide/guidebot.git"
   },
   "author": "Evelyne Lachance <eslachance@gmail.com> (http://evie.codes)",
   "contributors": [
@@ -20,15 +20,24 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/An-Idiots-Guide/guidebot/issues"
+    "url": "https://github.com/AnIdiotsGuide/guidebot/issues"
   },
-  "homepage": "https://github.com/An-Idiots-Guide/guidebot#readme",
+  "homepage": "https://github.com/AnIdiotsGuide/guidebot#readme",
   "dependencies": {
+    "@discordjs/builders": "^0.2.0",
     "chalk": "^4.1.1",
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.0.1",
     "enmap": "^5.8.5",
     "inquirer": "^8.0.0",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.30.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0"
   }
 }

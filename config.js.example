@@ -1,7 +1,4 @@
 const config = {
-  // Bot Owner, level 10 by default. A User ID. Should never be anything else than the bot owner's ID.
-  "ownerID": "123456789123456",
-
   // Bot Admins, level 9 by default. Array of user ID strings.
   "admins": [],
 
@@ -9,25 +6,27 @@ const config = {
   "support": [],
 
   // Your Bot's Token. Available on https://discord.com/developers/applications/me
-  "token": "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0",
+  "token": "Replace me",
 
   // Intents the bot needs.
   // By default GuideBot needs Guilds, Guild Messages and Direct Messages to work.
   // For join messages to work you need Guild Members, which is privileged and requires extra setup.
   // For more info about intents see the README.
-  intents: ["GUILDS","GUILD_MESSAGES","DIRECT_MESSAGES"],
+  intents: ["GUILDS", "GUILD_MESSAGES", "DIRECT_MESSAGES"],
+  // Partials your bot may need should go here, CHANNEL is required for DM's
+  partials: ["CHANNEL"],
 
-  // Default per-server settings. New guilds have these settings. 
-
-  // DO NOT LEAVE ANY OF THESE BLANK, AS YOU WILL NOT BE ABLE TO UPDATE THEM
-  // VIA COMMANDS IN THE GUILD.
+  // Default per-server settings. These settings are entered in a database on first load, 
+  // And are then completely ignored from this file. To modify default settings, use the `conf` command.
+  // DO NOT REMOVE THIS BEFORE YOUR BOT IS LOADED AND FUNCTIONAL.
   
   "defaultSettings" : {
-    "prefix": "-",
+    "prefix": "~",
     "modLogChannel": "mod-log",
     "modRole": "Moderator",
     "adminRole": "Administrator",
     "systemNotice": "true", // This gives a notice when a user tries to run a command that they do not have permission to use.
+    "commandReply": "true", // Toggle this if you want the bot to ping the executioner or not.
     "welcomeChannel": "welcome",
     "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
     "welcomeEnabled": "false"
@@ -36,7 +35,7 @@ const config = {
   // PERMISSION LEVEL DEFINITIONS.
 
   permLevels: [
-    // This is the lowest permisison level, this is for non-roled users.
+    // This is the lowest permission level, this is for users without a role.
     { level: 0,
       name: "User", 
       // Don't bother checking, just return true which allows them to execute any command their
@@ -81,7 +80,7 @@ const config = {
       check: (message) => message.channel.type === "text" ? (message.guild.ownerID === message.author.id ? true : false) : false
     },
 
-    // Bot Support is a special inbetween level that has the equivalent of server owner access
+    // Bot Support is a special in between level that has the equivalent of server owner access
     // to any server they joins, in order to help troubleshoot the bot on behalf of owners.
     { level: 8,
       name: "Bot Support",

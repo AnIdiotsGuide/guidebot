@@ -3,6 +3,7 @@
 // can be used to do **anything** on your machine, from stealing information to
 // purging the hard drive. DO NOT LET ANYONE ELSE USE THIS
 
+const { codeBlock } = require("@discordjs/builders");
 
 // However it's, like, super ultra useful for troubleshooting and doing stuff
 // you don't want to put in a command.
@@ -11,9 +12,9 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   try {
     const evaled = eval(code);
     const clean = await client.clean(client, evaled);
-    message.channel.send(`\`\`\`js\n${clean}\n\`\`\``);
+    message.channel.send(codeBlock("js", clean));
   } catch (err) {
-    message.channel.send(`\`ERROR\` \`\`\`xl\n${await client.clean(client, err)}\n\`\`\``);
+    message.channel.send(codeBlock("xl", `ERROR ${await client.clean(client, err)}`));
   }
 };
 

@@ -1,5 +1,6 @@
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
-  await message.reply("Bot is shutting down.");
+  const replying = client.settings.ensure(message.guild.id, client.config.defaultSettings).commandReply;
+  await message.reply({ content: "Bot is shutting down.", allowedMentions: { repliedUser: (replying === "true") }});
   await Promise.all(client.commands.map(cmd =>
     client.unloadCommand(cmd)
   ));
@@ -9,7 +10,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
 exports.conf = {
   enabled: true,
   guildOnly: false,
-  aliases: [],
+  aliases: ["restart"],
   permLevel: "Bot Admin"
 };
 
