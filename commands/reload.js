@@ -1,5 +1,5 @@
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
-  const replying = client.settings.get(message.guild.id).commandReply;
+  const replying = client.settings.ensure(message.guild.id, client.config.defaultSettings).commandReply;
   if (!args || args.length < 1) return message.reply({ content: "Must provide a command to reload. Derp.", allowedMentions: { repliedUser: (replying === "true") }});
   const command = client.commands.get(args[0]) || client.commands.get(client.aliases.get(args[0]));
   let response = await client.unloadCommand(args[0]);

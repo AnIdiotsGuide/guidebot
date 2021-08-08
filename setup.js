@@ -36,11 +36,6 @@ let prompts = [
     message: "Please enter the bot token from the application page."
   },
   {
-    type: "input",
-    name: "ownerID",
-    message: "Please enter the bot owner's User ID"
-  },
-  {
     type: "checkbox",
     name: "partials",
     message: "Which partials would you like? \n" +
@@ -99,7 +94,6 @@ let prompts = [
   }
 
   baseConfig = baseConfig
-    .replace("{{ownerID}}", answers.ownerID)
     .replace("{{token}}", `"${answers.token}"`)
     .replace("{{partials}}", JSON.stringify(answers.partials))
     .replace("{{intents}}", JSON.stringify(answers.intents));

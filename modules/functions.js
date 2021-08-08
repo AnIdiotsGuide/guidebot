@@ -108,8 +108,8 @@ module.exports = (client) => {
 
   client.loadCommand = (commandName) => {
     try {
-      client.logger.log(`Loading Command: ${commandName}`);
       const props = require(`../commands/${commandName}`);
+      client.logger.log(`Loading Command: ${props.help.name}. 👌`, "log");
       if (props.init) {
         props.init(client);
       }
