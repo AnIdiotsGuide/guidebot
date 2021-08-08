@@ -9,7 +9,7 @@ const { codeBlock } = require("@discordjs/builders");
   a command, it is not shown to them. If a command name is given with the
   help command, its extended help is shown.
 */
-class Help extends Command {
+module.exports = class Help extends Command {
   constructor(client) {
     super(client, {
       name: "help",
@@ -27,17 +27,23 @@ class Help extends Command {
       const settings = message.settings;
       
       // Filter all commands by which are available for the user's level, using the <Collection>.filter() method.
-      const myCommands = message.guild ? this.client.commands.filter(cmd => this.client.levelCache[cmd.conf.permLevel] <= level) : this.client.commands.filter(cmd => this.client.levelCache[cmd.conf.permLevel] <= level &&  cmd.conf.guildOnly !== true);
+      const myCommands = message.guild ? this.client.commands.filter(cmd => this.client.levelCache[cmd.conf.permLevel] <= level) :
+        this.client.commands.filter(cmd => this.client.levelCache[cmd.conf.permLevel] <= level && cmd.conf.guildOnly !== true);
 
+      // Then we will filter the myCommands collection again to get the enabled commands.
       const enabledCommands = myCommands.filter(cmd => cmd.conf.enabled);
-      
+
       // Here we have to get the command names only, and we use that array to get the longest name.
+      const commandNames = [...enabledCommands.keys()];
+
       // This make the help commands "aligned" in the output.
-      const commandNames = enabledCommands.keyArray();
       const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
+
       let currentCategory = "";
-      let output = `= Command List =\n\n[Use ${settings.prefix}help <commandname> for details]\n`;
-      const sorted = enabledCommands.array().sort((p, c) => p.help.category > c.help.category ? 1 :  p.help.name > c.help.name && p.help.category === c.help.category ? 1 : -1 );
+      let output = `= Command List =\n[Use ${settings.prefix}help <commandname> for details]\n`;
+      const sorted = enabledCommands.sort((p, c) => p.help.category > c.help.category ? 1 : 
+        p.help.name > c.help.name && p.help.category === c.help.category ? 1 : -1 );
+
       sorted.forEach( c => {
         const cat = c.help.category.toProperCase();
         if (currentCategory !== cat) {
@@ -47,6 +53,7 @@ class Help extends Command {
         output += `${settings.prefix}${c.help.name}${" ".repeat(longest - c.help.name.length)} :: ${c.help.description}\n`;
       });
       message.channel.send(codeBlock("asciidoc", output));
+
     } else {
       // Show individual command's help.
       let command = args[0];
@@ -57,6 +64,4 @@ class Help extends Command {
       }
     }
   }
-}
-
-module.exports = Help;
+};

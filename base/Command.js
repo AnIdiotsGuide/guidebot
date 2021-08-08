@@ -1,4 +1,4 @@
-class Command {
+module.exports = class Command {
 
   constructor(client, {
     name = null,
@@ -14,6 +14,4 @@ class Command {
     this.conf = { enabled, guildOnly, aliases, permLevel };
     this.help = { name, description, category, usage };
   }
-}
-
-module.exports = Command;
+};

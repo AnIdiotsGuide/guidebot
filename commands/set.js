@@ -13,7 +13,7 @@
 const Command = require("../base/Command.js");
 const { codeBlock } = require("@discordjs/builders");
 
-class SetCMD extends Command {
+module.exports = class SetCMD extends Command {
   constructor(client) {
     super(client, {
       name: "set",
@@ -91,6 +91,4 @@ class SetCMD extends Command {
       await message.channel.send(codeBlock("asciidoc", `= Current Guild Settings =
 ${array.join("\n")}`));    }
   }
-}
-
-module.exports = SetCMD;
+};

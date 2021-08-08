@@ -15,8 +15,17 @@ class interactionCreate extends Event {
     // If that command doesn't exist, silently exit and do nothing
     if (!cmd) return;
     // Run the command
-    cmd.run(this.client, interaction);
-
+    try {
+      await cmd.run(this.client, interaction);
+    } catch (e) {
+      console.error(e);
+      if (interaction.replied) 
+        interaction.followUp({ content: `There was a problem with your request.\n\`\`\`${e.message}\`\`\``, ephemeral: true })
+          .catch(e => console.error("An error occurred following up on an error", e));
+      else 
+        interaction.reply({ content: `There was a problem with your request.\n\`\`\`${e.message}\`\`\``, ephemeral: true })
+          .catch(e => console.error("An error occurred replying on an error", e));
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 const Command = require("../base/Command.js");
 
-class MyLevel extends Command {
+module.exports = class MyLevel extends Command {
   constructor(client) {
     super(client, {
       name: "mylevel",
@@ -15,6 +15,4 @@ class MyLevel extends Command {
     const replying = this.client.settings.ensure(message.guild.id, this.client.config.defaultSettings).commandReply;
     message.reply({ content: `Your permission level is: ${level} - ${friendly}`, allowedMentions: { repliedUser: (replying === "true") }});
   }
-}
-
-module.exports = MyLevel;
+};
