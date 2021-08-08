@@ -1,4 +1,4 @@
-class slashCommand {
+module.exports = class slashCommand {
 
   constructor(client, {
     name = null,
@@ -12,6 +12,4 @@ class slashCommand {
     this.guildOnly = guildOnly;
   }
 
-}
-
-module.exports = slashCommand;
+};

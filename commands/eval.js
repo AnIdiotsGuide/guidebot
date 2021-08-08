@@ -9,7 +9,7 @@ const { codeBlock } = require("@discordjs/builders");
 // you don't want to put in a command.
 const Command = require("../base/Command.js");
 
-class Eval extends Command {
+module.exports = class Eval extends Command {
   constructor(client) {
     super(client, {
       name: "eval",
@@ -37,6 +37,4 @@ class Eval extends Command {
       console.log(err);
     }
   }
-}
-
-module.exports = Eval;
+};

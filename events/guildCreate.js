@@ -25,3 +25,4 @@ class guildCreate extends Event {
 }
 
 module.exports = guildCreate;
+

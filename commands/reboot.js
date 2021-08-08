@@ -1,6 +1,6 @@
 const Command = require("../base/Command.js");
 
-class Reboot extends Command {
+module.exports = class Reboot extends Command {
   constructor(client) {
     super(client, {
       name: "reboot",
@@ -22,6 +22,4 @@ class Reboot extends Command {
       console.log(e);
     }
   }
-}
-
-module.exports = Reboot;
+};

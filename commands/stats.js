@@ -4,7 +4,7 @@ const { codeBlock } = require("@discordjs/builders");
 const moment = require("moment");
 require("moment-duration-format");
 
-class Stats extends Command {
+module.exports = class Stats extends Command {
   constructor(client) {
     super(client, {
       name: "stats",
@@ -25,6 +25,4 @@ class Stats extends Command {
 • Node       :: ${process.version}`);
     message.channel.send(stats);
   }
-}
-
-module.exports = Stats;
+};

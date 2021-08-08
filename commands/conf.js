@@ -8,7 +8,7 @@ your bot. The `del` action removes the key also from every guild, and loses its 
 const Command = require("../base/Command.js");
 const { codeBlock } = require("@discordjs/builders");
 
-class Conf extends Command {
+module.exports = class Conf extends Command {
   constructor(client) {
     super(client, {
       name: "conf",
@@ -100,6 +100,4 @@ class Conf extends Command {
 ${array.join("\n")}`));
     }
   }
-}
-
-module.exports = Conf;
+};
