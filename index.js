@@ -112,6 +112,7 @@ class GuideBot extends Client {
   }
 
   async reloadEvent(client, eventName) {
+    client.removeAllListeners(eventName);
     delete require.cache[require.resolve(`./events/${eventName}.js`)];
     const event = new(require(`./events/${eventName}.js`))(client);
     client.on(eventName, (...args) => event.run(...args));
