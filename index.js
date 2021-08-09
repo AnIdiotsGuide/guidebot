@@ -115,6 +115,7 @@ class GuideBot extends Client {
     try {
       const props = new (require(`${commandPath}${path.sep}${commandName}`))(this);
       this.logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
+      props.conf.location = commandPath;
       client.slashcmds.set(props.commandData.name, props);
     } catch (e) {
       return `Unable to load slash command ${commandName}: ${e}`;
