@@ -23,7 +23,7 @@ module.exports = class Reload extends Command {
 
     switch (type) {
       case "command": {
-        const command = this.client.commands.get(args[0]) || this.client.commands.get(this.client.aliases.get(args[0]));
+        const command = this.client.commands.get(module) || this.client.commands.get(this.client.aliases.get(module));
         
         let response = await this.client.unloadCommand(command.conf.location, command.help.name);
         if (response) return message.reply({ content: `Error Unloading: ${response}`, allowedMentions: { repliedUser: (replying === "true") }});
@@ -32,7 +32,18 @@ module.exports = class Reload extends Command {
         if (response) return message.reply({ content: `Error Loading: ${response}`, allowedMentions: { repliedUser: (replying === "true") }});
 
         return message.reply({ content: `The command \`${command.help.name}\` has been reloaded`, allowedMentions: { repliedUser: (replying === "true") }});
-        break;
+      }
+
+      case 'slash': {
+        const command = this.client.slashcmds.get(module);
+
+        let response = await this.client.unloadSlashCommand('./slash', command.commandData.name);
+        if (response) return message.reply({ content: `Error Unloading: ${response}`, allowedMentions: { repliedUser: (replying === "true") }});
+
+        response = this.client.loadSlashCommand('./slash', command.commandData.name);
+        if (response) return message.reply({ content: `Error Loading: ${response}`, allowedMentions: { repliedUser: (replying === "true") }});
+
+        return message.reply({ content: `The slash command \`${command.commandData.name}\` has been reloaded`, allowedMentions: { repliedUser: (replying === "true") }});
       }
 
       case "event": {
@@ -46,6 +57,4 @@ module.exports = class Reload extends Command {
       }
     }
   }
-}
-
-module.exports = Reload;
+};

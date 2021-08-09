@@ -111,6 +111,26 @@ class GuideBot extends Client {
     return false;
   }
 
+  loadSlashCommand(commandPath, commandName) {
+    try {
+      const props = new (require(`${commandPath}${path.sep}${commandName}`))(this);
+      this.logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
+      client.slashcmds.set(props.commandData.name, props);
+    } catch (e) {
+      return `Unable to load slash command ${commandName}: ${e}`;
+    }
+  }
+
+  async unloadSlashCommand(commandPath, commandName) {
+    let command;
+    if (this.slashcmds.has(commandName)) command = this.slashcmds.get(commandName);
+    
+    if (!command) return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
+
+    delete require.cache[require.resolve(`${commandPath}${path.sep}${commandName}.js`)];
+    return false;
+  }
+
   async reloadEvent(client, eventName) {
     client.removeAllListeners(eventName);
     delete require.cache[require.resolve(`./events/${eventName}.js`)];
@@ -228,16 +248,11 @@ const init = async () => {
     if (response) client.logger.error(response);
   });
 
-  readdir("./slash", (err, files) => {
-    if (err) return console.error(err);
-    files.forEach(file => {
-      if (!file.endsWith(".js")) return;
-      const props = new (require(`./slash/${file}`))(client);
-      const commandName = file.split(".")[0];
-      client.logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
-      // Now set the name of the command with it's properties.
-      client.slashcmds.set(props.commandData.name, props);
-    });
+  klaw("./slash").on("data", (item) => {
+    const cmdFile = path.parse(item.path);
+    if (!cmdFile.ext || cmdFile.ext !== ".js") return;
+    const response = client.loadSlashCommand(cmdFile.dir, `${cmdFile.name}${cmdFile.ext}`);
+    if (response) client.logger.error(response);
   });
 
   const evtFiles = await readdir("./events/");
