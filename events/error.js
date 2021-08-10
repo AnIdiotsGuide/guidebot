@@ -1,4 +1,4 @@
-const Event = require("../base/Event");
+const Event = require("../base/Event.js");
 
 module.exports = class Error extends Event {
   constructor(client) {

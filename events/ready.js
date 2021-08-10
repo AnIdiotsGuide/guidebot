@@ -1,6 +1,6 @@
 const { Team } = require("discord.js");
 
-const Event = require("../base/Event");
+const Event = require("../base/Event.js");
 
 module.exports = class Ready extends Event {
   constructor(client) {

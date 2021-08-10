@@ -1,6 +1,6 @@
 // This event executes when a guild (server) is left.
 
-const Event = require("../base/Event");
+const Event = require("../base/Event.js");
 
 module.exports = class guildDelete extends Event {
   constructor(client) {

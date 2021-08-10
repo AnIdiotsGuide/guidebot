@@ -1,6 +1,6 @@
 // This event executes when a new guild (server) is joined.
 
-const Event = require("../base/Event");
+const Event = require("../base/Event.js");
 
 module.exports = class guildCreate extends Event {
   constructor(client) {
