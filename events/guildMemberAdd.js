@@ -4,7 +4,7 @@
 
 const Event = require("../base/Event");
 
-class guildMemberAdd extends Event {
+module.exports = class guildMemberAdd extends Event {
   constructor(client) {
     super(client, {
       name: "guildMemberAdd"
@@ -27,5 +27,3 @@ class guildMemberAdd extends Event {
     member.guild.channels.cache.find(c => c.name === settings.welcomeChannel).send(welcomeMessage).catch(console.error);
   }
 }
-
-module.exports = guildMemberAdd;

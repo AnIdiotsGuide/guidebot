@@ -2,7 +2,7 @@
 
 const Event = require("../base/Event");
 
-class guildDelete extends Event {
+module.exports = class guildDelete extends Event {
   constructor(client) {
     super(client, {
       name: "guildDelete"
@@ -21,4 +21,3 @@ class guildDelete extends Event {
   }
 }
 
-module.exports = guildDelete;

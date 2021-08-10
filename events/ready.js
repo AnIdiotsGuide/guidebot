@@ -2,7 +2,7 @@ const { Team } = require("discord.js");
 
 const Event = require("../base/Event");
 
-class Ready extends Event {
+module.exports = class Ready extends Event {
   constructor(client) {
     super(client, {
       name: "ready"
@@ -41,5 +41,3 @@ class Ready extends Event {
     this.client.logger.log(`${this.client.user.tag}, ready to serve ${this.client.users.cache.size} users in ${this.client.guilds.cache.size} servers.`, "ready");
   }
 }
-
-module.exports = Ready;

@@ -2,7 +2,7 @@
 
 const Event = require("../base/Event");
 
-class guildCreate extends Event {
+module.exports = class guildCreate extends Event {
   constructor(client) {
     super(client, {
       name: "guildCreate"
@@ -23,6 +23,3 @@ class guildCreate extends Event {
     this.client.logger.cmd(`[GUILD JOIN] ${guild.id} added the bot. Owner: ${guild.ownerId}`);
   }
 }
-
-module.exports = guildCreate;
-

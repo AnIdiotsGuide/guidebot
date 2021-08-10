@@ -1,6 +1,6 @@
 const Event = require("../base/Event");
 
-class interactionCreate extends Event {
+module.exports = class interactionCreate extends Event {
   constructor(client) {
     super(client, {
       name: "interactionCreate"
@@ -28,5 +28,3 @@ class interactionCreate extends Event {
     }
   }
 }
-
-module.exports = interactionCreate;

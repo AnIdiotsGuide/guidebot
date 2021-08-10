@@ -1,6 +1,6 @@
 const Event = require("../base/Event");
 
-class Error extends Event {
+module.exports = class Error extends Event {
   constructor(client) {
     super(client, {
       name: "error"
@@ -12,4 +12,3 @@ class Error extends Event {
   }
 }
 
-module.exports = Error;

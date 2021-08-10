@@ -4,7 +4,7 @@
 
 const Event = require("../base/Event");
 
-class messageCreate extends Event {
+module.exports = class messageCreate extends Event {
   constructor(client) {
     super(client, {
       name: "messageCreate"
@@ -88,6 +88,3 @@ This command requires level ${this.client.levelCache[cmd.conf.permLevel]} (${cmd
     }
   }
 }
-
-module.exports = messageCreate;
-
