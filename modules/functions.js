@@ -37,16 +37,7 @@ module.exports = (client) => {
   // THIS IS HERE BECAUSE SOME PEOPLE DELETE ALL THE GUILD SETTINGS
   // And then they're stuck because the default settings are also gone.
   // So if you do that, you're resetting your defaults. Congrats.
-  const defaultSettings = {
-    "prefix": "~",
-    "modLogChannel": "mod-log",
-    "modRole": "Moderator",
-    "adminRole": "Administrator",
-    "systemNotice": "true",
-    "welcomeChannel": "welcome",
-    "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
-    "welcomeEnabled": "false"
-  };
+  const defaultSettings = client.config.defaultSettings
 
   // getSettings merges the client defaults with the guild settings. guild settings in
   // enmap should only have *unique* overrides that are different from defaults.
