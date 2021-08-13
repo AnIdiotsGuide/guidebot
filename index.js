@@ -6,8 +6,7 @@ if (Number(process.version.slice(1).split(".")[0]) < 16) throw new Error("Node 1
 // Load up the discord.js library
 const { Client, Collection } = require("discord.js");
 // We also load the rest of the things we need in this file:
-const { promisify } = require("util");
-const readdir = promisify(require("fs").readdir);
+const { readdirSync } = require("fs");
 const config = require("./config.js");
 const Enmap = require("enmap");
 const klaw = require("klaw");
@@ -219,28 +218,28 @@ const init = async () => {
     if (response) client.logger.error(response);
   });
 
-  readdir("./slash", (err, files) => {
-    if (err) return console.error(err);
-    files.forEach(file => {
-      if (!file.endsWith(".js")) return;
-      const props = new (require(`./slash/${file}`))(client);
-      const commandName = file.split(".")[0];
-      client.logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
-      // Now set the name of the command with it's properties.
-      client.slashcmds.set(props.commandData.name, props);
-    });
-  });
+  const slashFiles = readdirSync("./slash").filter(file => file.endsWith(".js"));
+  for (const file of slashFiles) {
+    const command = new (require(`./slash/${file}`))(client);
+    const commandName = file.split(".")[0];
+    client.logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
+    
+    // Now set the name of the command with it's properties.
+    client.slashcmds.set(command.commandData.name, command);
+  }
+
 
   // Then we load events, which will include our message and ready event.
-  const evtFiles = await readdir("./events/");
-  evtFiles.forEach(file => {
+  const eventFiles = readdirSync("./events/").filter(file => file.endsWith(".js"));
+  for (const file of eventFiles) {
     const eventName = file.split(".")[0];
     client.logger.log(`Loading Event: ${eventName}. 👌`, "log");
     const event = new (require(`./events/${file}`))(client);
+
     // This line is awesome by the way. Just sayin'.
     client.on(eventName, (...args) => event.run(...args));
     delete require.cache[require.resolve(`./events/${file}`)];
-  });
+  }
 
   client.levelCache = {};
   for (let i = 0; i < client.config.permLevels.length; i++) {
