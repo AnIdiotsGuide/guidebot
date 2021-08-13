@@ -6,10 +6,9 @@ if (Number(process.version.slice(1).split(".")[0]) < 16) throw new Error("Node 1
 // Load up the discord.js library
 const { Client, Collection } = require("discord.js");
 // We also load the rest of the things we need in this file:
-const { readdirSync } = require("fs");
+const { readdirSync, statSync } = require("fs");
 const config = require("./config.js");
 const Enmap = require("enmap");
-const klaw = require("klaw");
 const path = require("path");
 
 
@@ -77,12 +76,12 @@ class GuideBot extends Client {
 
   loadCommand(commandPath, commandName) {
     try {
-      const props = new (require(`${commandPath}${path.sep}${commandName}`))(this);
-      this.logger.log(`Loading Command: ${props.help.name}. 👌`, "log");
+      const props = new (require(commandPath))(this);
       props.conf.location = commandPath;
       if (props.init) {
         props.init(this);
       }
+
       this.commands.set(props.help.name, props);
       props.conf.aliases.forEach(alias => {
         this.aliases.set(alias, props.help.name);
@@ -105,7 +104,7 @@ class GuideBot extends Client {
     if (command.shutdown) {
       await command.shutdown(this);
     }
-    delete require.cache[require.resolve(`${commandPath}${path.sep}${commandName}.js`)];
+    delete require.cache[require.resolve(commandPath)];
     return false;
   }
 
@@ -209,24 +208,44 @@ const client = new GuideBot({ intents: config.intents, partials: config.partials
 
 const init = async () => {
 
-  // Here we load **commands** into memory, as a collection, so they're accessible
-  // here and everywhere else.
-  klaw("./commands").on("data", (item) => {
-    const cmdFile = path.parse(item.path);
-    if (!cmdFile.ext || cmdFile.ext !== ".js") return;
-    const response = client.loadCommand(cmdFile.dir, `${cmdFile.name}${cmdFile.ext}`);
-    if (response) client.logger.error(response);
-  });
-
-  const slashFiles = readdirSync("./slash").filter(file => file.endsWith(".js"));
-  for (const file of slashFiles) {
-    const command = new (require(`./slash/${file}`))(client);
-    const commandName = file.split(".")[0];
-    client.logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
-    
-    // Now set the name of the command with it's properties.
-    client.slashcmds.set(command.commandData.name, command);
+  // Let's load the slash commands, we're using a recursive method so you can have
+  // folders within folders, within folders, within folders, etc and so on.
+  function getSlashCommands(dir) {
+    const slashFiles = readdirSync(dir);
+    for (const file of slashFiles) {
+      const loc = path.resolve(dir, file);
+      const stats = statSync(loc);
+      if (stats.isDirectory()) {
+        getSlashCommands(path.resolve(dir, file));
+      } else {
+        const command = new (require(loc))(client);
+        const commandName = file.split(".")[0];
+        client.logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
+        client.slashcmds.set(command.commandData.name, command);
+      }
+    }
   }
+
+  // Here we load **commands** into memory, as a collection, so they're accessible
+  // here and everywhere else, and like the slash commands, sub-folders for days!
+  function getCommands(dir) {
+    const cmdFile = readdirSync(dir);
+    for (const file of cmdFile) {
+      const loc = path.resolve(dir, file);
+      const stats = statSync(loc);
+      if (stats.isDirectory()) {
+        getCommands(path.resolve(dir, file));
+      } else {
+        const commandName = file.split(".")[0];
+        client.logger.log(`Loading command: ${commandName}. 👌`, "log");
+        client.loadCommand(loc, commandName);
+      }
+    }
+  }
+
+  // Now let's call the functions to actually load up the commands!
+  getCommands("./commands");
+  getSlashCommands("./slash");
 
 
   // Then we load events, which will include our message and ready event.

@@ -7,14 +7,14 @@ const { codeBlock } = require("@discordjs/builders");
 
 // However it's, like, super ultra useful for troubleshooting and doing stuff
 // you don't want to put in a command.
-const Command = require("../base/Command.js");
+const Command = require("../../base/Command.js");
 
 module.exports = class Eval extends Command {
   constructor(client) {
     super(client, {
       name: "eval",
       description: "Evaluates arbitrary Javascript.",
-      category:"System",
+      category:"Owner",
       usage: "eval <expression>",
       aliases: ["ev"],
       permLevel: "Bot Owner"

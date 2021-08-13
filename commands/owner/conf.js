@@ -5,7 +5,7 @@ If a default setting is not specifically overwritten by a guild, changing a defa
 change it for that guild. The `add` action adds a key to the configuration of every guild in
 your bot. The `del` action removes the key also from every guild, and loses its value forever.
 */
-const Command = require("../base/Command.js");
+const Command = require("../../base/Command.js");
 const { codeBlock } = require("@discordjs/builders");
 
 module.exports = class Conf extends Command {
@@ -13,7 +13,7 @@ module.exports = class Conf extends Command {
     super(client, {
       name: "conf",
       description: "Modify the default configuration for all guilds.",
-      category: "System",
+      category: "Owner",
       usage: "conf <view/get/edit> <key> <value>",
       guildOnly: true,
       aliases: ["defaults"],

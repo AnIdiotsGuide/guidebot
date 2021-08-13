@@ -1,4 +1,4 @@
-const Command = require("../base/Command.js");
+const Command = require("../../base/Command.js");
 const { version } = require("discord.js");
 const { codeBlock } = require("@discordjs/builders");
 const moment = require("moment");

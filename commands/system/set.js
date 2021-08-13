@@ -10,7 +10,7 @@
 // const action = args[0]; const key = args[1]; const value = args.slice(2);
 // OR the same as:
 // const [action, key, ...value] = args;
-const Command = require("../base/Command.js");
+const Command = require("../../base/Command.js");
 const { codeBlock } = require("@discordjs/builders");
 
 module.exports = class SetCMD extends Command {
