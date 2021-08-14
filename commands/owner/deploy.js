@@ -5,7 +5,7 @@ module.exports = class Deploy extends Command {
     super(client, {
       name: "deploy",
       description: "This will deploy all slash commands.",
-      category: "OWner",
+      category: "Owner",
       usage: "deploy",
       permLevel: "Bot Owner",
       aliases: []
