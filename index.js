@@ -77,38 +77,72 @@ class GuideBot extends Client {
   that unloading happens in a consistent manner across the board.
   */
 
-  loadCommand(commandPath, commandName) {
+  async loadModule(type, modulePath, moduleName) {
     try {
-      const props = new (require(commandPath))(this);
-      props.conf.location = commandPath;
-      if (props.init) {
-        props.init(this);
+      switch (type) {
+        case "command": {
+          const props = new (require(modulePath))(this);
+          props.conf.location = modulePath;
+          if (props.init) {
+            props.init(this);
+          }
+      
+          this.commands.set(props.help.name, props);
+          props.conf.aliases.forEach(alias => {
+            this.aliases.set(alias, props.help.name);
+          });
+          return false;
+        }
+  
+        case "slash": {
+          const props = new (require(modulePath))(this);
+          this.logger.log(`Loading slash command: ${moduleName}. 👌`, "log");
+          props.conf.location = modulePath;
+          client.slashcmds.set(props.commandData.name, props);
+          break;
+        }
+  
+        case "event": {
+          client.logger.log(`Loading event: ${moduleName}. 👌`, "log");
+          const event = new(require(modulePath))(this);
+          client.events.set(event.conf.name, event);
+  
+          // This line is awesome by the way. Just sayin'.
+          client.on(moduleName, (...args) => event.run(...args));
+          delete require.cache[require.resolve(modulePath)];
+        }
       }
-
-      this.commands.set(props.help.name, props);
-      props.conf.aliases.forEach(alias => {
-        this.aliases.set(alias, props.help.name);
-      });
-      return false;
     } catch (e) {
-      return `Unable to load command ${commandName}: ${e}`;
+      return `Unable to load ${type} ${moduleName}: ${e}`
     }
   }
 
-  async unloadCommand(commandPath, commandName) {
-    let command;
-    if (this.commands.has(commandName)) {
-      command = this.commands.get(commandName);
-    } else if (this.aliases.has(commandName)) {
-      command = this.commands.get(this.aliases.get(commandName));
-    }
-    if (!command) return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
+  async unloadModule(type, commandPath, commandName) {
+    switch (type) {
+      case "command": {
+        let command;
+        if (this.commands.has(commandName)) {
+          command = this.commands.get(commandName);
+        } else if (this.aliases.has(commandName)) {
+          command = this.commands.get(this.aliases.get(commandName));
+        }
+        if (!command) return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
 
-    if (command.shutdown) {
-      await command.shutdown(this);
+        if (command.shutdown) {
+          await command.shutdown(this);
+        }
+        delete require.cache[require.resolve(commandPath)];
+        return false;
+      }
+
+      case "slash": {
+        let command;
+        if (this.slashcmds.has(commandName)) command = this.slashcmds.get(commandName);
+        if (!command) return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
+        delete require.cache[require.resolve(`${commandPath}${path.sep}${commandName}.js`)];
+        return false;
+      }
     }
-    delete require.cache[require.resolve(commandPath)];
-    return false;
   }
 
   async reloadEvent(client, eventName) {
@@ -218,19 +252,17 @@ const client = new GuideBot({ intents: config.intents, partials: config.partials
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
 
 const init = async () => {
+  async function getEvents(dir) {
+    for (const dirent of readdirSync(dir, { withFileTypes: true })) {
+      const loc = path.resolve(dir, dirent.name);
 
-// Let's load the events, which will include our message and ready event.
-  const eventFiles = readdirSync("./events/").filter(file => file.endsWith(".js"));
-  for (const file of eventFiles) {
-    const eventName = file.split(".")[0];
-    client.logger.log(`Loading event: ${eventName}. 👌`, "log");
-    
-    const event = new (require(`./events/${file}`))(client);
-    client.events.set(event.conf.name, event);
-
-    // This line is awesome by the way. Just sayin'.
-    client.on(eventName, (...args) => event.run(...args));
-    delete require.cache[require.resolve(`./events/${file}`)];
+      if (dirent.isFile()) {
+        const eventName = dirent.name.split(".")[0];
+        client.loadModule("event", loc, eventName);
+      } else if (dirent.isDirectory()) {
+        promises.push(getEvents(loc));
+      }
+    }
   }
 
   // Let's load the slash commands, we're using a recursive method so you can have
@@ -240,11 +272,8 @@ const init = async () => {
       const loc = path.resolve(dir, dirent.name);
     
       if (dirent.isFile()) {
-        const command = new (require(loc))(client);
         const commandName = dirent.name.split(".")[0];
-        client.logger.log(`Loading slash command: ${commandName}. 👌`, "log");
-        client.slashcmds.set(command.commandData.name, command);
-
+        client.loadModule("slash", loc, commandName);
       } else if (dirent.isDirectory()) {
         promises.push(getSlashCommands(loc));
       }
@@ -260,8 +289,7 @@ const init = async () => {
       if (dirent.isFile()) {
         const commandName = dirent.name.split(".")[0];
         client.logger.log(`Loading command: ${commandName}. 👌`, "log");
-        client.loadCommand(loc, commandName);
-
+        client.loadModule("command", loc, commandName);
       } else if (dirent.isDirectory()) {
         promises.push(getCommands(loc));
       }
@@ -269,6 +297,7 @@ const init = async () => {
   }
 
   // Now let's call the functions to actually load up the commands!
+  await getEvents("./events");
   await getCommands("./commands");
   await getSlashCommands("./slash");
 
