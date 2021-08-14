@@ -26,4 +26,4 @@ module.exports = class guildMemberAdd extends Event {
     // There's a place for more configs here.
     member.guild.channels.cache.find(c => c.name === settings.welcomeChannel).send(welcomeMessage).catch(console.error);
   }
-}
+};

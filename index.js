@@ -6,13 +6,13 @@ if (Number(process.version.slice(1).split(".")[0]) < 16) throw new Error("Node 1
 // Load up the discord.js library
 const { Client, Collection } = require("discord.js");
 // We also load the rest of the things we need in this file:
-const { promisify } = require("util");
-const readdir = promisify(require("fs").readdir);
+const { readdirSync } = require("fs");
 const config = require("./config.js");
 const Enmap = require("enmap");
-const klaw = require("klaw");
 const path = require("path");
 
+// Let's create an array for some promises we'll want to resolve later.
+const promises = [];
 
 class GuideBot extends Client {
   constructor(options) {
@@ -79,12 +79,12 @@ class GuideBot extends Client {
 
   loadCommand(commandPath, commandName) {
     try {
-      const props = new (require(`${commandPath}${path.sep}${commandName}`))(this);
-      this.logger.log(`Loading Command: ${props.help.name}. 👌`, "log");
+      const props = new (require(commandPath))(this);
       props.conf.location = commandPath;
       if (props.init) {
         props.init(this);
       }
+
       this.commands.set(props.help.name, props);
       props.conf.aliases.forEach(alias => {
         this.aliases.set(alias, props.help.name);
@@ -107,28 +107,7 @@ class GuideBot extends Client {
     if (command.shutdown) {
       await command.shutdown(this);
     }
-    delete require.cache[require.resolve(`${commandPath}${path.sep}${commandName}.js`)];
-    return false;
-  }
-
-  loadSlashCommand(commandPath, commandName) {
-    try {
-      const props = new (require(`${commandPath}${path.sep}${commandName}`))(this);
-      this.logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
-      props.conf.location = commandPath;
-      client.slashcmds.set(props.commandData.name, props);
-    } catch (e) {
-      return `Unable to load slash command ${commandName}: ${e}`;
-    }
-  }
-
-  async unloadSlashCommand(commandPath, commandName) {
-    let command;
-    if (this.slashcmds.has(commandName)) command = this.slashcmds.get(commandName);
-    
-    if (!command) return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
-
-    delete require.cache[require.resolve(`${commandPath}${path.sep}${commandName}.js`)];
+    delete require.cache[require.resolve(commandPath)];
     return false;
   }
 
@@ -240,32 +219,61 @@ const client = new GuideBot({ intents: config.intents, partials: config.partials
 
 const init = async () => {
 
-  // Here we load **commands** into memory, as a collection, so they're accessible
-  // here and everywhere else.
-  klaw("./commands").on("data", (item) => {
-    const cmdFile = path.parse(item.path);
-    if (!cmdFile.ext || cmdFile.ext !== ".js") return;
-    const response = client.loadCommand(cmdFile.dir, `${cmdFile.name}${cmdFile.ext}`);
-    if (response) client.logger.error(response);
-  });
-
-  klaw("./slash").on("data", (item) => {
-    const cmdFile = path.parse(item.path);
-    if (!cmdFile.ext || cmdFile.ext !== ".js") return;
-    const response = client.loadSlashCommand(cmdFile.dir, `${cmdFile.name}${cmdFile.ext}`);
-    if (response) client.logger.error(response);
-  });
-
-  const evtFiles = await readdir("./events/");
-  evtFiles.forEach(file => {
+  // Let's load the events, which will include our message and ready event.
+  const eventFiles = readdirSync("./events/").filter(file => file.endsWith(".js"));
+  for (const file of eventFiles) {
     const eventName = file.split(".")[0];
-    client.logger.log(`Loading Event: ${eventName}. 👌`, "log");
+    client.logger.log(`Loading event: ${eventName}. 👌`, "log");
+    
     const event = new (require(`./events/${file}`))(client);
     client.events.set(event.conf.name, event);
+
     // This line is awesome by the way. Just sayin'.
     client.on(eventName, (...args) => event.run(...args));
     delete require.cache[require.resolve(`./events/${file}`)];
-  });
+  }
+
+  // Let's load the slash commands, we're using a recursive method so you can have
+  // folders within folders, within folders, within folders, etc and so on.
+  async function getSlashCommands(dir) {
+    for (const dirent of readdirSync(dir, { withFileTypes: true })) {
+      const loc = path.resolve(dir, dirent.name);
+    
+      if (dirent.isFile()) {
+        const command = new (require(loc))(client);
+        const commandName = dirent.name.split(".")[0];
+        client.logger.log(`Loading slash command: ${commandName}. 👌`, "log");
+        client.slashcmds.set(command.commandData.name, command);
+
+      } else if (dirent.isDirectory()) {
+        promises.push(getSlashCommands(loc));
+      }
+    }
+  }
+
+  // Here we load **commands** into memory, as a collection, so they're accessible
+  // here and everywhere else, and like the slash commands, sub-folders for days!
+  async function getCommands(dir) {
+    for (const dirent of readdirSync(dir, { withFileTypes: true })) {
+      const loc = path.resolve(dir, dirent.name);
+    
+      if (dirent.isFile()) {
+        const commandName = dirent.name.split(".")[0];
+        client.logger.log(`Loading command: ${commandName}. 👌`, "log");
+        client.loadCommand(loc, commandName);
+
+      } else if (dirent.isDirectory()) {
+        promises.push(getCommands(loc));
+      }
+    }
+  }
+
+  // Now let's call the functions to actually load up the commands!
+  await getCommands("./commands");
+  await getSlashCommands("./slash");
+
+  // Now let's resolve those promises, loading all the commands at once.
+  await Promise.all(promises);
 
   client.levelCache = {};
   for (let i = 0; i < client.config.permLevels.length; i++) {

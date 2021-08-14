@@ -19,5 +19,5 @@ module.exports = class guildDelete extends Event {
     // Log the event.
     this.client.logger.cmd(`[GUILD JOIN] ${guild.id} added the bot. Owner: ${guild.ownerId}`);
   }
-}
+};
 

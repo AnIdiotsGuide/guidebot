@@ -45,6 +45,6 @@ class Logger {
   static cmd(content) {
     return this.log(content, "cmd");
   } 
-};
+}
 
 module.exports = Logger;

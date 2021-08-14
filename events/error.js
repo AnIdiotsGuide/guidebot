@@ -10,5 +10,5 @@ module.exports = class Error extends Event {
   async run(error) {
     this.client.logger.log(`An error event was sent by Discord.js: \n${JSON.stringify(error)}`, "error");
   }
-}
+};
 

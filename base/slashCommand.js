@@ -9,7 +9,7 @@ module.exports = class slashCommand {
   }) {
     this.client = client;
     this.commandData = { name, description, options, defaultPermissions };
-    this.conf = { guildOnly }
+    this.conf = { guildOnly };
   }
 
 };

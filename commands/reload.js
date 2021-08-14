@@ -34,7 +34,7 @@ module.exports = class Reload extends Command {
         return message.reply({ content: `The command \`${command.help.name}\` has been reloaded`, allowedMentions: { repliedUser: (replying === "true") }});
       }
 
-      case 'slash': {
+      case "slash": {
         const command = this.client.slashcmds.get(module);
 
         let response = await this.client.unloadSlashCommand(command.conf.location, command.commandData.name);

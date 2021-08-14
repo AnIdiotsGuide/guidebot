@@ -27,4 +27,4 @@ module.exports = class interactionCreate extends Event {
           .catch(e => console.error("An error occurred replying on an error", e));
     }
   }
-}
+};

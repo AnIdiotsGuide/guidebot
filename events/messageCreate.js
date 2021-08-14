@@ -2,6 +2,7 @@
 // Note that due to the binding of client to every event, every event
 // goes `client, other, args` when this function is run.
 
+const Event = require("../base/Event.js");
 
 module.exports = class messageCreate extends Event {
   constructor(client) {
@@ -86,4 +87,4 @@ This command requires level ${this.client.levelCache[cmd.conf.permLevel]} (${cmd
         .catch(e => console.error("An error occurred replying on an error", e));
     }
   }
-}
+};
