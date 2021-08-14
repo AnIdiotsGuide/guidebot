@@ -219,7 +219,7 @@ const client = new GuideBot({ intents: config.intents, partials: config.partials
 
 const init = async () => {
 
-  // Let's load the events, which will include our message and ready event.
+// Let's load the events, which will include our message and ready event.
   const eventFiles = readdirSync("./events/").filter(file => file.endsWith(".js"));
   for (const file of eventFiles) {
     const eventName = file.split(".")[0];

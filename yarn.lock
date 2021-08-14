@@ -31,10 +31,10 @@
     "discord-api-types" "^0.18.1"
     "tslib" "^2.3.0"
 
-"@discordjs/builders@^0.4.0":
-  "integrity" "sha512-EiwLltKph6TSaPJIzJYdzNc1PnA2ZNaaE0t0ODg3ghnpVHqfgd0YX9/srsleYHW2cw1sfIq+kbM+h0etf7GWLA=="
-  "resolved" "https://registry.npmjs.org/@discordjs/builders/-/builders-0.4.0.tgz"
-  "version" "0.4.0"
+"@discordjs/builders@^0.5.0":
+  "integrity" "sha512-HP5y4Rqw68o61Qv4qM5tVmDbWi4mdTFftqIOGRo33SNPpLJ1Ga3KEIR2ibKofkmsoQhEpLmopD1AZDs3cKpHuw=="
+  "resolved" "https://registry.npmjs.org/@discordjs/builders/-/builders-0.5.0.tgz"
+  "version" "0.5.0"
   dependencies:
     "@sindresorhus/is" "^4.0.1"
     "discord-api-types" "^0.22.0"
@@ -488,12 +488,12 @@
   "resolved" "https://registry.npmjs.org/discord-api-types/-/discord-api-types-0.22.0.tgz"
   "version" "0.22.0"
 
-"discord.js@^13.0.1":
-  "integrity" "sha512-pEODCFfxypBnGEYpSgjkn1jt70raCS1um7Zp0AXEfW1DcR29wISzQ/WeWdnjP5KTXGi0LTtkRiUjOsMgSoukxA=="
-  "resolved" "https://registry.npmjs.org/discord.js/-/discord.js-13.0.1.tgz"
-  "version" "13.0.1"
+"discord.js@^13.1.0":
+  "integrity" "sha512-gxO4CXKdHpqA+WKG+f5RNnd3srTDj5uFJHgOathksDE90YNq/Qijkd2WlMgTTMS6AJoEnHxI7G9eDQHCuZ+xDA=="
+  "resolved" "https://registry.npmjs.org/discord.js/-/discord.js-13.1.0.tgz"
+  "version" "13.1.0"
   dependencies:
-    "@discordjs/builders" "^0.4.0"
+    "@discordjs/builders" "^0.5.0"
     "@discordjs/collection" "^0.2.1"
     "@discordjs/form-data" "^3.0.1"
     "@sapphire/async-queue" "^1.1.4"
@@ -950,7 +950,7 @@
   dependencies:
     "type-fest" "^0.20.2"
 
-"graceful-fs@^4.1.2", "graceful-fs@^4.1.9":
+"graceful-fs@^4.1.2":
   "integrity" "sha512-qkIilPUYcNhJpd33n0GBXTB1MMPp14TxEsEs0pTrsSVucApsYzW5V+Q8Qxhik6KU3evy+qkAAowTByymK0avdg=="
   "resolved" "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.8.tgz"
   "version" "4.2.8"
@@ -1245,13 +1245,6 @@
   "version" "2.2.0"
   dependencies:
     "minimist" "^1.2.5"
-
-"klaw@^2.1.1":
-  "integrity" "sha1-QrdolHARacyRD9DRnOZ3tfs3ivE="
-  "resolved" "https://registry.npmjs.org/klaw/-/klaw-2.1.1.tgz"
-  "version" "2.1.1"
-  dependencies:
-    "graceful-fs" "^4.1.9"
 
 "levn@^0.4.1":
   "integrity" "sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ=="

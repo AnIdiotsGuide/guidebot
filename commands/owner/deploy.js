@@ -13,7 +13,7 @@ module.exports = class Deploy extends Command {
   }
 
   async run(message, args, level) { // eslint-disable-line no-unused-vars
-   // We'll partition the slash commands based on the guildOnly boolean.
+
     // Separating them into the correct objects defined in the array below.
     const [guildCmds, globalCmds] = this.client.slashcmds.partition(c => c.guildOnly);
 
@@ -22,10 +22,11 @@ module.exports = class Deploy extends Command {
 
     // We'll use set but please keep in mind that `set` is overkill for a singular command.
     // Set the guild commands like this.
-    await this.client.guilds.cache.get(message.guild.id)?.commands.set(guildCmds);
-    
+
+    await this.client.guilds.cache.get(message.guild.id)?.commands.set(guildCmds.map(c => c.commandData));
+
     // Then set the global commands like this.
-    await this.client.application?.commands.set(globalCmds).catch(e => console.log(e));
+    await this.client.application?.commands.set(globalCmds.map(c => c.commandData)).catch(e => console.log(e));
     
     // Reply to the user that the commands have been deployed.
     await message.channel.send("All commands deployed!");
