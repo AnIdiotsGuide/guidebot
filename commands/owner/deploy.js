@@ -1,11 +1,11 @@
-const Command = require("../base/Command.js");
+const Command = require("../../base/Command.js");
 
 module.exports = class Deploy extends Command {
   constructor(client) {
     super(client, {
       name: "deploy",
       description: "This will deploy all slash commands.",
-      category: "System",
+      category: "OWner",
       usage: "deploy",
       permLevel: "Bot Owner",
       aliases: []

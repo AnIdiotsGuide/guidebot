@@ -1,4 +1,4 @@
-const slashCommand = require("../base/slashCommand.js");
+const slashCommand = require("../../base/slashCommand.js");
 
 module.exports = class Leave extends slashCommand {
 
