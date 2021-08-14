@@ -26,10 +26,9 @@
   "dependencies": {
     "@discordjs/builders": "^0.2.0",
     "chalk": "^4.1.1",
-    "discord.js": "^13.0.1",
+    "discord.js": "^13.1.0",
     "enmap": "^5.8.6",
     "inquirer": "^8.0.0",
-    "klaw": "^2.1.1",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2"
   },
