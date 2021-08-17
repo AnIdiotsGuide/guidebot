@@ -77,43 +77,50 @@ class GuideBot extends Client {
   that unloading happens in a consistent manner across the board.
   */
 
-  async loadModule(type, modulePath, moduleName) {
+  async loadModule(dir, type, reloaded, reloadedName) {
     try {
-      switch (type) {
-        case "command": {
-          const props = new (require(modulePath))(this);
-          props.conf.location = modulePath;
-          if (props.init) {
-            props.init(this);
+      for (const dirent of readdirSync(dir, { withFileTypes: true })) {
+        const loc = path.resolve(dir, dirent.name);
+        if (dirent.isFile()) {
+          const name = dirent.name.split(".")[0];
+          
+          if (reloaded === true) {
+            if (name !== reloadedName) return; 
           }
-      
-          this.commands.set(props.help.name, props);
-          props.conf.aliases.forEach(alias => {
-            this.aliases.set(alias, props.help.name);
-          });
-          return false;
-        }
+
+          const file = new (require(loc))(this);
+          this.logger.log(`Loading ${type}: ${name}. 👌`, "log");  
+          file.conf.location = loc;
+          file.conf.dir = dir;
+          switch (type) {
+            case "event": {
+              client.events.set(file.conf.name, file);
+              // This line is awesome by the way. Just sayin'.
+              client.on(name, (...args) => file.run(...args));
+              delete require.cache[require.resolve(loc)];
+              break;
+            }
   
-        case "slash": {
-          const props = new (require(modulePath))(this);
-          this.logger.log(`Loading slash command: ${moduleName}. 👌`, "log");
-          props.conf.location = modulePath;
-          client.slashcmds.set(props.commandData.name, props);
-          break;
-        }
+            case "command": {
+              if (file.init) file.init(this);
+              this.commands.set(file.help.name, file);
+              file.conf.aliases.forEach(alias => {
+                this.aliases.set(alias, file.help.name);
+              });
+              break;
+            }
   
-        case "event": {
-          client.logger.log(`Loading event: ${moduleName}. 👌`, "log");
-          const event = new(require(modulePath))(this);
-          client.events.set(event.conf.name, event);
-  
-          // This line is awesome by the way. Just sayin'.
-          client.on(moduleName, (...args) => event.run(...args));
-          delete require.cache[require.resolve(modulePath)];
+            case "slash": {
+              client.slashcmds.set(file.commandData.name, file);
+              break;
+            }
+          }
+        } else if (dirent.isDirectory()) {
+          promises.push(this.loadModule(loc, type));
         }
       }
     } catch (e) {
-      return `Unable to load ${type} ${moduleName}: ${e}`
+      return `Unable to load ${type}: ${e}`;
     }
   }
 
@@ -139,18 +146,18 @@ class GuideBot extends Client {
         let command;
         if (this.slashcmds.has(commandName)) command = this.slashcmds.get(commandName);
         if (!command) return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
-        delete require.cache[require.resolve(`${commandPath}${path.sep}${commandName}.js`)];
+        delete require.cache[require.resolve(commandPath)];
         return false;
       }
     }
   }
 
-  async reloadEvent(client, eventName) {
+  async reloadEvent(client, eventName, loc) {
     client.removeAllListeners(eventName);
-    delete require.cache[require.resolve(`./events/${eventName}.js`)];
-    const event = new(require(`./events/${eventName}.js`))(client);
+    delete require.cache[require.resolve(loc)];
+    const event = new(require(loc))(client);
     client.on(eventName, (...args) => event.run(...args));
-    delete require.cache[require.resolve(`./events/${eventName}.js`)];
+    delete require.cache[require.resolve(loc)];
   }
 
   /*
@@ -252,54 +259,11 @@ const client = new GuideBot({ intents: config.intents, partials: config.partials
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
 
 const init = async () => {
-  async function getEvents(dir) {
-    for (const dirent of readdirSync(dir, { withFileTypes: true })) {
-      const loc = path.resolve(dir, dirent.name);
-
-      if (dirent.isFile()) {
-        const eventName = dirent.name.split(".")[0];
-        client.loadModule("event", loc, eventName);
-      } else if (dirent.isDirectory()) {
-        promises.push(getEvents(loc));
-      }
-    }
-  }
-
-  // Let's load the slash commands, we're using a recursive method so you can have
-  // folders within folders, within folders, within folders, etc and so on.
-  async function getSlashCommands(dir) {
-    for (const dirent of readdirSync(dir, { withFileTypes: true })) {
-      const loc = path.resolve(dir, dirent.name);
-    
-      if (dirent.isFile()) {
-        const commandName = dirent.name.split(".")[0];
-        client.loadModule("slash", loc, commandName);
-      } else if (dirent.isDirectory()) {
-        promises.push(getSlashCommands(loc));
-      }
-    }
-  }
-
-  // Here we load **commands** into memory, as a collection, so they're accessible
-  // here and everywhere else, and like the slash commands, sub-folders for days!
-  async function getCommands(dir) {
-    for (const dirent of readdirSync(dir, { withFileTypes: true })) {
-      const loc = path.resolve(dir, dirent.name);
-    
-      if (dirent.isFile()) {
-        const commandName = dirent.name.split(".")[0];
-        client.logger.log(`Loading command: ${commandName}. 👌`, "log");
-        client.loadModule("command", loc, commandName);
-      } else if (dirent.isDirectory()) {
-        promises.push(getCommands(loc));
-      }
-    }
-  }
 
   // Now let's call the functions to actually load up the commands!
-  await getEvents("./events");
-  await getCommands("./commands");
-  await getSlashCommands("./slash");
+  await client.loadModule("./events", "event");
+  await client.loadModule("./commands", "command");
+  await client.loadModule("./slash", "slash");
 
   // Now let's resolve those promises, loading all the commands at once.
   await Promise.all(promises);

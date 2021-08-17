@@ -2,7 +2,7 @@
 // If this event isn't firing, you need to enable the `GUILD_MEMBERS` privileged intent
 // in your bot's application page.
 
-const Event = require("../base/Event.js");
+const Event = require("../../base/Event.js");
 
 module.exports = class guildMemberAdd extends Event {
   constructor(client) {

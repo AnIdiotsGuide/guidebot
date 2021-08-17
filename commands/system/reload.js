@@ -25,10 +25,10 @@ module.exports = class Reload extends Command {
       case "command": {
         const command = this.client.commands.get(module) || this.client.commands.get(this.client.aliases.get(module));
         
-        let response = await this.client.unloadModule('command', command.conf.location, command.help.name);
+        let response = await this.client.unloadModule("command", command.conf.location, command.help.name);
         if (response) return message.reply({ content: `Error Unloading: ${response}`, allowedMentions: { repliedUser: (replying === "true") }});
 
-        response = await this.client.loadModule('command', command.conf.location, command.help.name);
+        response = await this.client.loadModule(command.conf.dir, "command", true, command.help.name);
         if (response) return message.reply({ content: `Error Loading: ${response}`, allowedMentions: { repliedUser: (replying === "true") }});
 
         return message.reply({ content: `The command \`${command.help.name}\` has been reloaded`, allowedMentions: { repliedUser: (replying === "true") }});
@@ -37,10 +37,10 @@ module.exports = class Reload extends Command {
       case "slash": {
         const command = this.client.slashcmds.get(module);
 
-        let response = await this.client.unloadModule('slash', command.conf.location, command.commandData.name);
+        let response = await this.client.unloadModule("slash", command.conf.location, command.commandData.name);
         if (response) return message.reply({ content: `Error Unloading: ${response}`, allowedMentions: { repliedUser: (replying === "true") }});
 
-        response = await this.client.loadModule('slash', command.conf.location, command.commandData.name);
+        response = await this.client.loadModule(command.conf.dir, "slash", true, command.commandData.name);
         if (response) return message.reply({ content: `Error Loading: ${response}`, allowedMentions: { repliedUser: (replying === "true") }});
 
         return message.reply({ content: `The slash command \`${command.commandData.name}\` has been reloaded`, allowedMentions: { repliedUser: (replying === "true") }});
@@ -50,7 +50,7 @@ module.exports = class Reload extends Command {
         const event = this.client.events.get(module);
         if (!event) return message.reply({ content: `${module} is neither a command, a command alias, or an event. Please check your spelling and try again.`, allowedMentions: { repliedUser: (replying === "true") }});
 
-        const response = await this.client.reloadEvent(this.client, event.conf.name);
+        const response = await this.client.reloadEvent(this.client, event.conf.name, event.conf.location);
         if (response) return message.reply({ content: `Error Unloading: ${response}`, allowedMentions: { repliedUser: (replying === "true") }});
 
         return message.reply({ content: `The event \`${event.conf.name}\` has been reloaded`, allowedMentions: { repliedUser: (replying === "true") }});

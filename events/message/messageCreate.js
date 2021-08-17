@@ -2,7 +2,7 @@
 // Note that due to the binding of client to every event, every event
 // goes `client, other, args` when this function is run.
 
-const Event = require("../base/Event.js");
+const Event = require("../../base/Event.js");
 
 module.exports = class messageCreate extends Event {
   constructor(client) {
