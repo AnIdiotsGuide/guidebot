@@ -9,7 +9,7 @@ exports.commandData = {
   name: "leave",
   description: "Make's the user leave the guild.",
   options: [],
-  defaultPermissions: true,
+  defaultPermission: true,
 };
 
 // Set this to false if you want it to be global.

@@ -20,7 +20,7 @@ exports.commandData = {
   name: "stats",
   description: "Show's the bots stats.",
   options: [],
-  defaultPermissions: true,
+  defaultPermission: true,
 };
 
 // Set this to false if you want it to be global.

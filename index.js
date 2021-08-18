@@ -13,8 +13,7 @@ try {
 // Load up the discord.js library
 const { Client, Collection} = require("discord.js");
 // We also load the rest of the things we need in this file:
-const { promisify } = require("util");
-const readdir = promisify(require("fs").readdir);
+const { readdirSync } = require("fs");
 const Enmap = require("enmap");
 const config = require("./config.js");
 
@@ -60,29 +59,26 @@ const init = async () => {
 
   // Here we load **commands** into memory, as a collection, so they're accessible
   // here and everywhere else.
-  const cmdFiles = await readdir("./commands/");
-  cmdFiles.forEach(f => {
-    if (!f.endsWith(".js")) return;
-    const response = client.loadCommand(f);
+  const commands = readdirSync("./commands/").filter(file => file.endsWith(".js"));
+  for (const file of commands) {
+    const response = client.loadCommand(file);
     if (response) console.log(response);
-  });
+  }
 
   // Now we load any **slash** commands you may have in the ./slash directory.
-  readdir("./slash", (err, files) => {
-    if (err) return console.error(err);
-    files.forEach(file => {
-      if (!file.endsWith(".js")) return;
-      const props = require(`./slash/${file}`);
-      const commandName = file.split(".")[0];
-      client.logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
-      // Now set the name of the command with it's properties.
-      client.slashcmds.set(props.commandData.name, props);
-    });
-  });
+  const slashFiles = readdirSync("./slash").filter(file => file.endsWith(".js"));
+  for (const file of slashFiles) {
+    const command = require(`./slash/${file}`);
+    const commandName = file.split(".")[0];
+    client.logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
+    
+    // Now set the name of the command with it's properties.
+    client.slashcmds.set(command.commandData.name, command);
+  }
 
   // Then we load events, which will include our message and ready event.
-  const evtFiles = await readdir("./events/");
-  evtFiles.forEach(file => {
+  const eventFiles = readdirSync("./events/").filter(file => file.endsWith(".js"));
+  for (const file of eventFiles) {
     const eventName = file.split(".")[0];
     client.logger.log(`Loading Event: ${eventName}. 👌`, "log");
     const event = require(`./events/${file}`);
@@ -90,7 +86,7 @@ const init = async () => {
     // provided by the discord.js event. 
     // This line is awesome by the way. Just sayin'.
     client.on(eventName, event.bind(null, client));
-  });
+  }  
 
   // Generate a cache of client permissions for pretty perm names in commands.
   client.levelCache = {};

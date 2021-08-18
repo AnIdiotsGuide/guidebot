@@ -14,7 +14,7 @@ exports.commandData = {
   name: "ping",
   description: "Pongs when pinged.",
   options: [],
-  defaultPermissions: true,
+  defaultPermission: true,
 };
 
 // Set this to false if you want it to be global.
