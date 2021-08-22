@@ -1,3 +1,7 @@
+const logger = require("../modules/Logger.js");
+const { getSettings, permlevel } = require("../modules/functions.js");
+const config = require("../config.js");
+
 // The MESSAGE event runs anytime a message is received
 // Note that due to the binding of client to every event, every event
 // goes `client, other, args` when this function is run.
@@ -9,7 +13,7 @@ module.exports = async (client, message) => {
 
   // Grab the settings for this server from Enmap.
   // If there is no guild, get default conf (DMs)
-  const settings = message.settings = client.getSettings(message.guild);
+  const settings = message.settings = getSettings(client, message.guild);
 
   // Checks if the bot was mentioned, with no message after it, returns the prefix.
   const prefixMention = new RegExp(`^<@!?${client.user.id}>( |)$`);
@@ -32,7 +36,7 @@ module.exports = async (client, message) => {
   if (message.guild && !message.member) await message.guild.members.fetch(message.author);
 
   // Get the user or member's permission level from the elevation
-  const level = client.permlevel(message);
+  const level = permlevel(message);
 
   // Check whether the command, or alias, exist in the collections defined
   // in app.js.
@@ -51,8 +55,8 @@ module.exports = async (client, message) => {
   if (level < client.levelCache[cmd.conf.permLevel]) {
     if (settings.systemNotice === "true") {
       return message.channel.send(`You do not have permission to use this command.
-  Your permission level is ${level} (${client.config.permLevels.find(l => l.level === level).name})
-  This command requires level ${client.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
+Your permission level is ${level} (${config.permLevels.find(l => l.level === level).name})
+This command requires level ${client.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
     } else {
       return;
     }
@@ -69,7 +73,7 @@ module.exports = async (client, message) => {
   // If the command exists, **AND** the user has permission, run it.
   try {
     await cmd.run(client, message, args, level);
-    client.logger.log(`${client.config.permLevels.find(l => l.level === level).name} ${message.author.id} ran command ${cmd.help.name}`, "cmd");
+    logger.log(`${config.permLevels.find(l => l.level === level).name} ${message.author.id} ran command ${cmd.help.name}`, "cmd");
   } catch (e) {
     message.channel.send({ content: `There was a problem with your request.\n\`\`\`${e.message}\`\`\`` })
       .catch(e => console.error("An error occurred replying on an error", e));

@@ -1,3 +1,4 @@
+const logger = require("../modules/Logger.js");
 module.exports = async (client, interaction) => {
   // If it's not a command, stop.
   if (!interaction.isCommand()) return;
@@ -8,6 +9,8 @@ module.exports = async (client, interaction) => {
   // Run the command
   try {
     await cmd.run(client, interaction);
+    logger.log(`${interaction.user.id} ran slash command ${interaction.commandName}`, "cmd");
+
   } catch (e) {
     console.error(e);
     if (interaction.replied) 

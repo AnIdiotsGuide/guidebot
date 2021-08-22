@@ -1,14 +1,21 @@
+const config = require("../config.js");
+const { settings } = require("../modules/settings.js");
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
-  const replying = client.settings.ensure(message.guild.id, client.config.defaultSettings).commandReply;
-  if (!args || args.length < 1) return message.reply({ content: "Must provide a command to reload. Derp.", allowedMentions: { repliedUser: (replying === "true") }});
-  const command = client.commands.get(args[0]) || client.commands.get(client.aliases.get(args[0]));
-  let response = await client.unloadCommand(args[0]);
-  if (response) return message.reply({ content: `Error Unloading: ${response}`, allowedMentions: { repliedUser: (replying === "true") }});
+  const replying = settings.ensure(message.guild.id, config.defaultSettings).commandReply;
+  if (!args || args.length < 1) return message.reply("Must provide a command name to reload.");
+  const commandName = args[0];
+  // Check if the command exists and is valid
+  if (!client.commands.has(commandName)) {
+    return message.reply("That command does not exist");
+  }
+  // the path is relative to the *current folder*, so just ./filename.js
+  delete require.cache[require.resolve(`./${commandName}.js`)];
+  // We also need to delete and reload the command from the client.commands Enmap
+  client.commands.delete(commandName);
+  const props = require(`./${commandName}.js`);
+  client.commands.set(commandName, props);
 
-  response = client.loadCommand(command.help.name);
-  if (response) return message.reply({ content: `Error Loading: ${response}`, allowedMentions: { repliedUser: (replying === "true") }});
-
-  message.reply({ content: `The command \`${command.help.name}\` has been reloaded`, allowedMentions: { repliedUser: (replying === "true") }});
+  message.reply({ content: `The command \`${commandName}\` has been reloaded`, allowedMentions: { repliedUser: (replying === "true") }});
 };
 
 exports.conf = {

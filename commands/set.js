@@ -11,15 +11,16 @@
 // OR the same as:
 // const [action, key, ...value] = args;
 const { codeBlock } = require("@discordjs/builders");
+const { settings } = require("../modules/settings.js");
 
 exports.run = async (client, message, [action, key, ...value], level) => { // eslint-disable-line no-unused-vars
 
   // Retrieve current guild settings (merged) and overrides only.
-  const settings = message.settings;
-  const defaults = client.settings.get("default");
-  const overrides = client.settings.get(message.guild.id);
-  const replying = settings.commandReply;
-  if (!client.settings.has(message.guild.id)) client.settings.set(message.guild.id, {});
+  const serverSettings = message.settings;
+  const defaults = settings.get("default");
+  const overrides = settings.get(message.guild.id);
+  const replying = serverSettings.commandReply;
+  if (!settings.has(message.guild.id)) settings.set(message.guild.id, {});
   
   // Edit an existing key value
   if (action === "edit") {
@@ -72,7 +73,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
   } else {
     // Otherwise, the default action is to return the whole configuration;
     const array = [];
-    Object.entries(settings).forEach(([key, value]) => {
+    Object.entries(serverSettings).forEach(([key, value]) => {
       array.push(`${key}${" ".repeat(20 - key.length)}::  ${value}`); 
     });
     await message.channel.send(codeBlock("asciidoc", `= Current Guild Settings =

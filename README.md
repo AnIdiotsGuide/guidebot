@@ -31,7 +31,6 @@ for more info.
 
 ## Intents
 
-Guidebot uses intents which are required as of October 7, 2020.
 You can enable privileged intents in your bot page
 (the one you got your token from) under `Privileged Gateway Intents`.
 
@@ -46,16 +45,16 @@ For more info about intents checkout the [official Discord.js guide page](https:
 
 ## Downloading
 
-Create a folder within your projects directory and run the following:
+Create a folder within your projects directory and run the following inside it:
 
 `git clone https://github.com/anidiotsguide/guidebot.git .`
 
 Once finished:
 
-- In the folder from where you ran the git command, run `npm install`, which will install the required packages,
-and it will then run the installer, make sure you have your token at hand to paste into the console.
+- In the folder from where you ran the git command, run `npm install`, which will install the required packages.
 - **If you get any error about python or msibuild.exe or binding, read the requirements section again!**
-- The installer will create the `config.js` file for you, if it doesn't work we have supplied an example config file.
+- Rename `config.js.example` to `config.js`, and give it the required intents and any partials you may require.
+- Rename `.env-example` to `.env` and put in your bot token in it and save.
 
 ## Starting the bot
 

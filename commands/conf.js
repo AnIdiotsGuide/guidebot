@@ -7,12 +7,14 @@ your bot. The `del` action removes the key also from every guild, and loses its 
 */
 
 const { codeBlock } = require("@discordjs/builders");
+const config = require("../config.js");
+const { settings } = require("../modules/settings.js");
 
 exports.run = async (client, message, [action, key, ...value], level) => { // eslint-disable-line no-unused-vars
 
   // Retrieve Default Values from the default settings in the bot.
-  const defaults = client.settings.get("default");
-  const replying = client.settings.ensure(message.guild.id, client.config.defaultSettings).commandReply;
+  const defaults = settings.get("default");
+  const replying = settings.ensure(message.guild.id, config.defaultSettings).commandReply;
 
   // Adding a new key adds it to every guild (it will be visible to all of them)
   if (action === "add") {
@@ -24,7 +26,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     defaults[key] = value.join(" ");
   
     // One the settings is modified, we write it back to the collection
-    client.settings.set("default", defaults);
+    settings.set("default", defaults);
     message.reply({ content: `${key} successfully added with the value of ${value.join(" ")}`, allowedMentions: { repliedUser: (replying === "true") }});
   } else
   
@@ -36,7 +38,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
 
     defaults[key] = value.join(" ");
 
-    client.settings.set("default", defaults);
+    settings.set("default", defaults);
     message.reply({ content: `${key} successfully edited to ${value.join(" ")}`, allowedMentions: { repliedUser: (replying === "true") }});
   } else
   
@@ -54,13 +56,13 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
 
       // We delete the default `key` here.
       delete defaults[key];
-      client.settings.set("default", defaults);
+      settings.set("default", defaults);
       
       // then we loop on all the guilds and remove this key if it exists.
       // "if it exists" is done with the filter (if the key is present and it's not the default config!)
-      for (const [guildId, conf] of client.settings.filter((setting, id) => setting[key] && id !== "default")) {
+      for (const [guildId, conf] of settings.filter((setting, id) => setting[key] && id !== "default")) {
         delete conf[key];
-        client.settings.set(guildId, conf);
+        settings.set(guildId, conf);
       }
       
       message.reply({ content: `${key} was successfully deleted.`, allowedMentions: { repliedUser: (replying === "true") }});
@@ -80,7 +82,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
   // Display all default settings.
   } else {
     const array = [];
-    Object.entries(client.settings.get("default")).forEach(([key, value]) => {
+    Object.entries(settings.get("default")).forEach(([key, value]) => {
       array.push(`${key}${" ".repeat(20 - key.length)}::  ${value}`); 
     });
     await message.channel.send(codeBlock("asciidoc", `= Bot Default Settings =
