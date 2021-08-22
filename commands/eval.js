@@ -38,7 +38,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
     const cleaned = await clean(client, evaled);
     message.channel.send(codeBlock("js", cleaned));
   } catch (err) {
-    message.channel.send(codeBlock("xl", `ERROR ${await client.clean(client, err)}`));
+    message.channel.send(codeBlock("xl", `ERROR ${await clean(client, err)}`));
   }
 };
 
