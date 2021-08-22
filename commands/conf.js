@@ -8,6 +8,7 @@ your bot. The `del` action removes the key also from every guild, and loses its 
 
 const { codeBlock } = require("@discordjs/builders");
 const config = require("../config.js");
+const { awaitReply } = require("../modules/functions.js");
 const { settings } = require("../modules/settings.js");
 
 exports.run = async (client, message, [action, key, ...value], level) => { // eslint-disable-line no-unused-vars
@@ -49,7 +50,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     if (!defaults[key]) return message.reply({ content: "This key does not exist in the settings", allowedMentions: { repliedUser: (replying === "true") }});
     
     // Throw the 'are you sure?' text at them.
-    const response = await client.awaitReply(message, `Are you sure you want to permanently delete ${key} from all guilds? This **CANNOT** be undone.`);
+    const response = await awaitReply(message, `Are you sure you want to permanently delete ${key} from all guilds? This **CANNOT** be undone.`);
 
     // If they respond with y or yes, continue.
     if (["y", "yes"].includes(response)) {

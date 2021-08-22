@@ -19,4 +19,3 @@ exports.help = {
   description: "Tells you your permission level for the current message location.",
   usage: "mylevel"
 };
-// const settings = require("../modules/settings.js");

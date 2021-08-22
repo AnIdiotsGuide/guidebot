@@ -12,6 +12,7 @@
 // const [action, key, ...value] = args;
 const { codeBlock } = require("@discordjs/builders");
 const { settings } = require("../modules/settings.js");
+const { awaitReply } = require("../modules/functions.js");
 
 exports.run = async (client, message, [action, key, ...value], level) => { // eslint-disable-line no-unused-vars
 
@@ -51,7 +52,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     if (!overrides[key]) return message.reply({ content: "This key does not have an override and is already using defaults.", allowedMentions: { repliedUser: (replying === "true") }});
     
     // Good demonstration of the custom awaitReply method in `./modules/functions.js` !
-    const response = await client.awaitReply(message, `Are you sure you want to reset ${key} to the default value?`);
+    const response = await awaitReply(message, `Are you sure you want to reset ${key} to the default value?`);
 
     // If they respond with y or yes, continue.
     if (["y", "yes"].includes(response.toLowerCase())) {

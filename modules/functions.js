@@ -57,7 +57,7 @@ function getSettings(guild) {
 
   USAGE
 
-  const response = await client.awaitReply(msg, "Favourite Color?");
+  const response = await awaitReply(msg, "Favourite Color?");
   msg.reply(`Oh, I really love ${response} too!`);
 
 */
