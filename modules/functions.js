@@ -88,14 +88,6 @@ Object.defineProperty(String.prototype, "toProperCase", {
   }
 });
 
-// <Array>.random() returns a single random element from an array
-// [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.
-Object.defineProperty(Array.prototype, "random", {
-  value: function() {
-    return this[Math.floor(Math.random() * this.length)];
-  }
-});
-
 // These 2 process methods will catch exceptions and give *more details* about the error and stack trace.
 process.on("uncaughtException", (err) => {
   const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, "g"), "./");

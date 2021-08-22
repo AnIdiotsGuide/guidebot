@@ -5,7 +5,7 @@ if (Number(process.version.slice(1).split(".")[0]) < 16) throw new Error("Node 1
 require("dotenv").config();
 
 // Load up the discord.js library
-const { Client, Collection} = require("discord.js");
+const { Client, Collection } = require("discord.js");
 // We also load the rest of the things we need in this file:
 const { readdirSync } = require("fs");
 const { intents, partials, permLevels } = require("./config.js");
@@ -13,10 +13,7 @@ const logger = require("./modules/Logger.js");
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're referring to. Your client.
-const client = new Client({
-  intents: intents,
-  partials: partials
-});
+const client = new Client({ intents, partials });
 
 // Aliases, commands and slash commands are put in collections where they can be
 // read from, catalogued, listed, etc.
