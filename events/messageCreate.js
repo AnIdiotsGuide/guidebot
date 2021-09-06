@@ -7,6 +7,8 @@ const config = require("../config.js");
 // goes `client, other, args` when this function is run.
 
 module.exports = async (client, message) => {
+  // Grab the container from the client to reduce line length.
+  const { container } = client;
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop (we call that "botception").
   if (message.author.bot) return;
@@ -40,7 +42,7 @@ module.exports = async (client, message) => {
 
   // Check whether the command, or alias, exist in the collections defined
   // in app.js.
-  const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
+  const cmd = container.commands.get(command) || container.commands.get(container.aliases.get(command));
   // using this const varName = thing OR otherThing; is a pretty efficient
   // and clean way to grab one of 2 values!
   if (!cmd) return;
@@ -52,11 +54,11 @@ module.exports = async (client, message) => {
 
   if (!cmd.conf.enabled) return;
 
-  if (level < client.levelCache[cmd.conf.permLevel]) {
+  if (level < container.levelCache[cmd.conf.permLevel]) {
     if (settings.systemNotice === "true") {
       return message.channel.send(`You do not have permission to use this command.
 Your permission level is ${level} (${config.permLevels.find(l => l.level === level).name})
-This command requires level ${client.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
+This command requires level ${container.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
     } else {
       return;
     }
@@ -75,7 +77,8 @@ This command requires level ${client.levelCache[cmd.conf.permLevel]} (${cmd.conf
     await cmd.run(client, message, args, level);
     logger.log(`${config.permLevels.find(l => l.level === level).name} ${message.author.id} ran command ${cmd.help.name}`, "cmd");
   } catch (e) {
-    message.channel.send({ content: `There was a problem with your request.\n\`\`\`${e.message}\`\`\`` })
-      .catch(e => console.error("An error occurred replying on an error", e));
+    return;
+    // message.channel.send({ content: `There was a problem with your request.\n\`\`\`${e.content}\`\`\`` })
+    // .catch(e => console.error("An error occurred replying on an error", e));
   }
 };

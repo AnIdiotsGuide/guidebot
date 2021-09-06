@@ -17,9 +17,25 @@ const client = new Client({ intents, partials });
 
 // Aliases, commands and slash commands are put in collections where they can be
 // read from, catalogued, listed, etc.
-client.commands = new Collection();
-client.aliases = new Collection();
-client.slashcmds = new Collection();
+const commands = new Collection();
+const aliases = new Collection();
+const slashcmds = new Collection();
+
+// Generate a cache of client permissions for pretty perm names in commands.
+const levelCache = {};
+for (let i = 0; i < permLevels.length; i++) {
+  const thisLevel = permLevels[i];
+  levelCache[thisLevel.name] = thisLevel.level;
+}
+
+// To reduce client pollution we'll create a single container property
+// that we can attach everything we need to.
+client.container = {
+  commands,
+  aliases,
+  slashcmds,
+  levelCache
+};
 
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
@@ -32,9 +48,9 @@ const init = async () => {
   for (const file of commands) {
     const props = require(`./commands/${file}`);
     logger.log(`Loading Command: ${props.help.name}. 👌`, "log");
-    client.commands.set(props.help.name, props);
+    client.container.commands.set(props.help.name, props);
     props.conf.aliases.forEach(alias => {
-      client.aliases.set(alias, props.help.name);
+      client.container.aliases.set(alias, props.help.name);
     });
   }
 
@@ -46,7 +62,7 @@ const init = async () => {
     logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
     
     // Now set the name of the command with it's properties.
-    client.slashcmds.set(command.commandData.name, command);
+    client.container.slashcmds.set(command.commandData.name, command);
   }
 
   // Then we load events, which will include our message and ready event.
@@ -60,13 +76,6 @@ const init = async () => {
     // This line is awesome by the way. Just sayin'.
     client.on(eventName, event.bind(null, client));
   }  
-
-  // Generate a cache of client permissions for pretty perm names in commands.
-  client.levelCache = {};
-  for (let i = 0; i < permLevels.length; i++) {
-    const thisLevel = permLevels[i];
-    client.levelCache[thisLevel.name] = thisLevel.level;
-  }
 
   // Threads are currently in BETA.
   // This event will fire when a thread is created, if you want to expand

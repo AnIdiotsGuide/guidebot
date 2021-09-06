@@ -3,7 +3,7 @@ const { settings } = require("../modules/settings.js");
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   const replying = settings.ensure(message.guild.id, config.defaultSettings).commandReply;
   await message.reply({ content: "Bot is shutting down.", allowedMentions: { repliedUser: (replying === "true") }});
-  await Promise.all(client.commands.map(cmd =>
+  await Promise.all(client.container.commands.map(cmd =>
     client.unloadCommand(cmd)
   ));
   process.exit(0);

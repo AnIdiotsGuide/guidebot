@@ -5,7 +5,6 @@
 
 const { codeBlock } = require("@discordjs/builders");
 
-
 /*
   MESSAGE CLEAN FUNCTION
 
@@ -13,7 +12,7 @@ const { codeBlock } = require("@discordjs/builders");
   escaped so they're shown more easily. As a bonus it resolves promises
   and stringifies objects!
   This is mostly only used by the Eval and Exec commands.
-  */
+*/
 async function clean(client, text) {
   if (text && text.constructor.name == "Promise")
     text = await text;
@@ -33,13 +32,9 @@ async function clean(client, text) {
 // you don't want to put in a command.
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   const code = args.join(" ");
-  try {
-    const evaled = eval(code);
-    const cleaned = await clean(client, evaled);
-    message.channel.send(codeBlock("js", cleaned));
-  } catch (err) {
-    message.channel.send(codeBlock("xl", `ERROR ${await clean(client, err)}`));
-  }
+  const evaled = eval(code);
+  const cleaned = await clean(client, evaled);
+  message.channel.send(codeBlock("js", cleaned));
 };
 
 exports.conf = {

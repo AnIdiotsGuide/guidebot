@@ -103,4 +103,4 @@ process.on("unhandledRejection", err => {
   console.error(err);
 });
 
-module.exports = {getSettings, permlevel, awaitReply};
+module.exports = { getSettings, permlevel, awaitReply };

@@ -104,7 +104,7 @@ const config = {
     { level: 10,
       name: "Bot Owner", 
       // Another simple check, compares the message author id to a list of owners found in the bot application.
-      check: (message) => message.client.owners.includes(message.author.id)
+      check: (message) => message.author.id === process.env.OWNER
     }
   ]
 };

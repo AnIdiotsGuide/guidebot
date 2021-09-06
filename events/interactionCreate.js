@@ -2,8 +2,8 @@ const logger = require("../modules/Logger.js");
 module.exports = async (client, interaction) => {
   // If it's not a command, stop.
   if (!interaction.isCommand()) return;
-  // Grab the command data from the client.slashcmds Collection
-  const cmd = client.slashcmds.get(interaction.commandName);
+  // Grab the command data from the client.container.slashcmds Collection
+  const cmd = client.container.slashcmds.get(interaction.commandName);
   // If that command doesn't exist, silently exit and do nothing
   if (!cmd) return;
   // Run the command

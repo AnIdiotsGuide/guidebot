@@ -1,9 +1,9 @@
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
 // Filter the slash commands to find guild only ones.
-  const guildCmds = client.slashcmds.filter(c => c.guildOnly).map(c => c.commandData);
+  const guildCmds = client.container.slashcmds.filter(c => c.guildOnly).map(c => c.commandData);
 
   // Now we filter out global commands by inverting the filter.
-  const globalCmds = client.slashcmds.filter(c => !c.guildOnly).map(c => c.commandData);
+  const globalCmds = client.container.slashcmds.filter(c => !c.guildOnly).map(c => c.commandData);
 
   // Give the user a notification the commands are deploying.
   await message.channel.send("Deploying commands!");
