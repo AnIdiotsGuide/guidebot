@@ -5,7 +5,7 @@ const { cyan, red, magenta, gray, yellow, white, green } = require("colorette");
 const { Timestamp } = require("@sapphire/time-utilities");
 
 exports.log = (content, type = "log") => {
-  const timestamp = cyan(new Timestamp("YYYY-MM-DD HH:mm:ss"));
+  const timestamp = `[${cyan(new Timestamp("YYYY-MM-DD HH:mm:ss"))}]:`;
   
   switch (type) {
     case "log": return console.log(`${timestamp} ${gray(type.toUpperCase())} ${content} `);
