@@ -77,8 +77,7 @@ This command requires level ${container.levelCache[cmd.conf.permLevel]} (${cmd.c
     await cmd.run(client, message, args, level);
     logger.log(`${config.permLevels.find(l => l.level === level).name} ${message.author.id} ran command ${cmd.help.name}`, "cmd");
   } catch (e) {
-    return;
-    // message.channel.send({ content: `There was a problem with your request.\n\`\`\`${e.content}\`\`\`` })
-    // .catch(e => console.error("An error occurred replying on an error", e));
+    message.channel.send({ content: `There was a problem with your request.\n\`\`\`${e.content}\`\`\`` })
+      .catch(e => console.error("An error occurred replying on an error", e));
   }
 };
