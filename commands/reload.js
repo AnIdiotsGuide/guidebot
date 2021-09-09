@@ -7,7 +7,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   if (!args || args.length < 1) return message.reply("Must provide a command name to reload.");
   const command = container.commands.get(args[0]) || container.commands.get(container.aliases.get(args[0]));
   // Check if the command exists and is valid
-  if (!container.commands.has(command.help.name)) {
+  if (!command) {
     return message.reply("That command does not exist");
   }
   // the path is relative to the *current folder*, so just ./filename.js

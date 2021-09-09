@@ -26,7 +26,7 @@ Need support? Join the [Idiot's Guide Community](https://discord.gg/vXVxsAjSMF)!
 - The node-gyp build tools. This is a pre-requisite for Enmap, but also for a **lot** of other modules. See [The Enmap Guide](https://enmap.evie.codes/install#pre-requisites) for details and requirements for your OS. Just follow what's in the tabbed block only, then come back here!
 
 You also need your bot's token. This is obtained by creating an application in
-the Developer section of discord.com. Check the [first section of this page](https://anidiots.guide/getting-started/the-long-version.html)
+the Developer section of discord.com. Check the [first section of this page](https://anidiots.guide/getting-started/getting-started-long-version)
 for more info.
 
 ## Intents
