@@ -1,8 +1,8 @@
-const { Permissions } = require('discord.js');
+const { Permissions } = require("discord.js");
 
 exports.run = async (client, interaction) => { // eslint-disable-line no-unused-vars
   await interaction.deferReply();
-  if(!interaction.guild.me.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) 
+  if (!interaction.guild.me.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) 
     return await interaction.editReply("I do not have permission to kick members in this server.");
   await interaction.member.send("You requested to leave the server, if you change your mind you can rejoin at a later date.");
   await interaction.member.kick(`${interaction.member.displayName} wanted to leave.`);
@@ -17,4 +17,7 @@ exports.commandData = {
 };
 
 // Set this to false if you want it to be global.
-exports.guildOnly = true;
+exports.conf = {
+  permLevel: "User",
+  guildOnly: true
+};
