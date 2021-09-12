@@ -1,6 +1,7 @@
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
 
-  // Now we filter out global commands by inverting the filter.
+  // We'll partition the slash commands based on the guildOnly boolean.
+  // Separating them into the correct objects defined in the array below.
   const [globalCmds, guildCmds] = client.container.slashcmds.partition(c => !c.conf.guildOnly);
 
   // Give the user a notification the commands are deploying.
