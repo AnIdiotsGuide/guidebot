@@ -8,14 +8,16 @@ help command, its extended help is shown.
 const { codeBlock } = require("@discordjs/builders");
 
 exports.run = (client, message, args, level) => {
+  // Grab the container from the client to reduce line length.
+  const { container } = client;
   // If no specific command is called, show all filtered commands.
   if (!args[0]) {
     // Load guild settings (for prefixes and eventually per-guild tweaks)
     const settings = message.settings;
       
     // Filter all commands by which are available for the user's level, using the <Collection>.filter() method.
-    const myCommands = message.guild ? client.commands.filter(cmd => client.levelCache[cmd.conf.permLevel] <= level) :
-      client.commands.filter(cmd => client.levelCache[cmd.conf.permLevel] <= level && cmd.conf.guildOnly !== true);
+    const myCommands = message.guild ? container.commands.filter(cmd => container.levelCache[cmd.conf.permLevel] <= level) :
+      container.commands.filter(cmd => container.levelCache[cmd.conf.permLevel] <= level && cmd.conf.guildOnly !== true);
 
     // Then we will filter the myCommands collection again to get the enabled commands.
     const enabledCommands = myCommands.filter(cmd => cmd.conf.enabled);
@@ -44,9 +46,9 @@ exports.run = (client, message, args, level) => {
   } else {
     // Show individual command's help.
     let command = args[0];
-    if (client.commands.has(command)) {
-      command = client.commands.get(command);
-      if (level < client.levelCache[command.conf.permLevel]) return;
+    if (container.commands.has(command)) {
+      command = container.commands.get(command);
+      if (level < container.levelCache[command.conf.permLevel]) return;
       message.channel.send(codeBlock("asciidoc", `= ${command.help.name} = \n${command.help.description}\nusage:: ${command.help.usage}\naliases:: ${command.conf.aliases.join(", ")}`));
     }
   }};

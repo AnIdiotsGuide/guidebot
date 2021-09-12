@@ -5,17 +5,36 @@
 
 const { codeBlock } = require("@discordjs/builders");
 
+/*
+  MESSAGE CLEAN FUNCTION
+
+  "Clean" removes @everyone pings, as well as tokens, and makes code blocks
+  escaped so they're shown more easily. As a bonus it resolves promises
+  and stringifies objects!
+  This is mostly only used by the Eval and Exec commands.
+*/
+async function clean(client, text) {
+  if (text && text.constructor.name == "Promise")
+    text = await text;
+  if (typeof text !== "string")
+    text = require("util").inspect(text, {depth: 1});
+
+  text = text
+    .replace(/`/g, "`" + String.fromCharCode(8203))
+    .replace(/@/g, "@" + String.fromCharCode(8203));
+
+  text = text.replaceAll(client.token, "[REDACTED]");
+
+  return text;
+}
+
 // However it's, like, super ultra useful for troubleshooting and doing stuff
 // you don't want to put in a command.
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   const code = args.join(" ");
-  try {
-    const evaled = eval(code);
-    const clean = await client.clean(client, evaled);
-    message.channel.send(codeBlock("js", clean));
-  } catch (err) {
-    message.channel.send(codeBlock("xl", `ERROR ${await client.clean(client, err)}`));
-  }
+  const evaled = eval(code);
+  const cleaned = await clean(client, evaled);
+  message.channel.send(codeBlock("js", cleaned));
 };
 
 exports.conf = {

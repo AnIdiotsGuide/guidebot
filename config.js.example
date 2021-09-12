@@ -1,3 +1,5 @@
+const { Intents } = require("discord.js");
+
 const config = {
   // Bot Admins, level 9 by default. Array of user ID strings.
   "admins": [],
@@ -5,14 +7,11 @@ const config = {
   // Bot Support, level 8 by default. Array of user ID strings
   "support": [],
 
-  // Your Bot's Token. Available on https://discord.com/developers/applications/me
-  "token": "Replace me",
-
   // Intents the bot needs.
   // By default GuideBot needs Guilds, Guild Messages and Direct Messages to work.
   // For join messages to work you need Guild Members, which is privileged and requires extra setup.
   // For more info about intents see the README.
-  intents: ["GUILDS", "GUILD_MESSAGES", "DIRECT_MESSAGES"],
+  intents: [ Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES ],
   // Partials your bot may need should go here, CHANNEL is required for DM's
   partials: ["CHANNEL"],
 
@@ -102,7 +101,7 @@ const config = {
     { level: 10,
       name: "Bot Owner", 
       // Another simple check, compares the message author id to a list of owners found in the bot application.
-      check: (message) => message.client.owners.includes(message.author.id)
+      check: (message) => message.author.id === process.env.OWNER
     }
   ]
 };
