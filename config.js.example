@@ -78,7 +78,7 @@ const config = {
       // Otherwise it will return false.
       check: (message) => {
         const serverOwner = message.author ?? message.user;
-        return message.channel.type === "GUILD_TEXT" ? (message.guild.ownerId === serverOwner.id ? true : false) : false;
+        return message.guild?.ownerId === serverOwner.id;
       }
     },
 
