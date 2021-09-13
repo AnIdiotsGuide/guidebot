@@ -46,11 +46,11 @@ exports.run = (client, message, args, level) => {
   } else {
     // Show individual command's help.
     let command = args[0];
-    if (container.commands.has(command)) {
-      command = container.commands.get(command);
+    if (container.commands.has(command) || container.commands.has(container.aliases.get(command))) {
+      command = container.commands.get(command) ?? container.commands.get(container.aliases.get(command));
       if (level < container.levelCache[command.conf.permLevel]) return;
       message.channel.send(codeBlock("asciidoc", `= ${command.help.name} = \n${command.help.description}\nusage:: ${command.help.usage}\naliases:: ${command.conf.aliases.join(", ")}`));
-    }
+    } else return message.channel.send("No command with that name, or alias exists.");
   }};
 
 exports.conf = {
