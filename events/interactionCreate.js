@@ -22,13 +22,15 @@ module.exports = async (client, interaction) => {
   // Since the permission system from Discord is rather limited in regarding to
   // Slash Commands, we'll just utilise our permission checker.
   if (level < client.container.levelCache[cmd.conf.permLevel]) {
-    if (settings.systemNotice === "true") {
-      return await interaction.reply(`You do not have permission to use this command.
-Your permission level is ${level} (${config.permLevels.find(l => l.level === level).name})
-This command requires level ${client.container.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
-    } else {
-      return;
-    }
+    // Due to the nature of interactions we **must** respond to them otherwise
+    // they will error out because we didn't respond to them.
+    return await interaction.reply({
+      content: `This command can only be used by ${cmd.conf.permLevel}'s only`,
+      // This will basically set the ephemeral response to either announce
+      // to everyone, or just the command executioner. But we **HAVE** to 
+      // respond.
+      ephemeral: settings.systemNotice !== "true"
+    });
   }
 
   // If everything checks out, run the command
