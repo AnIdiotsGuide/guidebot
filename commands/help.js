@@ -1,5 +1,4 @@
-const Command = require("../../base/Command.js");
-
+const Command = require("../base/Command.js");
 const { codeBlock } = require("@discordjs/builders");
 
 /*
@@ -21,14 +20,15 @@ module.exports = class Help extends Command {
   }
 
   async run(message, args, level) {
+    const { container } = this.client;
     // If no specific command is called, show all filtered commands.
     if (!args[0]) {
       // Load guild settings (for prefixes and eventually per-guild tweaks)
       const settings = message.settings;
       
       // Filter all commands by which are available for the user's level, using the <Collection>.filter() method.
-      const myCommands = message.guild ? this.client.commands.filter(cmd => this.client.levelCache[cmd.conf.permLevel] <= level) :
-        this.client.commands.filter(cmd => this.client.levelCache[cmd.conf.permLevel] <= level && cmd.conf.guildOnly !== true);
+      const myCommands = message.guild ? container.commands.filter(cmd => container.levelCache[cmd.conf.permLevel] <= level) :
+        container.commands.filter(cmd => container.levelCache[cmd.conf.permLevel] <= level && cmd.conf.guildOnly !== true);
 
       // Then we will filter the myCommands collection again to get the enabled commands.
       const enabledCommands = myCommands.filter(cmd => cmd.conf.enabled);
@@ -57,11 +57,11 @@ module.exports = class Help extends Command {
     } else {
       // Show individual command's help.
       let command = args[0];
-      if (this.client.commands.has(command)) {
-        command = this.client.commands.get(command);
-        if (level < this.client.levelCache[command.conf.permLevel]) return;
+      if (container.commands.has(command) || container.commands.has(container.aliases.get(command))) {
+        command = container.commands.get(command) ?? container.commands.get(container.aliases.get(command));
+        if (level < container.levelCache[command.conf.permLevel]) return;
         message.channel.send(codeBlock("asciidoc", `= ${command.help.name} = \n${command.help.description}\nusage:: ${command.help.usage}\nalises:: ${command.conf.aliases.join(", ")}`));
-      }
-    }
+      } else return message.channel.send("No command with that name, or alias exists.");
+    } 
   }
 };

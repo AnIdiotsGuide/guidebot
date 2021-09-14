@@ -1,4 +1,4 @@
-const Command = require("../../base/Command.js");
+const Command = require("../base/Command.js");
 
 module.exports = class Deploy extends Command {
   constructor(client) {
@@ -16,7 +16,7 @@ module.exports = class Deploy extends Command {
 
     // We'll partition the slash commands based on the guildOnly boolean.
     // Separating them into the correct objects defined in the array below.
-    const [guildCmds, globalCmds] = this.client.slashcmds.partition(c => c.guildOnly);
+    const [guildCmds, globalCmds] = this.client.container.slashcmds.partition(c => c.guildOnly);
 
     // Give the user a notification the commands are deploying.
     await message.channel.send("Deploying commands!");

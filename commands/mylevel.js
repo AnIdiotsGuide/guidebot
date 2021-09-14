@@ -1,5 +1,6 @@
-const Command = require("../../base/Command.js");
-
+const Command = require("../base/Command.js");
+const { permLevels, defaultSettings } = require("../config.js");
+const { settings } = require("../util/settings.js");
 module.exports = class MyLevel extends Command {
   constructor(client) {
     super(client, {
@@ -11,8 +12,8 @@ module.exports = class MyLevel extends Command {
   }
 
   async run(message, args, level) {
-    const friendly = this.client.config.permLevels.find(l => l.level === level).name;
-    const replying = this.client.settings.ensure(message.guild.id, this.client.config.defaultSettings).commandReply;
+    const friendly = permLevels.find(l => l.level === level).name;
+    const replying = settings.ensure(message.guild.id, defaultSettings).commandReply;
     message.reply({ content: `Your permission level is: ${level} - ${friendly}`, allowedMentions: { repliedUser: (replying === "true") }});
   }
 };
