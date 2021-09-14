@@ -5,11 +5,15 @@ module.exports = class slashCommand {
     description = "No description provided.",
     options = [],
     defaultPermission = true,
-    guildOnly = false // false = global, true = guild.
+    guildOnly = false, // false = global, true = guild.
+    permLevel = "User"
   }) {
     this.client = client;
     this.commandData = { name, description, options, defaultPermission };
-    this.guildOnly = guildOnly;
+    this.conf = {
+      guildOnly,
+      permLevel
+    };
   }
 
 };
