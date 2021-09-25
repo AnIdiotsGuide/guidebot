@@ -17,7 +17,7 @@ module.exports = class {
     // Get the user or member's permission level from the elevation
     const level = permLevel(interaction);
 
-    // Grab the command data from the client.slashcmds Collection
+    // Grab the command data from the client.container.slashcmds Collection
     const cmd = this.client.container.slashcmds.get(interaction.commandName);
     // If that command doesn't exist, silently exit and do nothing
     if (!cmd) return;

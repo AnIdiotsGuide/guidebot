@@ -27,7 +27,7 @@ function permLevel(message) {
  * A simple way to grab a single reply, from the user that initiated
  * the command. Useful to get "precisions" on certain things...
  * USAGE
- * const response = await client.awaitReply(msg, "Favourite Color?");
+ * const response = await awaitReply(msg, "Favourite Color?");
  * msg.reply(`Oh, I really love ${response} too!`);
  */
 async function awaitReply(msg, question, limit = 60000) {
