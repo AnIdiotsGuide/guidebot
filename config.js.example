@@ -76,7 +76,10 @@ const config = {
       name: "Server Owner", 
       // Simple check, if the guild owner id matches the message author's ID, then it will return true.
       // Otherwise it will return false.
-      check: (message) => message.channel.type === "text" ? (message.guild.ownerID === message.author.id ? true : false) : false
+      check: (message) => {
+        const serverOwner = message.author ?? message.user;
+        return message.guild?.ownerId === serverOwner.id;
+      }
     },
 
     // Bot Support is a special in between level that has the equivalent of server owner access
@@ -85,13 +88,19 @@ const config = {
       name: "Bot Support",
       // The check is by reading if an ID is part of this array. Yes, this means you need to
       // change this and reboot the bot to add a support user. Make it better yourself!
-      check: (message) => config.support.includes(message.author.id)
+      check: (message) => {
+        const botSupport = message.author ?? message.user;
+        return config.support.includes(botSupport.id);
+      }
     },
 
     // Bot Admin has some limited access like rebooting the bot or reloading commands.
     { level: 9,
       name: "Bot Admin",
-      check: (message) => config.admins.includes(message.author.id)
+      check: (message) => {
+        const botAdmin = message.author ?? message.user;
+        return config.admins.includes(botAdmin.id);
+      }
     },
 
     // This is the bot owner, this should be the highest permission level available.
@@ -101,7 +110,10 @@ const config = {
     { level: 10,
       name: "Bot Owner", 
       // Another simple check, compares the message author id to a list of owners found in the bot application.
-      check: (message) => message.author.id === process.env.OWNER
+      check: (message) => {
+        const owner = message.author ?? message.user;
+        return owner.id === process.env.OWNER;
+      }
     }
   ]
 };
