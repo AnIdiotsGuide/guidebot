@@ -9,25 +9,11 @@
   "extends": "eslint:recommended",
   "rules": {
     "no-console": "off",
-    "indent": [
-      "error",
-      2,
-      {
-        "SwitchCase": 1
-      }
-    ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "quotes": [
-      "warn",
-      "double"
-    ],
-    "semi": [
-      "warn",
-      "always"
-    ],
+    "indent": [ "error", 2, { "SwitchCase": 1 } ],
+    "object-curly-spacing": ["error", "always", { "arraysInObjects": false }],
+    "linebreak-style": [ "error", "unix" ],
+    "quotes": [ "error", "double" ],
+    "semi": [ "error", "always" ],
     "keyword-spacing": [
       "error", {
         "before": true,

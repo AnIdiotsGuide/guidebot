@@ -2,196 +2,42 @@
 // Node version, if it isn't it will throw the following error to inform
 // you.
 if (Number(process.version.slice(1).split(".")[0]) < 16) throw new Error("Node 16.x or higher is required. Update Node on your system.");
-
-// Load up the discord.js library
+require("dotenv").config();
+// Load up the discord.js library, but only require the things we need.
 const { Client, Collection } = require("discord.js");
 // We also load the rest of the things we need in this file:
-const { readdirSync, statSync } = require("fs");
-const config = require("./config.js");
-const Enmap = require("enmap");
-const path = require("path");
-
+const { readdirSync } = require("fs");
+// Grab hold of the intents, partials and permLevels from the config file.
+const { intents, partials, permLevels } = require("./config.js");
+// Add the logger.
+const logger = require("./util/logger.js");
+// Create an empty object for later.
+const levelCache = {};
 
 class GuideBot extends Client {
   constructor(options) {
     super(options);
-    
-    // Here we load the config.js file that contains our token and our prefix values.
-    this.config = config;
-    // client.config.token contains the bot's token
-    // client.config.prefix contains the message prefix
 
-    // Aliases, commands and slash commands are put in collections where they can be read from,
-    // catalogued, listed, etc.
-    this.commands = new Collection();
-    this.aliases = new Collection();
-    this.slashcmds = new Collection();
-
-    this.owners = new Array();
-
-    // Now we integrate the use of Evie's awesome Enhanced Map module, which
-    // essentially saves a collection to disk. This is great for per-server configs,
-    // and makes things extremely easy for this purpose.
-    this.settings = new Enmap({ name: "settings" });
-
-    //requiring the Logger class for easy console logging
-    this.logger = require("./util/logger.js");
-
-    // Basically just an async shortcut to using a setTimeout. Nothing fancy!
-    this.wait = require("util").promisify(setTimeout);
-  }
-
-  /*
-  PERMISSION LEVEL FUNCTION
-
-  This is a very basic permission system for commands which uses "levels"
-  "spaces" are intentionally left black so you can add them if you want.
-  NEVER GIVE ANYONE BUT OWNER THE LEVEL 10! By default this can run any
-  command including the VERY DANGEROUS `eval` command!
-
-  */
-  permlevel(message) {
-    let permlvl = 0;
-
-    const permOrder = this.config.permLevels.slice(0).sort((p, c) => p.level < c.level ? 1 : -1);
-
-    while (permOrder.length) {
-      const currentLevel = permOrder.shift();
-      if (message.guild && currentLevel.guildOnly) continue;
-      if (currentLevel.check(message)) {
-        permlvl = currentLevel.level;
-        break;
-      }
-    }
-    return permlvl;
-  }
-
-  /* 
-  COMMAND LOAD AND UNLOAD
-  
-  To simplify the loading and unloading of commands from multiple locations
-  including the index.js load loop, and the reload function, these 2 ensure
-  that unloading happens in a consistent manner across the board.
-  */
-
-  loadCommand(commandPath, commandName) {
-    try {
-      const props = new (require(commandPath))(this);
-      props.conf.location = commandPath;
-      if (props.init) {
-        props.init(this);
-      }
-
-      this.commands.set(props.help.name, props);
-      props.conf.aliases.forEach(alias => {
-        this.aliases.set(alias, props.help.name);
-      });
-      return false;
-    } catch (e) {
-      return `Unable to load command ${commandName}: ${e}`;
-    }
-  }
-
-  async unloadCommand(commandPath, commandName) {
-    let command;
-    if (this.commands.has(commandName)) {
-      command = this.commands.get(commandName);
-    } else if (this.aliases.has(commandName)) {
-      command = this.commands.get(this.aliases.get(commandName));
-    }
-    if (!command) return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
-
-    if (command.shutdown) {
-      await command.shutdown(this);
-    }
-    delete require.cache[require.resolve(commandPath)];
-    return false;
-  }
-
-  /*
-  MESSAGE CLEAN FUNCTION
-  "Clean" removes @everyone pings, as well as tokens, and makes code blocks
-  escaped so they're shown more easily. As a bonus it resolves promises
-  and stringifies objects!
-  This is mostly only used by the Eval and Exec commands.
-  */
-  async clean(text) {
-    if (text && text.constructor.name == "Promise")
-      text = await text;
-    if (typeof text !== "string")
-      text = require("util").inspect(text, { depth: 1 });
-
-    text = text
-      .replace(/`/g, "`" + String.fromCharCode(8203))
-      .replace(/@/g, "@" + String.fromCharCode(8203));
-
-    text = this.replaceAll(text, config.token, "[REDACTED]");
-
-    return text;
-  }
-
-  /**
-  This function will take an input string, split it
-  at the needle, and replace it with the supplied string.
-  */
-
-  replaceAll(haystack, needle, replacement) {
-    return haystack.split(needle).join(replacement);
-  }
-
-  /* SETTINGS FUNCTIONS
-  These functions are used by any and all location in the bot that wants to either
-  read the current *complete* guild settings (default + overrides, merged) or that
-  wants to change settings for a specific guild.
-  */
-
-  // getSettings merges the client defaults with the guild settings. guild settings in
-  // enmap should only have *unique* overrides that are different from defaults.
-  getSettings(guild) {
-    const defaults = this.settings.get("default") || {};
-    const guildData = guild ? this.settings.get(guild.id) || {} : {};
-    const returnObject = {};
-    Object.keys(defaults).forEach((key) => {
-      returnObject[key] = guildData[key] ? guildData[key] : defaults[key];
-    });
-    return returnObject;
-  }
-
-  // writeSettings overrides, or adds, any configuration item that is different
-  // than the defaults. This ensures less storage wasted and to detect overrides.
-  writeSettings(id, newSettings) {
-    const defaults = this.settings.get("default");
-    let settings = this.settings.get(id);
-    if (typeof settings != "object") settings = {};
-    for (const key in newSettings) {
-      if (defaults[key] !== newSettings[key]) {
-        settings[key] = newSettings[key];
-      } else {
-        delete settings[key];
-      }
-    }
-    this.settings.set(id, settings);
-  }
-
-  /*
-  SINGLE-LINE AWAIT MESSAGE
-  A simple way to grab a single reply, from the user that initiated
-  the command. Useful to get "precisions" on certain things...
-  USAGE
-  const response = await client.awaitReply(msg, "Favourite Color?");
-  msg.reply(`Oh, I really love ${response} too!`);
-  */
-  async awaitReply(msg, question, limit = 60000) {
-    const filter = m => m.author.id === msg.author.id;
-    await msg.channel.send(question);
-    try {
-      const collected = await msg.channel.awaitMessages({ filter, max: 1, time: limit, errors: ["time"] });
-      return collected.first().content;
-    } catch (e) {
-      return false;
-    }
+    // To reduce client pollution we'll create a single container property
+    // that we can attach everything we need to.
+    this.container = {
+      // This is our commands collection.
+      commands: new Collection(),
+      // Aliases
+      aliases: new Collection(),
+      // Slash Commands
+      slashcmds: new Collection(),
+      // And to make the levelCache available everywhere, pin it here.
+      levelCache
+    };
   }
 }
+
+for (let i = 0; i < permLevels.length; i++) {
+  const thisLevel = permLevels[i];
+  levelCache[thisLevel.name] = thisLevel.level;
+}
+
 
 // Default Intents the bot needs.
 // By default GuideBot needs Guilds, Guild Messages and Direct Messages to work.
@@ -201,101 +47,60 @@ class GuideBot extends Client {
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're referring to. Your client.
-const client = new GuideBot({ intents: config.intents, partials: config.partials });
+const client = new GuideBot({ intents, partials });
 
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
-
 const init = async () => {
-
-  // Let's load the slash commands, we're using a recursive method so you can have
-  // folders within folders, within folders, within folders, etc and so on.
-  function getSlashCommands(dir) {
-    const slashFiles = readdirSync(dir);
-    for (const file of slashFiles) {
-      const loc = path.resolve(dir, file);
-      const stats = statSync(loc);
-      if (stats.isDirectory()) {
-        getSlashCommands(path.resolve(dir, file));
-      } else {
-        const command = new (require(loc))(client);
-        const commandName = file.split(".")[0];
-        client.logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
-        client.slashcmds.set(command.commandData.name, command);
-      }
-    }
-  }
-
   // Here we load **commands** into memory, as a collection, so they're accessible
-  // here and everywhere else, and like the slash commands, sub-folders for days!
-  function getCommands(dir) {
-    const cmdFile = readdirSync(dir);
-    for (const file of cmdFile) {
-      const loc = path.resolve(dir, file);
-      const stats = statSync(loc);
-      if (stats.isDirectory()) {
-        getCommands(path.resolve(dir, file));
-      } else {
-        const commandName = file.split(".")[0];
-        client.logger.log(`Loading command: ${commandName}. 👌`, "log");
-        client.loadCommand(loc, commandName);
-      }
-    }
+  // here and everywhere else.
+  const commands = readdirSync("./commands/").filter(file => file.endsWith(".js"));
+  // A nice little loop.
+  for (const file of commands) {
+    // Require the file into memory.
+    const props = new (require(`./commands/${file}`))(client);
+    // Add the details into the commands collection.
+    client.container.commands.set(props.help.name, props);
+    // Loop and add every alias into the aliases collection.
+    props.conf.aliases.forEach(alias => {
+      client.container.aliases.set(alias, props.help.name);
+    });
+    // Output to the console.
+    logger.log(`Loading Command: ${props.help.name}. 👌`, "log");
   }
 
-  // Now let's call the functions to actually load up the commands!
-  getCommands("./commands");
-  getSlashCommands("./slash");
+  // Repeat the above but for slash commands!
+  const slashFiles = readdirSync("./slash").filter(file => file.endsWith(".js"));
+  for (const file of slashFiles) {
+    const command = new (require(`./slash/${file}`))(client);
+    const commandName = file.split(".")[0];
+    // Now set the name of the command with it's properties.
+    client.container.slashcmds.set(command.commandData.name, command);
+    logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
+  }
 
-
-  // Then we load events, which will include our message and ready event.
+  // Aaaaaand repeat it a third time for events!
   const eventFiles = readdirSync("./events/").filter(file => file.endsWith(".js"));
   for (const file of eventFiles) {
     const eventName = file.split(".")[0];
-    client.logger.log(`Loading Event: ${eventName}. 👌`, "log");
     const event = new (require(`./events/${file}`))(client);
-
     // This line is awesome by the way. Just sayin'.
     client.on(eventName, (...args) => event.run(...args));
     delete require.cache[require.resolve(`./events/${file}`)];
-  }
-
-  client.levelCache = {};
-  for (let i = 0; i < client.config.permLevels.length; i++) {
-    const thisLevel = client.config.permLevels[i];
-    client.levelCache[thisLevel.name] = thisLevel.level;
+    logger.log(`Loading Event: ${eventName}. 👌`, "log");
   }
 
   // Here we login the client.
-  client.login(client.config.token);
-
+  client.login();
   // End top-level async/await function.
 };
 
 init();
 
-client.on("disconnect", () => client.logger.warn("Bot is disconnecting..."))
-  .on("reconnecting", () => client.logger.log("Bot reconnecting...", "log"))
-  .on("error", e => client.logger.error(e))
-  .on("warn", info => client.logger.warn(info));
-
-/* MISCELLANEOUS NON-CRITICAL FUNCTIONS */
-
-// EXTENDING NATIVE TYPES IS BAD PRACTICE. Why? Because if JavaScript adds this
-// later, this conflicts with native code. Also, if some other lib you use does
-// this, a conflict also occurs. KNOWING THIS however, the following methods
-// are, we feel, very useful in code. So let's just Carpe Diem.
-
-// <String>.toProperCase() returns a proper-cased string such as: 
-// "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
-String.prototype.toProperCase = function() {
-  return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-};
-// <Array>.random() returns a single random element from an array
-// [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.
-Array.prototype.random = function() {
-  return this[Math.floor(Math.random() * this.length)];
-};
+client.on("disconnect", () => logger.warn("Bot is disconnecting..."))
+  .on("reconnecting", () => logger.log("Bot reconnecting...", "log"))
+  .on("error", e => logger.error(e))
+  .on("warn", info => logger.warn(info));
 
 // These 2 process methods will catch exceptions and give *more details* about the error and stack trace.
 process.on("uncaughtException", (err) => {

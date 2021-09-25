@@ -2,6 +2,10 @@
 // Note that due to the binding of client to every event, every event
 // goes `client, other, args` when this function is run.
 
+const { getSettings } = require("../util/settings.js");
+const { permLevels } = require("../config.js");
+const { permLevel } = require("../util/functions.js");
+const logger = require("../util/logger.js");
 module.exports = class {
   constructor(client) {
     this.client = client;
@@ -15,7 +19,7 @@ module.exports = class {
 
     // Grab the settings for this server from the Enmap
     // If there is no guild, get default conf (DMs)
-    const settings = message.settings = this.client.getSettings(message.guild);
+    const settings = message.settings = getSettings(message.guild);
 
     // Checks if the bot was mentioned, with no message after it, returns the prefix.
     const prefixMention = new RegExp(`^<@!?${this.client.user.id}> ?$`);
@@ -38,11 +42,10 @@ module.exports = class {
     if (message.guild && !message.member) await message.guild.members.fetch(message.author);
 
     // Get the user or member's permission level from the elevation
-    const level = this.client.permlevel(message);
-
+    const level = permLevel(message);
     // Check whether the command, or alias, exist in the collections defined
     // in app.js.
-    const cmd = this.client.commands.get(command) || this.client.commands.get(this.client.aliases.get(command));
+    const cmd = this.client.container.commands.get(command) || this.client.container.commands.get(this.client.container.aliases.get(command));
     // using this const varName = thing OR otherThing; is a pretty efficient
     // and clean way to grab one of 2 values!
     if (!cmd) return;
@@ -55,11 +58,11 @@ module.exports = class {
     // Do a quick little check to see if the command is actually enabled, if it isn't stop.
     if (!cmd.conf.enabled) return;
 
-    if (level < this.client.levelCache[cmd.conf.permLevel]) {
+    if (level < this.client.container.levelCache[cmd.conf.permLevel]) {
       if (settings.systemNotice === "true") {
         return message.channel.send(`You do not have permission to use this command.
-Your permission level is ${level} (${this.client.config.permLevels.find(l => l.level === level).name})
-This command requires level ${this.client.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
+Your permission level is ${level} (${permLevels.find(l => l.level === level).name})
+This command requires level ${this.client.container.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
       } else {
         return;
       }
@@ -77,8 +80,9 @@ This command requires level ${this.client.levelCache[cmd.conf.permLevel]} (${cmd
     // If the command exists, **AND** the user has permission, run it.
     try {
       await cmd.run(message, args, level);
-      this.client.logger.log(`${this.client.config.permLevels.find(l => l.level === level).name} ${message.author.id} ran command ${cmd.help.name}`, "cmd");
+      logger.log(`${permLevels.find(l => l.level === level).name} ${message.author.id} ran command ${cmd.help.name}`, "cmd");
     } catch (e) {
+      console.log(e);
       message.channel.send({ content: `There was a problem with your request.\n\`\`\`${e.message}\`\`\`` })
         .catch(e => console.error("An error occurred replying on an error", e));
     }

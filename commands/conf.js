@@ -5,8 +5,10 @@ If a default setting is not specifically overwritten by a guild, changing a defa
 change it for that guild. The `add` action adds a key to the configuration of every guild in
 your bot. The `del` action removes the key also from every guild, and loses its value forever.
 */
-const Command = require("../../base/Command.js");
+const Command = require("../base/Command.js");
 const { codeBlock } = require("@discordjs/builders");
+const { settings } = require("../util/settings.js");
+const { defaultSettings } = require("../config.js");
 
 module.exports = class Conf extends Command {
   constructor(client) {
@@ -24,8 +26,8 @@ module.exports = class Conf extends Command {
   async run(message, [action, key, ...value], level) { // eslint-disable-line no-unused-vars
     
     // Retrieve Default Values from the default settings in the bot.
-    const defaults = this.client.settings.get("default");
-    const replying = this.client.settings.ensure(message.guild.id, this.client.config.defaultSettings).commandReply;
+    const defaults = settings.get("default");
+    const replying = settings.ensure(message.guild.id, defaultSettings).commandReply;
 
     // Adding a new key adds it to every guild (it will be visible to all of them)
     if (action === "add") {
@@ -37,7 +39,7 @@ module.exports = class Conf extends Command {
       defaults[key] = value.join(" ");
   
       // One the settings is modified, we write it back to the collection
-      this.client.settings.set("default", defaults);
+      settings.set("default", defaults);
       message.reply({ content: `${key} successfully added with the value of ${value.join(" ")}`, allowedMentions: { repliedUser: (replying === "true") }});
     } else
   
@@ -49,7 +51,7 @@ module.exports = class Conf extends Command {
   
       defaults[key] = value.join(" ");
 
-      this.client.settings.set("default", defaults);
+      settings.set("default", defaults);
       message.reply({ content: `${key} successfully edited to ${value.join(" ")}`, allowedMentions: { repliedUser: (replying === "true") }});
     } else
   
@@ -67,13 +69,13 @@ module.exports = class Conf extends Command {
 
         // We delete the default `key` here.
         delete defaults[key];
-        this.client.settings.set("default", defaults);
+        settings.set("default", defaults);
       
         // then we loop on all the guilds and remove this key if it exists.
         // "if it exists" is done with the filter (if the key is present and it's not the default config!)
-        for (const [guildId, conf] of this.client.settings.filter((setting, id) => setting[key] && id !== "default")) {
+        for (const [guildId, conf] of settings.filter((setting, id) => setting[key] && id !== "default")) {
           delete conf[key];
-          this.client.settings.set(guildId, conf);
+          settings.set(guildId, conf);
         }
       
         message.reply({ content: `${key} was successfully deleted.`, allowedMentions: { repliedUser: (replying === "true") }});
@@ -93,7 +95,7 @@ module.exports = class Conf extends Command {
       // Display all default settings.
     } else {
       const array = [];
-      Object.entries(this.client.settings.get("default")).forEach(([key, value]) => {
+      Object.entries(settings.get("default")).forEach(([key, value]) => {
         array.push(`${key}${" ".repeat(20 - key.length)}::  ${value}`); 
       });
       await message.channel.send(codeBlock("asciidoc", `= Bot Default Settings =

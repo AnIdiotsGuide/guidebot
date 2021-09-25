@@ -14,8 +14,8 @@ most of the basic features you would need:
 - Per-server configuration system
 - A logging system
 
-[Guidebot Class](https://github.com/AnIdiotsGuide/guidebot/tree/class) differs from [Guidebot](https://github.com/AnIdiotsGuide/guidebot/) in one thing and one thing only:
-it's built using *Classes* and not functions. That's it, the rest should be functionally identical.
+Functionally [guidebot class](https://github.com/AnIdiotsGuide/guidebot/tree/class) is identical to [guidebot](https://github.com/AnIdiotsGuide/guidebot/), but the difference is that guidebot
+is created with functions while this version is purely class based.
 
 Need support? Join the [Idiot's Guide Community](https://discord.gg/vXVxsAjSMF)!
 
@@ -26,12 +26,11 @@ Need support? Join the [Idiot's Guide Community](https://discord.gg/vXVxsAjSMF)!
 - The node-gyp build tools. This is a pre-requisite for Enmap, but also for a **lot** of other modules. See [The Enmap Guide](https://enmap.evie.codes/install#pre-requisites) for details and requirements for your OS. Just follow what's in the tabbed block only, then come back here!
 
 You also need your bot's token. This is obtained by creating an application in
-the Developer section of discord.com. Check the [first section of this page](https://anidiots.guide/getting-started/the-long-version.html)
+the Developer section of discord.com. Check the [first section of this page](https://anidiots.guide/getting-started/getting-started-long-version)
 for more info.
 
 ## Intents
 
-Guidebot uses intents which are required as of October 7, 2020.
 You can enable privileged intents in your bot page
 (the one you got your token from) under `Privileged Gateway Intents`.
 
@@ -46,17 +45,17 @@ For more info about intents checkout the [official Discord.js guide page](https:
 
 ## Downloading
 
-Create a folder within your projects directory and run the following:
+Create a folder within your projects directory and run the following inside it:
 
 `git clone https://github.com/anidiotsguide/guidebot.git .`
-`git checkout class`
 
 Once finished:
 
-- In the folder from where you ran the git command, run `npm install`, which will install the required packages,
-and it will then run the installer, make sure you have your token at hand to paste into the console.
+- `git checkout class`
+- In the folder from where you ran the git command(s), run `npm install`, which will install the required packages.
 - **If you get any error about python or msibuild.exe or binding, read the requirements section again!**
-- The installer will create the `config.js` file for you, if it doesn't work we have supplied an example config file.
+- Rename `config.js.example` to `config.js`, and give it the required intents and any partials you may require.
+- Rename `.env-example` to `.env` and put in your bot token in it and save.
 
 ## Starting the bot
 
