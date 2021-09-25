@@ -17,21 +17,27 @@ module.exports = async (client, message) => {
   // If there is no guild, get default conf (DMs)
   const settings = message.settings = getSettings(message.guild);
 
-  // Checks if the bot was mentioned, with no message after it, returns the prefix.
-  const prefixMention = new RegExp(`^<@!?${client.user.id}>( |)$`);
+  // Checks if the bot was mentioned via regex, with no message after it,
+  // returns the prefix. The reason why we used regex here instead of
+  // message.mentions is because of the mention prefix later on in the
+  // code, would render it useless.
+  const prefixMention = new RegExp(`^<@!?${this.client.user.id}> ?$`);
   if (message.content.match(prefixMention)) {
-    return message.reply(`The prefix for this guild is \`${settings.prefix}\``);
+    return message.reply(`My prefix on this guild is \`${settings.prefix}\``);
   }
 
-  // Also good practice to ignore any message that does not start with our prefix,
-  // which is set in the configuration file.
-  if (message.content.indexOf(settings.prefix) !== 0) return;
-
+  // It's also good practice to ignore any and all messages that do not start
+  // with our prefix, or a bot mention.
+  const prefix = new RegExp(`^<@!?${this.client.user.id}> |^\\${settings.prefix}`).exec(message.content);
+  // This will return and stop the code from continuing if it's missing
+  // our prefix (be it mention or from the settings).
+  if (!prefix) return;
+    
   // Here we separate our "command" name, and our "arguments" for the command.
   // e.g. if we have the message "+say Is this the real life?" , we'll get the following:
   // command = say
   // args = ["Is", "this", "the", "real", "life?"]
-  const args = message.content.slice(settings.prefix.length).trim().split(/ +/g);
+  const args = message.content.slice(prefix[0].length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
   // If the member on a guild is invisible or not cached, fetch them.
