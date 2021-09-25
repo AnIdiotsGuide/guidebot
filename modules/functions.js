@@ -75,18 +75,11 @@ async function awaitReply(msg, question, limit = 60000) {
 
 /* MISCELLANEOUS NON-CRITICAL FUNCTIONS */
   
-// EXTENDING NATIVE TYPES IS BAD PRACTICE. Why? Because if JavaScript adds this
-// later, this conflicts with native code. Also, if some other lib you use does
-// this, a conflict also occurs. KNOWING THIS however, the following 2 methods
-// are, we feel, very useful in code. 
-  
-// <String>.toProperCase() returns a proper-cased string such as: 
-// "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
-Object.defineProperty(String.prototype, "toProperCase", {
-  value: function() {
-    return this.replace(/([^\W_]+[^\s-]*) */g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-  }
-});
+// toProperCase(String) returns a proper-cased string such as: 
+// toProperCase("Mary had a little lamb") returns "Mary Had A Little Lamb"
+function toProperCase(string) {
+  return string.replace(/([^\W_]+[^\s-]*) */g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+}
 
 // These 2 process methods will catch exceptions and give *more details* about the error and stack trace.
 process.on("uncaughtException", (err) => {
@@ -103,4 +96,4 @@ process.on("unhandledRejection", err => {
   console.error(err);
 });
 
-module.exports = { getSettings, permlevel, awaitReply };
+module.exports = { getSettings, permlevel, awaitReply, toProperCase };

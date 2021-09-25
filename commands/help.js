@@ -6,6 +6,7 @@ a command, it is not shown to them. If a command name is given with the
 help command, its extended help is shown.
 */
 const { codeBlock } = require("@discordjs/builders");
+const { toProperCase } = require("../modules/functions.js");
 
 exports.run = (client, message, args, level) => {
   // Grab the container from the client to reduce line length.
@@ -34,7 +35,7 @@ exports.run = (client, message, args, level) => {
       p.help.name > c.help.name && p.help.category === c.help.category ? 1 : -1 );
 
     sorted.forEach( c => {
-      const cat = c.help.category.toProperCase();
+      const cat = toProperCase(c.help.category);
       if (currentCategory !== cat) {
         output += `\u200b\n== ${cat} ==\n`;
         currentCategory = cat;
