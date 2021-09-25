@@ -7,7 +7,8 @@ module.exports = class Leave extends slashCommand {
       name: "leave",
       description: "Makes the user leave the guild.",
       options: [],
-      guildOnly: true // Set this to false if you want it to be global.
+      // Set this to false if you want it to be global.
+      guildOnly: true
     });
   }
 

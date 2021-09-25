@@ -10,6 +10,7 @@ module.exports = class Stats extends slashCommand {
       name: "stats",
       description: "Show's the bots stats",
       options: [],
+      // Set this to false if you want it to be global.
       guildOnly: false
     });
   }
