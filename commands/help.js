@@ -1,5 +1,6 @@
 const Command = require("../base/Command.js");
 const { codeBlock } = require("@discordjs/builders");
+const { toProperCase } =  require("../util/functions.js");
 
 /*
   The HELP command is used to display every command's name and description
@@ -45,7 +46,7 @@ module.exports = class Help extends Command {
         p.help.name > c.help.name && p.help.category === c.help.category ? 1 : -1 );
 
       sorted.forEach( c => {
-        const cat = c.help.category.toProperCase();
+        const cat = toProperCase(c.help.category);
         if (currentCategory !== cat) {
           output += `\u200b\n== ${cat} ==\n`;
           currentCategory = cat;

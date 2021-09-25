@@ -34,30 +34,19 @@ async function awaitReply(msg, question, limit = 60000) {
   const filter = m => m.author.id === msg.author.id;
   await msg.channel.send(question);
   try {
-    const collected = await msg.channel.awaitMessages({ filter, max: 1, time: limit, errors: ["time"] });
+    const collected = await msg.channel.awaitMessages({ filter, max: 1, time: limit, errors: ["time"]});
     return collected.first().content;
   } catch (e) {
     return false;
   }
 }
 
-/**
- * MISCELLANEOUS NON-CRITICAL FUNCTIONS
- * EXTENDING NATIVE TYPES IS BAD PRACTICE. Why? Because if JavaScript adds this
- * later, this conflicts with native code. Also, if some other lib you use does
- * this, a conflict also occurs. KNOWING THIS however, the following methods
- * are, we feel, very useful in code. So let's just Carpe Diem.
- */
+/* MISCELLANEOUS NON-CRITICAL FUNCTIONS */
+  
+// toProperCase(String) returns a proper-cased string such as: 
+// toProperCase("Mary had a little lamb") returns "Mary Had A Little Lamb"
+function toProperCase(string) {
+  return string.replace(/([^\W_]+[^\s-]*) */g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+}
 
-// <String>.toProperCase() returns a proper-cased string such as: 
-// "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
-String.prototype.toProperCase = function() {
-  return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-};
-// <Array>.random() returns a single random element from an array
-// [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.
-Array.prototype.random = function() {
-  return this[Math.floor(Math.random() * this.length)];
-};
-
-module.exports = { permLevel, awaitReply };
+module.exports = { permLevel, awaitReply, toProperCase };
