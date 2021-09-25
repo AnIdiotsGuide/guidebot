@@ -21,14 +21,14 @@ module.exports = async (client, message) => {
   // returns the prefix. The reason why we used regex here instead of
   // message.mentions is because of the mention prefix later on in the
   // code, would render it useless.
-  const prefixMention = new RegExp(`^<@!?${this.client.user.id}> ?$`);
+  const prefixMention = new RegExp(`^<@!?${client.user.id}> ?$`);
   if (message.content.match(prefixMention)) {
     return message.reply(`My prefix on this guild is \`${settings.prefix}\``);
   }
 
   // It's also good practice to ignore any and all messages that do not start
   // with our prefix, or a bot mention.
-  const prefix = new RegExp(`^<@!?${this.client.user.id}> |^\\${settings.prefix}`).exec(message.content);
+  const prefix = new RegExp(`^<@!?${client.user.id}> |^\\${settings.prefix}`).exec(message.content);
   // This will return and stop the code from continuing if it's missing
   // our prefix (be it mention or from the settings).
   if (!prefix) return;
