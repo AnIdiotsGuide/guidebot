@@ -1,4 +1,4 @@
-const logger = require("../modules/Logger.js");
+const logger = require("../modules/logger.js");
 // This event executes when a new guild (server) is joined.
 
 module.exports = (client, guild) => {

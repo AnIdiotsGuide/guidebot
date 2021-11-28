@@ -1,4 +1,4 @@
-const logger = require("../modules/Logger.js");
+const logger = require("../modules/logger.js");
 const { getSettings } = require("../modules/functions.js");
 module.exports = async client => {
   // Log that the bot is online.

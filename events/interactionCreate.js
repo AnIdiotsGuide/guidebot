@@ -1,4 +1,4 @@
-const logger = require("../modules/Logger.js");
+const logger = require("../modules/logger.js");
 const { getSettings, permlevel } = require("../modules/functions.js");
 const config = require("../config.js");
 
