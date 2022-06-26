@@ -1,5 +1,5 @@
 version: '3'
 services:
-    discordDooBot:
+    discord-doo-bot:
         build: .
         restart: always
