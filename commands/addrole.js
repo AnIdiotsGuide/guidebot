@@ -82,7 +82,7 @@ exports.run = async (client, message, args, level) => {
     if (rolesChannel) {
         rolesChannel
             .send(
-                `Channel für [@${roleName}] wurden erstellt. Reagiere auf diese Nachricht, um alles sehen zu können.`
+                `Channel für [<@&${role.id}>] wurden erstellt. Reagiere auf diese Nachricht, um alles sehen zu können.`
             )
             .then((c) => {
                 // Add guild, channel and message to the reaction_messages table

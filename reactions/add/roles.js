@@ -10,14 +10,14 @@ exports.run = async (client, reaction, user, level) => {
     if (!reaction.message.author.bot) return
 
     // Get role based on the text in square brackets in the reaction message (if it exists)
-    const roleName = reaction.message.content.match(/\[(.*?)\]/g)
-    if (!roleName) {
+    const roleId = reaction.message.content.match(/\[\<\@(.*?)\>\]/g)
+    if (!roleId) {
         return
     }
 
     // Check if role exists
     const role = reaction.message.guild.roles.cache.find(
-        (r) => r.name === roleName[0].slice(1, -1)
+        (r) => r.id === roleId[0].slice(4, -2)
     )
     if (!role) {
         return
