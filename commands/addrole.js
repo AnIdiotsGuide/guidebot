@@ -8,10 +8,11 @@ exports.run = async (client, message, args, level) => {
         config.defaultSettings
     ).commandReply
 
+    // Check if the user has given a role name
     if (!args || args.length < 1) return message.reply('Must provide a role name.')
     const roleName = args[0]
 
-    // Check if rolename already exists
+    // Check if role name already exists
     const roleExists = message.guild.roles.cache.find((r) => r.name === roleName)
     if (roleExists) {
         return message.reply('That role does already exist')
@@ -70,6 +71,18 @@ exports.run = async (client, message, args, level) => {
                 permissionOverwrites: permissions,
             })
         })
+
+    // Send a message to the roles channel about the just created role and add a reaction to that message
+    const rolesChannel = message.guild.channels.cache.find((c) => c.name === 'roles')
+    if (rolesChannel) {
+        rolesChannel
+            .send(
+                `[${roleName}] has been created. React to this message, to add it to yourself.`
+            )
+            .then((c) => {
+                c.react('✅')
+            })
+    }
 
     // Add a final message
     message.reply({
