@@ -1,7 +1,13 @@
-const config = require('../config.js')
-const { settings } = require('../modules/settings.js')
+const config = require('../../config.js')
+const { settings } = require('../../modules/settings.js')
 exports.run = async (client, reaction, user, level) => {
     // eslint-disable-line no-unused-vars
+
+    // Check if the right reaction was used
+    if (reaction.emoji.name !== '✅') return
+
+    // Check if the message is a reaction to a bots message
+    if (!reaction.message.author.bot) return
 
     // Get role based on the text in square brackets in the reaction message (if it exists)
     const roleName = reaction.message.content.match(/\[(.*?)\]/g)

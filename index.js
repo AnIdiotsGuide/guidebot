@@ -20,7 +20,8 @@ const client = new Client({ intents, partials })
 // read from, catalogued, listed, etc.
 const commands = new Collection()
 const aliases = new Collection()
-const reactions = new Collection()
+const reactionsAdd = new Collection()
+const reactionsRemove = new Collection()
 const slashcmds = new Collection()
 
 // Generate a cache of client permissions for pretty perm names in commands.
@@ -35,7 +36,8 @@ for (let i = 0; i < permLevels.length; i++) {
 client.container = {
     commands,
     aliases,
-    reactions,
+    reactionsAdd,
+    reactionsRemove,
     slashcmds,
     levelCache,
 }
@@ -56,11 +58,22 @@ const init = async () => {
         })
     }
 
-    const reactions = readdirSync('./reactions/').filter((file) => file.endsWith('.js'))
-    for (const file of reactions) {
-        const props = require(`./reactions/${file}`)
-        logger.log(`Loading Reaction: ${props.help.name}. 👌`, 'log')
-        client.container.reactions.set(props.help.name, props)
+    const reactionsAdd = readdirSync('./reactions/add/').filter((file) =>
+        file.endsWith('.js')
+    )
+    for (const file of reactionsAdd) {
+        const props = require(`./reactions/add/${file}`)
+        logger.log(`Loading Add Reaction: ${props.help.name}. 👌`, 'log')
+        client.container.reactionsAdd.set(props.help.name, props)
+    }
+
+    const reactionsRemove = readdirSync('./reactions/remove/').filter((file) =>
+        file.endsWith('.js')
+    )
+    for (const file of reactionsRemove) {
+        const props = require(`./reactions/remove/${file}`)
+        logger.log(`Loading Remove Reaction: ${props.help.name}. 👌`, 'log')
+        client.container.reactionsRemove.set(props.help.name, props)
     }
 
     // Now we load any **slash** commands you may have in the ./slash directory.

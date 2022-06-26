@@ -9,9 +9,6 @@ module.exports = async (client, reaction, user) => {
     // Check if the message is a reaction to a message from the bot
     if (reaction.message.author.id === user.id) return
 
-    // Get settings for the server the message was sent in
-    // const settings = (reaction.message.settings = getSettings(reaction.message.guild))
-
     // If the member on a guild is invisible or not cached, fetch them.
     if (reaction.message.guild && !reaction.message.member)
         await reaction.message.guild.members.fetch(reaction.message.author)
@@ -24,22 +21,11 @@ module.exports = async (client, reaction, user) => {
 
     // Check if the reaction channel exists in the collections defined
     // in index.js.
-    const rct = container.reactionsAdd.get(channelName)
+    const rct = container.reactionsRemove.get(channelName)
+
     if (!rct) return
 
     if (level < container.levelCache[rct.conf.permLevel]) {
-        //         if (settings.systemNotice === 'true') {
-        //             return reaction.message.channel
-        //                 .send(`You do not have permission to use this reaction.
-        // Your permission level is ${level} (${
-        //                 config.permLevels.find((l) => l.level === level).name
-        //             })
-        // This reaction requires level ${container.levelCache[rct.conf.permLevel]} (${
-        //                 rct.conf.permLevel
-        //             })`)
-        //         } else {
-        //             return
-        //         }
         return
     }
 
