@@ -13,7 +13,7 @@ module.exports = async (client, reaction, user) => {
     if (reaction.message.author.id === user.id) return
 
     // Get settings for the server the message was sent in
-    const settings = (reaction.message.settings = getSettings(reaction.message.guild))
+    // const settings = (reaction.message.settings = getSettings(reaction.message.guild))
 
     // If the member on a guild is invisible or not cached, fetch them.
     if (reaction.message.guild && !reaction.message.member)
