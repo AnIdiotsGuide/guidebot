@@ -25,14 +25,6 @@ exports.run = async (client, reaction, user, level) => {
 
     const reactedUser = reaction.message.guild.members.cache.get(user.id)
 
-    // Check if the user has already the role, that's defined by roleName
-    const hasRole = reactedUser.roles.cache.find(
-        (r) => r.name === roleName[0].slice(1, -1)
-    )
-    if (hasRole) {
-        return
-    }
-
     // Give the user that just reacted the role
     reactedUser.roles.add(role)
 }
