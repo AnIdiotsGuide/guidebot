@@ -82,7 +82,7 @@ exports.run = async (client, message, args, level) => {
     if (rolesChannel) {
         rolesChannel
             .send(
-                `[${roleName}] has been created. React to this message, to add it to yourself.`
+                `Channel für [@${roleName}] wurden erstellt. Reagiere auf diese Nachricht, um alles sehen zu können.`
             )
             .then((c) => {
                 // Add guild, channel and message to the reaction_messages table
@@ -98,7 +98,7 @@ exports.run = async (client, message, args, level) => {
     message.reply({
         content: `The role \`${roleName}\` has been created ${
             !channel ? 'and a category with channels has been added' : ''
-        }`,
+        }\nYou'll find the reactions in #roles`,
         allowedMentions: { repliedUser: replying === 'true' },
     })
 }
