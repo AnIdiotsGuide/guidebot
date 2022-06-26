@@ -67,3 +67,5 @@ typings/
 .env
 
 /.vscode/
+
+/build

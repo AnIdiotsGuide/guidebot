@@ -39,7 +39,7 @@ exports.run = async (client, reaction, user, level) => {
 
 exports.conf = {
     enabled: true,
-    permLevel: 'Bot Admin',
+    permLevel: 'User',
 }
 
 exports.help = {
