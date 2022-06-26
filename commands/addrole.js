@@ -1,6 +1,11 @@
 const { Permissions } = require('discord.js')
 const config = require('../config.js')
 const { settings } = require('../modules/settings.js')
+
+// Better SQLite
+const SQLite = require('better-sqlite3')
+const sql = new SQLite('./database.sqlite')
+
 exports.run = async (client, message, args, level) => {
     // eslint-disable-line no-unused-vars
     const replying = settings.ensure(
@@ -80,6 +85,11 @@ exports.run = async (client, message, args, level) => {
                 `[${roleName}] has been created. React to this message, to add it to yourself.`
             )
             .then((c) => {
+                // Add guild, channel and message to the reaction_messages table
+                sql.prepare(
+                    `INSERT INTO reaction_messages (guild_id, channel_id, message_id) VALUES (?, ?, ?)`
+                ).run(message.guild.id, c.channel.id, c.id)
+
                 c.react('✅')
             })
     }

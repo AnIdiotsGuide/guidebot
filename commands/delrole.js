@@ -1,6 +1,11 @@
 const { Permissions } = require('discord.js')
 const config = require('../config.js')
 const { settings } = require('../modules/settings.js')
+
+// Better SQLite
+const SQLite = require('better-sqlite3')
+const sql = new SQLite('./database.sqlite')
+
 exports.run = async (client, message, args, level) => {
     // eslint-disable-line no-unused-vars
     const replying = settings.ensure(
@@ -58,6 +63,8 @@ exports.run = async (client, message, args, level) => {
     const messages = await rolesChannel.messages.fetch({ limit: 100 })
     messages.forEach((m) => {
         if (m.content.includes(`[${roleName}]`)) {
+            // Delete the message in the reaction_messages table
+            sql.prepare(`DELETE FROM reaction_messages WHERE message_id = ${m.id}`).run()
             m.delete()
         }
     })

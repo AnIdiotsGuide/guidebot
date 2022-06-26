@@ -29,11 +29,11 @@ exports.run = async (client, reaction, user, level) => {
     const hasRole = reactedUser.roles.cache.find(
         (r) => r.name === roleName[0].slice(1, -1)
     )
-    if (hasRole) {
+    if (!hasRole) {
         return
     }
 
-    // Give the user that just reacted the role
+    // Give the user, that just reacted, the role
     reactedUser.roles.remove(role)
 }
 

@@ -9,6 +9,11 @@ config.js
 data/
 test.js
 
+# SQLite
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
 # Runtime data
 pids
 *.pid

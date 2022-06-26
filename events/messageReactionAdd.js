@@ -6,6 +6,12 @@ module.exports = async (client, reaction, user) => {
     // Grab the container from the client to reduce line length.
     const { container } = client
 
+    // If a message gains a reaction and it is uncached, fetch and cache the message
+    // You should account for any errors while fetching, it could return API errors if the resource is missing
+    if (reaction.message.partial) await reaction.message.fetch()
+
+    // console.log(`${user.username} reacted in channel ${reaction.message.channel.name}`)
+
     // Check if the message is a reaction to a message from the bot
     if (reaction.message.author.id === user.id) return
 
@@ -51,8 +57,8 @@ module.exports = async (client, reaction, user) => {
         await rct.run(client, reaction, user, level)
         logger.log(
             `${config.permLevels.find((l) => l.level === level).name} ${
-                reaction.message.author.id
-            } reacted in channel ${rct.help.name}`,
+                user.username
+            } added a reaction in channel ${rct.help.name}`,
             'log'
         )
     } catch (e) {
