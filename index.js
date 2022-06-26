@@ -56,12 +56,12 @@ const init = async () => {
         })
     }
 
-    // const reactions = readdirSync('./reactions/').filter((file) => file.endsWith('.js'))
-    // for (const file of reactions) {
-    //     const props = require(`./reactions/${file}`)
-    //     logger.log(`Loading Reaction: ${props.help.name}. 👌`, 'log')
-    //     client.container.reactions.set(props.help.name, props)
-    // }
+    const reactions = readdirSync('./reactions/').filter((file) => file.endsWith('.js'))
+    for (const file of reactions) {
+        const props = require(`./reactions/${file}`)
+        logger.log(`Loading Reaction: ${props.help.name}. 👌`, 'log')
+        client.container.reactions.set(props.help.name, props)
+    }
 
     // Now we load any **slash** commands you may have in the ./slash directory.
     const slashFiles = readdirSync('./slash').filter((file) => file.endsWith('.js'))
