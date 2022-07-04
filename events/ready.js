@@ -4,35 +4,10 @@ const sql = new SQLite('./database.sqlite')
 
 const logger = require('../modules/logger.js')
 const { getSettings } = require('../modules/functions.js')
+// Create tables using the createTables.js
+const createTables = require('../sqlite/createTables.js')
 module.exports = async (client) => {
-    // Check if the table reaction_messages exists
-    const table = sql
-        .prepare(
-            `SELECT count(*) FROM sqlite_master WHERE type='table' AND name='reaction_messages'`
-        )
-        .get()
-
-    if (!table['count(*)']) {
-        // If the table does not exist, create it and setup the database
-        sql.prepare(
-            'CREATE TABLE reaction_messages (id TEXT PRIMARY KEY, guild_id TEXT, channel_id TEXT, message_id TEXT)'
-        ).run()
-        sql.prepare(
-            `CREATE UNIQUE INDEX idx_reaction_messages_id ON reaction_messages (id)`
-        ).run()
-        sql.prepare(
-            `CREATE INDEX idx_reaction_messages_guild_id ON reaction_messages (guild_id)`
-        ).run()
-        sql.prepare(
-            `CREATE INDEX idx_reaction_messages_channel_id ON reaction_messages (channel_id)`
-        ).run()
-        sql.prepare(
-            `CREATE INDEX idx_reaction_messages_message_id ON reaction_messages (message_id)`
-        ).run()
-
-        sql.pragma('synchronous = 1')
-        sql.pragma('journal_mode = wal')
-    }
+    await createTables(client)
 
     // Fetch all the messages that have a reaction
     const messages = sql.prepare(`SELECT * FROM reaction_messages`).all()

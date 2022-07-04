@@ -27,6 +27,7 @@ const commands = new Collection()
 const aliases = new Collection()
 const reactionsAdd = new Collection()
 const reactionsRemove = new Collection()
+// const voiceEvents = new Collection()
 const slashcmds = new Collection()
 
 // Generate a cache of client permissions for pretty perm names in commands.
@@ -43,6 +44,7 @@ client.container = {
     aliases,
     reactionsAdd,
     reactionsRemove,
+    // voiceEvents,
     slashcmds,
     levelCache,
 }
@@ -80,6 +82,15 @@ const init = async () => {
         logger.log(`Loading Remove Reaction: ${props.help.name}. 👌`, 'log')
         client.container.reactionsRemove.set(props.help.name, props)
     }
+
+    // const voiceEvents = readdirSync('./event_handler/voice/').filter((file) =>
+    //     file.endsWith('.js')
+    // )
+    // for (const file of voiceEvents) {
+    //     const props = require(`./event_handler/voice/${file}`)
+    //     logger.log(`Loading Voice State Update: ${props.help.name}. 👌`, 'log')
+    //     client.container.voiceEvents.set(props.help.name, props)
+    // }
 
     // Now we load any **slash** commands you may have in the ./slash directory.
     const slashFiles = readdirSync('./slash').filter((file) => file.endsWith('.js'))

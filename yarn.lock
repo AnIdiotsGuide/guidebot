@@ -23,13 +23,16 @@
     "chalk" "^2.0.0"
     "js-tokens" "^4.0.0"
 
-"@discordjs/builders@^0.2.0":
-  "integrity" "sha512-TVq7NZBCJrrTRc3CfxOr3IdgY5nrtqVxZ7qDUF1mN6LgxIiOldmFxsSwMrQBzLFVmOwqFyNLKCeblley8UpEuw=="
-  "resolved" "https://registry.npmjs.org/@discordjs/builders/-/builders-0.2.0.tgz"
-  "version" "0.2.0"
+"@discordjs/builders@^0.11.0":
+  "integrity" "sha512-ZTB8yJdJKrKlq44dpWkNUrAtEJEq0gqpb7ASdv4vmq6/mZal5kOv312hQ56I/vxwMre+VIkoHquNUAfnTbiYtg=="
+  "resolved" "https://registry.npmjs.org/@discordjs/builders/-/builders-0.11.0.tgz"
+  "version" "0.11.0"
   dependencies:
-    "discord-api-types" "^0.18.1"
-    "tslib" "^2.3.0"
+    "@sindresorhus/is" "^4.2.0"
+    "discord-api-types" "^0.26.0"
+    "ts-mixer" "^6.0.0"
+    "tslib" "^2.3.1"
+    "zod" "^3.11.6"
 
 "@discordjs/builders@^0.5.0":
   "integrity" "sha512-HP5y4Rqw68o61Qv4qM5tVmDbWi4mdTFftqIOGRo33SNPpLJ1Ga3KEIR2ibKofkmsoQhEpLmopD1AZDs3cKpHuw=="
@@ -123,7 +126,7 @@
   "resolved" "https://registry.npmjs.org/@sapphire/utilities/-/utilities-2.0.1.tgz"
   "version" "2.0.1"
 
-"@sindresorhus/is@^4.0.1":
+"@sindresorhus/is@^4.0.1", "@sindresorhus/is@^4.2.0":
   "integrity" "sha512-VkE3KLBmJwcCaVARtQpfuKcKv8gcBmUubrfHGF84dXuuW6jgsRYxPtzcIhPyK9WAPpRt2/xY6zkD9MnRaJzSyw=="
   "resolved" "https://registry.npmjs.org/@sindresorhus/is/-/is-4.2.0.tgz"
   "version" "4.2.0"
@@ -539,15 +542,15 @@
   "resolved" "https://registry.npmjs.org/detect-libc/-/detect-libc-2.0.1.tgz"
   "version" "2.0.1"
 
-"discord-api-types@^0.18.1":
-  "integrity" "sha512-hNC38R9ZF4uaujaZQtQfm5CdQO58uhdkoHQAVvMfIL0LgOSZeW575W8H6upngQOuoxWd8tiRII3LLJm9zuQKYg=="
-  "resolved" "https://registry.npmjs.org/discord-api-types/-/discord-api-types-0.18.1.tgz"
-  "version" "0.18.1"
-
 "discord-api-types@^0.22.0":
   "integrity" "sha512-l8yD/2zRbZItUQpy7ZxBJwaLX/Bs2TGaCthRppk8Sw24LOIWg12t9JEreezPoYD0SQcC2htNNo27kYEpYW/Srg=="
   "resolved" "https://registry.npmjs.org/discord-api-types/-/discord-api-types-0.22.0.tgz"
   "version" "0.22.0"
+
+"discord-api-types@^0.26.0":
+  "integrity" "sha512-T5PdMQ+Y1MEECYMV5wmyi9VEYPagEDEi4S0amgsszpWY0VB9JJ/hEvM6BgLhbdnKky4gfmZEXtEEtojN8ZKJQQ=="
+  "resolved" "https://registry.npmjs.org/discord-api-types/-/discord-api-types-0.26.1.tgz"
+  "version" "0.26.1"
 
 "discord.js@^13.0.1":
   "integrity" "sha512-gxO4CXKdHpqA+WKG+f5RNnd3srTDj5uFJHgOathksDE90YNq/Qijkd2WlMgTTMS6AJoEnHxI7G9eDQHCuZ+xDA=="
@@ -2183,7 +2186,7 @@
     "minimist" "^1.2.0"
     "strip-bom" "^3.0.0"
 
-"tslib@^2.3.0":
+"tslib@^2.3.0", "tslib@^2.3.1":
   "integrity" "sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw=="
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-2.3.1.tgz"
   "version" "2.3.1"
@@ -2323,3 +2326,8 @@
   "integrity" "sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A=="
   "resolved" "https://registry.npmjs.org/yallist/-/yallist-4.0.0.tgz"
   "version" "4.0.0"
+
+"zod@^3.11.6":
+  "integrity" "sha512-4oKP5zvG6GGbMlqBkI5FESOAweldEhSOZ6LI6cG+JzUT7ofj1ZOC0PJudpQOpT1iqOFpYYtX5Pw0+o403y4bcg=="
+  "resolved" "https://registry.npmjs.org/zod/-/zod-3.17.3.tgz"
+  "version" "3.17.3"
