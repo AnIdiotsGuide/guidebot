@@ -34,18 +34,6 @@ module.exports = async (client, reaction, user) => {
     if (!rct) return
 
     if (level < container.levelCache[rct.conf.permLevel]) {
-        //         if (settings.systemNotice === 'true') {
-        //             return reaction.message.channel
-        //                 .send(`You do not have permission to use this reaction.
-        // Your permission level is ${level} (${
-        //                 config.permLevels.find((l) => l.level === level).name
-        //             })
-        // This reaction requires level ${container.levelCache[rct.conf.permLevel]} (${
-        //                 rct.conf.permLevel
-        //             })`)
-        //         } else {
-        //             return
-        //         }
         return
     }
 
