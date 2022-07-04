@@ -36,6 +36,7 @@ module.exports = async (client, oldState, newState) => {
 
             return
         } catch (error) {
+            logger.error(error)
             sql.prepare(`DELETE FROM voice_states WHERE id = ?`).run(vsMessage.id)
         }
     }
@@ -52,7 +53,7 @@ const createNewEmbedMessage = (client, userVoiceState, channel) => {
 
     const field = {
         name: `${category.name}`,
-        value: memberNicknameMention(userVoiceState.userId),
+        value: `${memberNicknameMention(userVoiceState.userId)}`,
         inline: true,
     }
     messageTemplate.fields.push(field)
@@ -98,8 +99,6 @@ const editEmbedMessage = (client, userVoiceState, message) => {
         embed.fields.push(field)
     }
 
-    console.log(embed)
-
     message.edit({
         embeds: [embed],
     })
@@ -125,27 +124,44 @@ const getEmbedMessageTemplate = (client) => {
 }
 
 const editUserInField = (embed, userVoiceState, addEmojis) => {
-    const emojis = ['🔇', '🎥']
+    const emojis = [':mute:', ':video_camera:']
+
+    const wasMuted = userVoiceState.wasMuted || userVoiceState.wasDeafen ? emojis[0] : ''
+    const wasVideoing =
+        userVoiceState.wasVideoing || userVoiceState.wasStreaming ? emojis[1] : ''
+
     const muted = userVoiceState.mute || userVoiceState.deaf ? emojis[0] : ''
-    const video = userVoiceState.selfVideo || userVoiceState.selfStream ? emojis[1] : ''
+    const video = userVoiceState.video || userVoiceState.streaming ? emojis[1] : ''
+
+    const userName = memberNicknameMention(userVoiceState.userId)
 
     // Remove emojis, that are behind the users mention
-    embed.fields.forEach((field) => {
-        if (field.value.includes(memberNicknameMention(userVoiceState.userId))) {
-            field.value = field.value.replace(muted, '')
-            field.value = field.value.replace(video, '')
-            if (addEmojis) {
-                field.value += muted
-                field.value += video
+    if (!addEmojis) {
+        embed.fields.forEach((field) => {
+            if (field.value.includes(userVoiceState.userId)) {
+                field.value = field.value.replace(
+                    `${userName}${wasMuted}${wasVideoing}`,
+                    `${userName}`
+                )
             }
-        }
-    })
+        })
+    } else {
+        // Add emojis behind the users mention by replacing the user's mention with the emojis
+        embed.fields.forEach((field) => {
+            if (field.value.includes(userVoiceState.userId)) {
+                field.value = field.value.replace(
+                    `${userName}`,
+                    `${userName}${muted}${video}`
+                )
+            }
+        })
+    }
 
     return embed
 }
 
 const removeUserFromField = (embed, userVoiceState) => {
-    embed = editUserInField(embed, userVoiceState, false)
+    embed = editUserInField(embed, userVoiceState)
 
     // Foreach field the user is in, remove the user from the field
     embed.fields.forEach((field) => {
@@ -167,14 +183,14 @@ const removeUserFromField = (embed, userVoiceState) => {
 }
 
 const addUserToField = (embed, userVoiceState) => {
-    removeUserFromField(embed, userVoiceState)
+    embed = removeUserFromField(embed, userVoiceState)
 
     const fieldName = userVoiceState.parent?.name || userVoiceState.channel.name
 
     // Check if a field with fieldName exists
     const field = embed.fields.find((field) => field.name === fieldName)
 
-    // If no field exists, create a new field
+    // If no field exists, create a new field, else add the user to it
     if (!field) {
         const field = {
             name: `${fieldName}`,
@@ -182,9 +198,7 @@ const addUserToField = (embed, userVoiceState) => {
             inline: true,
         }
         embed.fields.push(field)
-    }
-    // If a field exists, add the user to the field
-    else {
+    } else {
         field.value += `\n${memberNicknameMention(userVoiceState.userId)}`
     }
 
@@ -204,6 +218,10 @@ const getUserVoiceState = (oldState, newState) => {
         mute: newState.selfMute || newState.serverMute || false,
         video: newState.selfVideo,
         streaming: newState.streaming,
+        wasDeafen: oldState.selfDeaf || oldState.serverDeaf || false,
+        wasMuted: oldState.selfMute || oldState.serverMute || false,
+        wasVideoing: oldState.selfVideo,
+        wasStreaming: oldState.streaming,
         suppress: newState.suppress,
         channel: newState.channel || oldState.channel,
         parent: newState.channel?.parent || oldState.channel?.parent,
