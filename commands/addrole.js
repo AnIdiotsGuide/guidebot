@@ -4,7 +4,7 @@ const { settings } = require('../modules/settings.js')
 
 // Better SQLite
 const SQLite = require('better-sqlite3')
-const sql = new SQLite('./database.sqlite')
+const sql = new SQLite('./data/database.sqlite')
 
 exports.run = async (client, message, args, level) => {
     // eslint-disable-line no-unused-vars

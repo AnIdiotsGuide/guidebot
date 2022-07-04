@@ -3,7 +3,7 @@ const { getSettings } = require('../modules/functions.js')
 
 // Better SQLite
 const SQLite = require('better-sqlite3')
-const sql = new SQLite('./database.sqlite')
+const sql = new SQLite('./data/database.sqlite')
 
 const { memberNicknameMention, channelMention } = require('@discordjs/builders')
 
