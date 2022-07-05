@@ -72,7 +72,7 @@ const editEmbedMessage = (client, userVoiceState, message) => {
     let embed = message.embeds[0]
 
     // If the user left the channel
-    if (userVoiceState.leftVoiceChannel) {
+    if (userVoiceState.leftVoiceChannel && !userVoiceState.joinedVoiceChannel) {
         // Remove the user from the field
         embed = removeUserFromField(embed, userVoiceState)
     }
@@ -87,17 +87,22 @@ const editEmbedMessage = (client, userVoiceState, message) => {
     if (embed.fields.length === 0) {
         const randomUser = client.guilds.cache
             .get(userVoiceState.guildId)
-            .members.cache.random()
+            .members.cache.filter((e) => !e.user.bot)
+            .random()
 
         const field = {
             name: `:information_source: Zurzeit sind keine User im Voice-Chat`,
-            value: `Frag doch mal ${memberNicknameMention(
-                randomUser.id
-            )}, ob er Lust hat zu zocken.`,
+            value: randomUser
+                ? `Frag doch mal ${memberNicknameMention(
+                      randomUser.id
+                  )}, ob er Lust hat zu zocken.`
+                : 'Ich werd immer so melancholisch wenn niemand da ist :frowning:',
             inline: true,
         }
         embed.fields.push(field)
     }
+
+    embed.timestamp = new Date()
 
     message.edit({
         embeds: [embed],
@@ -163,13 +168,18 @@ const editUserInField = (embed, userVoiceState, addEmojis) => {
 const removeUserFromField = (embed, userVoiceState) => {
     embed = editUserInField(embed, userVoiceState)
 
+    const userName = memberNicknameMention(userVoiceState.userId)
+
     // Foreach field the user is in, remove the user from the field
     embed.fields.forEach((field) => {
-        if (field.value.includes(userVoiceState.userId)) {
-            field.value = field.value.replace(
-                `${memberNicknameMention(userVoiceState.userId)}`,
-                ''
-            )
+        if (field.value.includes(`\n${userName}`)) {
+            field.value = field.value.replace(`\n${userName}`, '')
+        }
+        if (field.value.includes(`${userName}\n`)) {
+            field.value = field.value.replace(`${userName}\n`, '')
+        }
+        if (field.value.includes(`${userName}`)) {
+            field.value = field.value.replace(`${userName}`, '')
         }
     })
 
