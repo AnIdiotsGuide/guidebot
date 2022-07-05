@@ -183,11 +183,16 @@ const removeUserFromField = (embed, userVoiceState) => {
         }
     })
 
-    // Check for each field, if the value is empty
-    // If it is empty, remove the field
-    embed.fields = embed.fields.filter(
-        (field) => field.value !== '' && !field.name.includes(':information_source:')
-    )
+    if (
+        !userVoiceState.joinedVoiceChannel ||
+        (userVoiceState.switchedVoiceChannel && userVoiceState.switchedToNewCategory)
+    ) {
+        // Check for each field, if the value is empty
+        // If it is empty, remove the field
+        embed.fields = embed.fields.filter(
+            (field) => field.value !== '' && !field.name.includes(':information_source:')
+        )
+    }
 
     return embed
 }
@@ -238,6 +243,9 @@ const getUserVoiceState = (oldState, newState) => {
         guildId: newState.guild.id || oldState.guild.id,
         joinedVoiceChannel: newState.channelId !== null,
         leftVoiceChannel: oldState.channelId !== null,
+        switchedVoiceChannel: newState.channel?.id !== oldState.channel?.id,
+        switchedToNewCategory:
+            newState.channel?.parent?.id !== oldState.channel?.parent?.id,
     }
 
     return userVoiceState
