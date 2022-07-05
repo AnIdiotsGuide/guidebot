@@ -3,3 +3,5 @@ services:
     discord-doo-bot:
         build: .
         restart: always
+        volumes:
+            - ./_database/data:/app/data
