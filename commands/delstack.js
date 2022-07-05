@@ -89,8 +89,8 @@ exports.conf = {
 }
 
 exports.help = {
-    name: 'delrole',
+    name: 'delstack',
     category: 'System',
     description: "Deletes a role and it's associated categories and messages.",
-    usage: 'delrole [role]',
+    usage: 'delstack [role]',
 }

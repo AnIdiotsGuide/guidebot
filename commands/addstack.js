@@ -111,9 +111,9 @@ exports.conf = {
 }
 
 exports.help = {
-    name: 'addrole',
+    name: 'addstack',
     category: 'System',
     description:
         'Adds a new role, creates a category for it as well as an reaction. When mentioning users, it will also assign the role.',
-    usage: 'addrole [command] (@users)',
+    usage: 'addstack [command] (@users)',
 }
