@@ -50,4 +50,5 @@ jobs:
                   port: ${{ secrets.PORT }}
                   script: |
                       cd /home/docker-compose/discordbot/DooBot/code
+                      cp ./config.js.example ./config.js
                       ./init.sh
