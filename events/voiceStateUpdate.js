@@ -8,9 +8,6 @@ const sql = new SQLite('./data/database.sqlite')
 const { memberNicknameMention, channelMention } = require('@discordjs/builders')
 
 module.exports = async (client, oldState, newState) => {
-    // Get the settings for the guild
-    const settings = getSettings(newState.guild.id)
-
     const userVoiceState = getUserVoiceState(oldState, newState)
 
     // Find channel called "wo-wer-was" and send a message to it
@@ -97,10 +94,14 @@ const editEmbedMessage = async (client, userVoiceState, message) => {
                 .random()
 
             if (randomUser) {
+                // Get the settings for the guild
+                const settings = getSettings(message.guild.id)
+
                 const randomUserRole = await randomUser.roles.cache
                     .filter(
                         (role) =>
-                            role?.name !== '@everyone' && !role?.name.startsWith('[')
+                            role?.name !== '@everyone' &&
+                            !roleNameContainsExcludePrefix(role?.name, settings)
                     )
                     .random()
 
@@ -239,6 +240,10 @@ const addUserToField = (embed, userVoiceState) => {
     embed = editUserInField(embed, userVoiceState, true)
 
     return embed
+}
+
+const roleNameContainsExcludePrefix = (roleName, settings) => {
+    return settings.excludeRolesWithPrefix.some((prefix) => roleName.startsWith(prefix))
 }
 
 const getUserVoiceState = (oldState, newState) => {
