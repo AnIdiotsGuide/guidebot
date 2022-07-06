@@ -72,7 +72,7 @@ const editEmbedMessage = async (client, userVoiceState, message) => {
     let embed = message.embeds[0]
 
     // If the user left the channel
-    if (userVoiceState.leftVoiceChannel && !userVoiceState.joinedVoiceChannel) {
+    if (userVoiceState.leftVoice) {
         // Remove the user from the field
         embed = removeUserFromField(embed, userVoiceState)
     }
@@ -107,7 +107,7 @@ const editEmbedMessage = async (client, userVoiceState, message) => {
                 if (randomUserRole) {
                     fieldValueText = `Frag doch mal ${memberNicknameMention(
                         randomUser.id
-                    )}, ob er Lust hat \`${randomUserRole.name}\` zu zocken.`
+                    )}, ob er/sie Lust hat \`${randomUserRole.name}\` zu zocken.`
                 }
             }
         } catch (error) {
@@ -170,15 +170,17 @@ const editUserInField = (embed, userVoiceState) => {
         }
     })
 
-    // Add emojis behind the users mention by replacing the user's mention with the emojis
-    embed.fields.forEach((field) => {
-        if (field.value.includes(userVoiceState.userId)) {
-            field.value = field.value.replace(
-                `${userName}`,
-                `${userName}${muted}${video}`
-            )
-        }
-    })
+    if (!userVoiceState.leftVoice) {
+        // Add emojis behind the users mention by replacing the user's mention with the emojis
+        embed.fields.forEach((field) => {
+            if (field.value.includes(userVoiceState.userId)) {
+                field.value = field.value.replace(
+                    `${userName}`,
+                    `${userName}${muted}${video}`
+                )
+            }
+        })
+    }
 
     return embed
 }
@@ -260,6 +262,8 @@ const getUserVoiceState = (oldState, newState) => {
         guildId: newState.guild.id || oldState.guild.id,
         joinedVoiceChannel: newState.channelId !== null,
         leftVoiceChannel: oldState.channelId !== null,
+        joinedVoice: newState.channelId && !oldState.channelId,
+        leftVoice: oldState.channelId && !newState.channelId,
         switchedVoiceChannel: newState.channel?.id !== oldState.channel?.id,
         switchedToNewCategory:
             newState.channel?.parent?.id !== oldState.channel?.parent?.id,
