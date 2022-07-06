@@ -67,7 +67,7 @@ const createNewEmbedMessage = (client, userVoiceState, channel) => {
     })
 }
 
-const editEmbedMessage = (client, userVoiceState, message) => {
+const editEmbedMessage = async (client, userVoiceState, message) => {
     // Edit the embed message
     let embed = message.embeds[0]
 
@@ -85,18 +85,30 @@ const editEmbedMessage = (client, userVoiceState, message) => {
 
     // If there aren't any field left, add a field to tell the user, that there are no users in the voice chat currently
     if (embed.fields.length === 0) {
-        const randomUser = client.guilds.cache
-            .get(userVoiceState.guildId)
-            .members.cache.filter((e) => !e.user.bot)
+        let fieldValueText =
+            'Ich werd immer so melancholisch wenn niemand da ist :frowning:'
+
+        const randomUser = await message.guild.members.cache
+            .filter((member) => member.presence.status !== 'offline' && !member.user.bot)
             .random()
+
+        if (randomUser) {
+            const randomUserRole = await randomUser.roles.cache
+                .filter(
+                    (role) => role?.name !== '@everyone' && !role?.name.startsWith('[')
+                )
+                .random()
+
+            if (randomUserRole) {
+                fieldValueText = `Frag doch mal ${memberNicknameMention(
+                    randomUser.id
+                )}, ob er Lust hat \`${randomUserRole.name}\` zu zocken.`
+            }
+        }
 
         const field = {
             name: `:information_source: Zurzeit sind keine User im Voice-Chat`,
-            value: randomUser
-                ? `Frag doch mal ${memberNicknameMention(
-                      randomUser.id
-                  )}, ob er Lust hat zu zocken.`
-                : 'Ich werd immer so melancholisch wenn niemand da ist :frowning:',
+            value: fieldValueText,
             inline: true,
         }
         embed.fields.push(field)
