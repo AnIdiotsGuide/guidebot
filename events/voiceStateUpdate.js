@@ -88,22 +88,30 @@ const editEmbedMessage = async (client, userVoiceState, message) => {
         let fieldValueText =
             'Ich werd immer so melancholisch wenn niemand da ist :frowning:'
 
-        const randomUser = await message.guild.members.cache
-            .filter((member) => member.presence.status !== 'offline' && !member.user.bot)
-            .random()
-
-        if (randomUser) {
-            const randomUserRole = await randomUser.roles.cache
+        try {
+            const randomUser = await message.guild.members.cache
                 .filter(
-                    (role) => role?.name !== '@everyone' && !role?.name.startsWith('[')
+                    (member) =>
+                        member?.presence?.status !== 'offline' && !member?.user?.bot
                 )
                 .random()
 
-            if (randomUserRole) {
-                fieldValueText = `Frag doch mal ${memberNicknameMention(
-                    randomUser.id
-                )}, ob er Lust hat \`${randomUserRole.name}\` zu zocken.`
+            if (randomUser) {
+                const randomUserRole = await randomUser.roles.cache
+                    .filter(
+                        (role) =>
+                            role?.name !== '@everyone' && !role?.name.startsWith('[')
+                    )
+                    .random()
+
+                if (randomUserRole) {
+                    fieldValueText = `Frag doch mal ${memberNicknameMention(
+                        randomUser.id
+                    )}, ob er Lust hat \`${randomUserRole.name}\` zu zocken.`
+                }
             }
+        } catch (error) {
+            logger.error(error)
         }
 
         const field = {
