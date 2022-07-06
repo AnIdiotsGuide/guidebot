@@ -168,6 +168,10 @@ const editUserInField = (embed, userVoiceState) => {
                 `${userName}${wasMuted}${wasVideoing}`,
                 `${userName}`
             )
+            field.value = field.value.replace(
+                `${userName}${muted}${video}`,
+                `${userName}`
+            )
         }
     })
 
