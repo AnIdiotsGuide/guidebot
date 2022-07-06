@@ -128,7 +128,7 @@ const getEmbedMessageTemplate = (client) => {
     }
 }
 
-const editUserInField = (embed, userVoiceState, addEmojis) => {
+const editUserInField = (embed, userVoiceState) => {
     const emojis = [':mute:', ':video_camera:']
 
     const wasMuted = userVoiceState.wasMuted || userVoiceState.wasDeafen ? emojis[0] : ''
@@ -141,26 +141,24 @@ const editUserInField = (embed, userVoiceState, addEmojis) => {
     const userName = memberNicknameMention(userVoiceState.userId)
 
     // Remove emojis, that are behind the users mention
-    if (!addEmojis) {
-        embed.fields.forEach((field) => {
-            if (field.value.includes(userVoiceState.userId)) {
-                field.value = field.value.replace(
-                    `${userName}${wasMuted}${wasVideoing}`,
-                    `${userName}`
-                )
-            }
-        })
-    } else {
-        // Add emojis behind the users mention by replacing the user's mention with the emojis
-        embed.fields.forEach((field) => {
-            if (field.value.includes(userVoiceState.userId)) {
-                field.value = field.value.replace(
-                    `${userName}`,
-                    `${userName}${muted}${video}`
-                )
-            }
-        })
-    }
+    embed.fields.forEach((field) => {
+        if (field.value.includes(userVoiceState.userId)) {
+            field.value = field.value.replace(
+                `${userName}${wasMuted}${wasVideoing}`,
+                `${userName}`
+            )
+        }
+    })
+
+    // Add emojis behind the users mention by replacing the user's mention with the emojis
+    embed.fields.forEach((field) => {
+        if (field.value.includes(userVoiceState.userId)) {
+            field.value = field.value.replace(
+                `${userName}`,
+                `${userName}${muted}${video}`
+            )
+        }
+    })
 
     return embed
 }
@@ -183,10 +181,7 @@ const removeUserFromField = (embed, userVoiceState) => {
         }
     })
 
-    if (
-        !userVoiceState.joinedVoiceChannel ||
-        (userVoiceState.switchedVoiceChannel && userVoiceState.switchedToNewCategory)
-    ) {
+    if (userVoiceState.switchedToNewCategory) {
         // Check for each field, if the value is empty
         // If it is empty, remove the field
         embed.fields = embed.fields.filter(
@@ -198,7 +193,9 @@ const removeUserFromField = (embed, userVoiceState) => {
 }
 
 const addUserToField = (embed, userVoiceState) => {
-    embed = removeUserFromField(embed, userVoiceState)
+    if (userVoiceState.switchedToNewCategory || userVoiceState.switchedVoiceChannel) {
+        embed = removeUserFromField(embed, userVoiceState)
+    }
 
     const fieldName = userVoiceState.parent?.name || userVoiceState.channel.name
 
@@ -213,7 +210,7 @@ const addUserToField = (embed, userVoiceState) => {
             inline: true,
         }
         embed.fields.push(field)
-    } else {
+    } else if (!field.value.includes(userVoiceState.userId)) {
         field.value += `\n${memberNicknameMention(userVoiceState.userId)}`
     }
 
