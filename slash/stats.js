@@ -1,5 +1,4 @@
-const { version } = require("discord.js");
-const { codeBlock } = require("discord.js");
+const { version, codeBlock } = require("discord.js");
 const { DurationFormatter } = require("@sapphire/time-utilities");
 const durationFormatter = new DurationFormatter();
 
