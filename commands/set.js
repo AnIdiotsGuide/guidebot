@@ -10,7 +10,7 @@
 // const action = args[0]; const key = args[1]; const value = args.slice(2);
 // OR the same as:
 // const [action, key, ...value] = args;
-const { codeBlock } = require("@discordjs/builders");
+const { codeBlock } = require("discord.js");
 const { settings } = require("../modules/settings.js");
 const { awaitReply } = require("../modules/functions.js");
 

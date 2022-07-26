@@ -1,10 +1,11 @@
 const logger = require("../modules/logger.js");
 const { getSettings, permlevel } = require("../modules/functions.js");
 const config = require("../config.js");
+const { InteractionType } = require("discord.js");
 
 module.exports = async (client, interaction) => {
   // If it's not a command, stop.
-  if (!interaction.isCommand()) return;
+  if (interaction.type !== InteractionType.ApplicationCommand) return;
 
   // Grab the settings for this server from Enmap.
   // If there is no guild, get default conf (DMs)

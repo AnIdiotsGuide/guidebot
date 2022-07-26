@@ -6,7 +6,7 @@ change it for that guild. The `add` action adds a key to the configuration of ev
 your bot. The `del` action removes the key also from every guild, and loses its value forever.
 */
 
-const { codeBlock } = require("@discordjs/builders");
+const { codeBlock } = require("discord.js");
 const config = require("../config.js");
 const { awaitReply } = require("../modules/functions.js");
 const { settings } = require("../modules/settings.js");
