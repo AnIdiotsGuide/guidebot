@@ -16,7 +16,7 @@ const config = {
   * If this intent isn't provided you will need to ping the bot to use text commands.
   * For more info about intents see the README.
   */
-  intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.DirectMessages, IntentsBitField.Flags.MessageContent ],
+  intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.DirectMessages ],
   // Partials your bot may need should go here, CHANNEL is required for DM's
   partials: [Partials.Channel],
 
