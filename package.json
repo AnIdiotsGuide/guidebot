@@ -23,11 +23,11 @@
   },
   "homepage": "https://github.com/AnIdiotsGuide/guidebot#readme",
   "dependencies": {
-    "@sapphire/time-utilities": "^1.3.8",
+    "@sapphire/time-utilities": "^1.7.5",
     "colorette": "^2.0.19",
     "discord.js": "^14.0.3",
     "dotenv": "^16.0.1",
-    "enmap": "^5.8.5"
+    "enmap": "^5.9.0"
   },
   "devDependencies": {
     "eslint": "^8.20.0",
