@@ -12,6 +12,8 @@ const config = {
   * Intents the bot needs.
   * By default GuideBot needs Guilds, Guild Messages and Direct Messages to work.
   * For join messages to work you need Guild Members, which is privileged and requires extra setup.
+  * The bot also needs the Message Content intent to receive messages with its prefix. This is also privileged.
+  * If this intent isn't provided you will need to ping the bot to use text commands.
   * For more info about intents see the README.
   */
   intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.DirectMessages, IntentsBitField.Flags.MessageContent ],
