@@ -19,7 +19,7 @@ exports.commandData = {
   name: "stats",
   description: "Show's the bots stats.",
   options: [],
-  defaultPermission: true,
+  dmPermission: true,
 };
 
 // Set guildOnly to true if you want it to be available on guilds only.

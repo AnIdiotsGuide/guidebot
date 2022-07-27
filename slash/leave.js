@@ -13,7 +13,7 @@ exports.commandData = {
   name: "leave",
   description: "Make's the user leave the guild.",
   options: [],
-  defaultPermission: true,
+  dmPermission : false,
 };
 
 // Set guildOnly to true if you want it to be available on guilds only.
