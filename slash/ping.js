@@ -8,7 +8,7 @@ exports.commandData = {
   name: "ping",
   description: "Pongs when pinged.",
   options: [],
-  defaultPermission: true,
+  dmPermission: true,
 };
 
 // Set guildOnly to true if you want it to be available on guilds only.

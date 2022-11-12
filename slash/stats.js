@@ -1,5 +1,4 @@
-const { version } = require("discord.js");
-const { codeBlock } = require("@discordjs/builders");
+const { version, codeBlock } = require("discord.js");
 const { DurationFormatter } = require("@sapphire/time-utilities");
 const durationFormatter = new DurationFormatter();
 
@@ -20,7 +19,7 @@ exports.commandData = {
   name: "stats",
   description: "Show's the bots stats.",
   options: [],
-  defaultPermission: true,
+  dmPermission: true,
 };
 
 // Set guildOnly to true if you want it to be available on guilds only.

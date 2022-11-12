@@ -5,7 +5,7 @@ command is also filtered by level, so if a user does not have access to
 a command, it is not shown to them. If a command name is given with the
 help command, its extended help is shown.
 */
-const { codeBlock } = require("@discordjs/builders");
+const { codeBlock } = require("discord.js");
 const { toProperCase } = require("../modules/functions.js");
 
 exports.run = (client, message, args, level) => {

@@ -3,7 +3,7 @@
 // can be used to do **anything** on your machine, from stealing information to
 // purging the hard drive. DO NOT LET ANYONE ELSE USE THIS
 
-const { codeBlock } = require("@discordjs/builders");
+const { codeBlock } = require("discord.js");
 
 /*
   MESSAGE CLEAN FUNCTION
