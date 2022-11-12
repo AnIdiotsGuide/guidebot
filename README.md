@@ -22,7 +22,7 @@ Need support? Join the [Idiot's Guide Community](https://discord.gg/vXVxsAjSMF)!
 ## Requirements
 
 - `git` command line ([Windows](https://git-scm.com/download/win) | [Linux](https://git-scm.com/download/linux) | [MacOS](https://git-scm.com/download/mac)) installed
-- `node` [Version 16.x](https://nodejs.org)
+- `node` [Version 16.9.0 or higher](https://nodejs.org)
 - The node-gyp build tools. This is a pre-requisite for Enmap, but also for a **lot** of other modules. See [The Enmap Guide](https://enmap.evie.codes/install#pre-requisites) for details and requirements for your OS. Just follow what's in the tabbed block only, then come back here!
 
 You also need your bot's token. This is obtained by creating an application in
@@ -67,3 +67,12 @@ To add the bot to your guild, you have to get an oauth link for it.
 
 You can use this site to help you generate a full OAuth Link, which includes a calculator for the permissions:
 [Permission Calculator](https://finitereality.github.io/permissions-calculator/?v=0)
+
+## Deploying Slash Commands
+
+By default, all slash commands are not deployed. To deploy slash commands, you need to run the deploy command on your bot.
+You may do so by running:
+
+`@GuideBot deploy`
+
+You will need to do this every time you add a new slash command.
